@@ -44,7 +44,10 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
   
         :return: plugin capabilities object  
         """  
-        capabilities={'generateandrunkql':"This capability allows to generate and run KQL queries to retrieve logs and events from Microsoft Sentinel. This capability should be used when the user ask about retrieving new incidents or alerts. Other type of common data is Signin and Audit logs. Do not use this capabilitiy if the user ask for only KQL generation without runing it"}
+        capabilities={
+            "generateandrunkql":"This capability allows to generate and run KQL queries to retrieve logs and events from Microsoft Sentinel. This capability should be used when the user ask about retrieving new incidents or alerts. Other type of common data is Signin and Audit logs. Do not use this capabilitiy if the user ask for only KQL generation without runing it"
+            ,"onlygeneratekql":"This capability allows to generate KQL queries for Microsoft Sentinel without runing the query. This capability should be used when the user ask about only generating a query for Sentinel without running it."
+            }
         return  capabilities
   
     def generateSentinelSchema(self):  
@@ -94,8 +97,18 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
           
         with open(self.extended_schema_file, 'r', encoding='utf-8') as f:  
             return json.load(f)  
+    def runKQLQuery(self, query, session,channel):  
+        """  
+        Generate a KQL query from a prompt and run it.  
   
-    def generateKQLandRun(self, prompt, session,channel):  
+        :param prompt: Input prompt  
+        :param session: Session context  
+        :return: Result of the KQL query  
+        """ 
+        query_results=self.sentinelClient.run_query(query, printresults=False)
+        result_object={"status":"success","result":query_results,"session_tokens":0}   
+        return  result_object 
+    def generateKQL(self, prompt, session,channel):  
         """  
         Generate a KQL query from a prompt and run it.  
   
@@ -117,14 +130,13 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
             return prompt_result_object
         else:
         # Clean KQL tags from the result  
-            prompt_result_clean = prompt_result_object['result'].replace("```kql", "").replace("```kusto", "").replace("```", "").strip()  
-            print_plugin_debug(self.name, f"Generated Query:\n {prompt_result_clean}")  
-            channel('debugmessage',{"message":f"Generated KQL Query:\n {prompt_result_clean}"})
-            query_results=self.sentinelClient.run_query(prompt_result_clean, printresults=False)  
-            result_object={"status":prompt_result_object['status'],"result":query_results,"session_tokens":prompt_result_object['session_tokens']} 
+            query = prompt_result_object['result'].replace("```kql", "").replace("```kusto", "").replace("```", "").strip()  
+            print_plugin_debug(self.name, f"Generated Query:\n {query}")  
+            channel('debugmessage',{"message":f"Generated KQL Query:\n {query}"})
+            result_object={"status":prompt_result_object['status'],"result":query,"session_tokens":prompt_result_object['session_tokens']} 
             return  result_object
     
-    def generateKQLandRunWithSchemaAndTable(self, prompt, table, session,channel):  
+    def generateKQLWithSchemaAndTable(self, prompt, table, session,channel):  
         """  
         Generate a KQL query using the schema for a specific table and run it.  
   
@@ -144,7 +156,8 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
             print_plugin_debug(self.name, f"Table '{table}' not found in schema. Generating Query without schema")  
             extended_prompt = prompt  
           
-        return self.generateKQLandRun(extended_prompt, session,channel)  
+        query_object= self.generateKQL(extended_prompt, session,channel)  
+        return query_object
   
     def findTable(self, prompt, session,channel):  
         """  
@@ -180,17 +193,30 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         result_object= self.azureOpenAIClient.runPrompt(prompt, session)
         return result_object
   
-    def runprompt(self, prompt, session,channel):  
+    def generateQuery(self, prompt, session,channel):  
         """  
         Convenience method to run the prompt and generate a KQL query with or without schema based on the plugin configuration.  
         :param prompt: Input prompt  
         :param session: Session context  
         :return: Result of the KQL query  
         """ 
-        result=''
+        query_object={}
         if self.loadSchema:
             table = self.findTable(prompt, session,channel)  
-            result= self.generateKQLandRunWithSchemaAndTable(prompt, table, session,channel)
+            query_object= self.generateKQLWithSchemaAndTable(prompt, table, session,channel)
         else: 
-            result= self.generateKQLandRun(prompt, session,channel)
-        return result
+            query_object= self.generateKQL(prompt, session,channel)
+        return query_object
+    def runtask(self, task, session,channel):  
+        """  
+        Convenience method to run the tasks inside the plugin.  
+        :param task: Input task  
+        :param session: Session context  
+        :return: Result of the task execution 
+        """ 
+        if task["capability_name"]=="generateandrunkql":
+            query_object = self.generateQuery( task["task"], session,channel)
+            return self.runKQLQuery(query_object["result"], session,channel)
+        else:
+            if task["capability_name"]=="onlygeneratekql":
+                return self.generateQuery(task["task"], session,channel)

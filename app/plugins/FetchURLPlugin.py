@@ -1,6 +1,6 @@
 from app.plugins.TeisecAgentPlugin import TeisecAgentPlugin  
 import requests  
-from requests.exceptions import MissingSchema,InvalidSchema
+from requests.exceptions import MissingSchema,InvalidSchema,ChunkedEncodingError
 from bs4 import BeautifulSoup  
  
 class FetchURLPlugin(TeisecAgentPlugin):  
@@ -80,9 +80,11 @@ class FetchURLPlugin(TeisecAgentPlugin):
                 return f"Failed to retrieve content. Status code: {response.status_code}" 
         except MissingSchema as e:  
             return f"Failed to retrieve content. URL couldn't be extracted from the prompt."  
-        except InvalidSchema as e:  
+        except InvalidSchema as e: 
             return f"Failed to retrieve content. URL couldn't be extracted from the prompt."  
-    def runprompt(self, prompt, session,channel):  
+        except ChunkedEncodingError as e:  
+            return f"Failed to retrieve content. URL couldn't be extracted from the prompt."  
+    def fetchAndClean(self, prompt, session,channel):  
         """  
         Extract the URL from the prompt and process it.  
   
@@ -106,3 +108,11 @@ class FetchURLPlugin(TeisecAgentPlugin):
             return result_object
         else:
             return result_object
+    def runtask(self, task, session,channel):  
+        """  
+        Convenience method to run the tasks inside the plugin.  
+        :param task: Input task  
+        :param session: Session context  
+        :return: Result of the task execution 
+        """
+        return self.fetchAndClean(task["task"],session,channel)

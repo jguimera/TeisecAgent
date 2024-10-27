@@ -233,7 +233,7 @@ class TeisecAgent:
         self.send_system(channel,{"message":'Prompt decomposed in '+ str(len(decomposed_tasks))+' tasks'})
         for task in decomposed_tasks:
             self.send_system(channel,{"message":'('+task['plugin_name']+') '+task['task']})
-            plugin_response_object = self.get_plugin(task['plugin_name']).runprompt(task['task'], self.session,channel)  
+            plugin_response_object = self.get_plugin(task['plugin_name']).runtask(task, self.session,channel)  
             if plugin_response_object['status']=='error':
                 channel('systemmessage',{"message":f"Error: {plugin_response_object['result'] }"})
                 break   

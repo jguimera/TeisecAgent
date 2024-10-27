@@ -11,6 +11,10 @@ class TeisecAgentPlugin:
         return self.name
     def runprompt(self,prompt,session,channel):
         print(self.prompt)
+    def runtask(self,task,session,channel):
+        result_object={"status":"success","result":"","session_tokens":0}   
+        print(self.task)
+        return result_object
     def pluginhelp(self):
         return "Use 'string' in your prompt to generate and run KQL adhering to the Sentinel schema"
     def plugincapabilities(self):  
