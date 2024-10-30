@@ -98,22 +98,37 @@ class TeisecAgent:
         """  
         # System message to guide the AI assistant on how to decompose the prompt into tasks
         system_message = (  
-                'You are an AI assistant that is part of a system that takes a user prompt and process it with one or more of the capabilities from the available plugins.\n '
-                'You will receive the user prompt and the list of available plugins and its capabilities in JSON format.\n'  
-                'Each plugin might have one or more capabilities.\n'
+                'You are an AI assistant that is part of a system that receives a user prompt and process it with one or more of the capabilities from the available plugins.\n '
+                'You will receive the user prompt and the previous messages of the session.\n'  
                 'Your task is to select the most appropiate plugins and capabilities to fulfill the user prompt.\n'  
+                'Each plugin might have one or more capabilities.\n'
                 'Evaluate if the prompt of the user can be answered by only one of the capabilities or you need to decompose the prompt in multiple sub-prompts(tasks) that will be executed sequentially.\n'
                 'When decomposing the user prompt in multiple tasks take into account that each task will have access to the results of the previous ones as context but the content original prompt is not available.\n'
-                'Make sure you always return an array even if it contains only one task.\n'
                 'Include all the necessary details in the description of each task to achieve the expected results.\n'
+                'Make sure you always return an array even if it contains only one task.\n'
                 'I will parse the output inside a python script so It must be returned using only JSON format and will follow this schema [{"plugin_name":"<selected_plugin_name>","capability_name":"<selected_capability_name>","task":"<Task detailed description>"}]'  
-                'This is the list of available plugins and its capabilities (in JSON format) you have use to perform the decomposition in tasks of the user prompt:\n'
+                'This is the list of available plugins and its capabilities (in JSON format) you have use to perform the decomposition in tasks of the original user prompt:\n'
                 f'{self.plugin_capabilities}'
                 )
-        
+        system_message='''
+            You are an AI assistant designed to process user prompts by utilizing one or more capabilities from the available plugins. You will receive both the user prompt and the session's previous messages. Your task is to select the most appropriate plugins and capabilities to fulfill the user's request.
+            Evaluate whether the user's prompt can be addressed by a single capability or if it needs to be broken down into multiple sequential tasks. When decomposing the prompt, remember that each task will have access to the results of the previous tasks as context, but not the original prompt.
+            Ensure each task description includes all necessary details to achieve the expected results. Always return the output as an array, even if it contains only one task. The output must be in JSON format, adhering to the following schema:
+            [  
+                {  
+                    "plugin_name": "<selected_plugin_name>",  
+                    "capability_name": "<selected_capability_name>",  
+                    "task": "<Task detailed description>"  
+                }  
+            ]  
+            Below is the list of available plugins and their capabilities, which you will use to decompose the user's prompt into tasks:
+
+            '''
+        system_message=system_message+f'{self.plugin_capabilities}'
+        print(system_message)
         # User prompt to be decomposed into tasks
         extended_user_prompt = (
-            'This is the user prompt you need to decompose in tasks following provided instructions:\n'
+            'Decompose the user prompt below in one or multiple tasks:\n'
             f'{prompt}'
             )
         
@@ -189,10 +204,10 @@ class TeisecAgent:
         elif output_type == 'html':  
             extended_prompt = (  
                 'Below you have a prompt and the response associated with it. '  
-                'Based on the prompt I need you to format the provided response to be shown in a browser in HTML format. your response will be embedded inside a chat session.'  
+                'Based on the original prompt I need you to format the provided response to be shown in a browser in HTML format. Your response will be embedded inside a chat session.'  
                 'You do not need to include the whole HTML document, only a div element with the results. No style is needed.'
-                'If the orinal prompt is asking to generate a code, either JSON, KQL or YAML please wrap the code in iside a code block like this: <div class="relative bg-gray-100 rounded-lg dark:bg-gray-100 p-4"><div class="max-h-full"><pre><code id="code-block" class="text-sm text-black-500 dark:text-black-500 whitespace-pre"> Returned Code </code></pre></div></div>'
-                'If the orinal prompt is asking to retrieve some data and the response is a JSON object, you must format it in a table for the HTML output. '  
+                'If the original prompt is asking to only generate a code, either JSON, KQL or YAML please wrap the code in iside a code block like this: <div class="relative bg-gray-100 rounded-lg dark:bg-gray-100 p-4"><div class="max-h-full"><pre><code id="code-block" class="text-sm text-black-500 dark:text-black-500 whitespace-pre"> Returned Code </code></pre></div></div>'
+                'If the original prompt is asking to retrieve some data and the response is a JSON object, you must format it in a table for the HTML output. '  
                 'Make sure that the output html table is responsive. If a field takes more than 40 characters you can truncate it.\n'  
                 f'This is the original prompt (only use it to format the output): {user_input}\n'  
                 f'This is the original prompt response (this is the data you have to format): \n{response}'  

@@ -23,12 +23,13 @@ Every time the user submits a prompt the tool executes this steps:
 - Each task will will be executed by selected plugin. Plugins can make use of the different clients to retrieve data from external platforms/sites and use the LLM to process the prompt (ie. Select the Sentinel table and generate a KQL to be run). 
 - Response processing: Once the plugin sends back the response the underneatch LLM is used to produce a response using the data and the session context in the right format (terminal output/HTML)
 ![Screenshot2](./images/TeisecAgent-PromptFlow.png)
+![Screenshot7](./images/TeisecAgent-decompose.png)
 
 ## Current plugins  
   
 - GPT: Run prompts using Azure OpenAi client. It uses the previous prompts and responses as context.
 - Sentinel KQL: 
-    - Generate and run KQL queries in your Sentinel instance. It uses available tables and actual Sentinel Schema to generate valid KQL queries. Currently KQL queries with only one table are generated. 
+    - Generate (and run) KQL queries in your Sentinel instance. It uses available tables and actual Sentinel Schema to generate valid KQL queries. Currently, KQL queries with only one table are generated. 
     - This plugin will use Azure OpenAI to create an extended Sentinel Schema. THe first time the tool is executed It runs a prompt for each table with 3 sample log entries to extract the table description and the most relevant fields. This task will be perfomed only the first time the tool is run. If you want to avoid this cost and not use the Sentinel Schema feature
 - FetchURL: Fetch and process data from public URLs. The plugin logic removes unnecesary code (Javascript and CSS) from the downloaded site to reduce token consumption.
 

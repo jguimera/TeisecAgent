@@ -45,8 +45,8 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         :return: plugin capabilities object  
         """  
         capabilities={
-            "generateandrunkql":"This capability allows to generate and run KQL queries to retrieve logs and events from Microsoft Sentinel. This capability should be used when the user ask about retrieving new incidents or alerts. Other type of common data is Signin and Audit logs. Do not use this capabilitiy if the user ask for only KQL generation without runing it"
-            ,"onlygeneratekql":"This capability allows to generate KQL queries for Microsoft Sentinel without runing the query. This capability should be used when the user ask about only generating a query for Sentinel without running it."
+            "generateandrunkql":"This capability allows to generate and run one KQL query to retrieve logs and events from Microsoft Sentinel. This capability should be used when the user ask about retrieving new incidents or alerts. Other type of common data is Signin and Audit logs. Do not use this capabilitiy if the user ask for only KQL generation without runing it"
+            ,"onlygeneratekql":"This capability allows to generate one KQL query for Microsoft Sentinel without runing the query. This capability should be used when the user ask about only generating a query for Sentinel without running it."
             }
         return  capabilities
   
