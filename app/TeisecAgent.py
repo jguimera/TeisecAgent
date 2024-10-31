@@ -98,9 +98,13 @@ class TeisecAgent:
         """  
         # System message to guide the AI assistant on how to decompose the prompt into tasks
         system_message='''
-            You are an AI assistant designed to process user prompts by utilizing one or more capabilities from the available plugins. You will receive both the user prompt and the session's previous messages. Your task is to select the most appropriate plugins and capabilities to fulfill the user's request.
-            Evaluate whether the user's prompt can be addressed by a single capability or if it needs to be broken down into multiple sequential tasks. When decomposing the prompt, remember that each task will have access to the results of the previous tasks as context, but not the original prompt.
-            Ensure each task description includes all necessary details to achieve the expected results. Always return the output as an array, even if it contains only one task. The output must be in JSON format, adhering to the following schema:
+            You are an AI assistant designed to process user prompts by utilizing one or more capabilities from the available plugins. You will receive both the user prompt and the session's previous messages. 
+            Your task is to select the most appropriate plugins and capabilities to fulfill the user's request.
+            Evaluate whether the user's prompt can be addressed by a single capability or if it needs to be broken down into multiple sequential tasks.
+            When decomposing the prompt, remember that each task will have access to the results of the previous tasks as context.
+            Ensure each task description includes all necessary details to achieve the expected results. 
+            There is no limit on the length of the Task description.
+            Always return the output as an array, even if it contains only one task. The output must be in JSON format, adhering to the following schema:
             [  
                 {  
                     "plugin_name": "<selected_plugin_name>",  
@@ -109,12 +113,11 @@ class TeisecAgent:
                 }  
             ]  
             Below is the list of available plugins and their capabilities, which you will use to decompose the user's prompt into tasks:
-
             '''
         system_message=system_message+f'{self.plugin_capabilities}'
         # User prompt to be decomposed into tasks
         extended_user_prompt = (
-            'Decompose the user prompt below in one or multiple tasks:\n'
+            'Please, considering the session context, decompose the following user prompt in one or multiple tasks:\n'
             f'{prompt}'
             )
         
@@ -135,6 +138,7 @@ class TeisecAgent:
         else:
             # Clean tags from the result
             selected_plugin_string_clean = task_list_object['result'].replace("```plaintext", "").replace("```json", "").replace("```html", "").replace("```", "")  
+            self.update_session(extended_user_prompt, selected_plugin_string_clean)
             try:
                 # Parse the cleaned result into a JSON object
                 obj = json.loads(selected_plugin_string_clean) 
