@@ -17,11 +17,16 @@ class TeisecAgent:
         self.session = []  
         self.context_window_size = int(os.getenv('ASSISTANT_CONTEXT_WINDOW_SIZE', 5))  
         self.print_intro_message()  
+        if auth_type!=None:
+            self.auth(auth_type)  
+            self.create_clients()  
+            self.load_plugins()  
+            self.load_plugin_capabilities()
+    def launch_auth(self, auth_type):
         self.auth(auth_type)  
         self.create_clients()  
         self.load_plugins()  
         self.load_plugin_capabilities()
-  
     def auth(self, auth_type):  
         """  
         Authenticate with Azure using different credential types based on the provided auth_type.  
@@ -62,7 +67,7 @@ class TeisecAgent:
         )  
   
         azure_endpoint = os.getenv('AZURE_OPENAI_ENDPOINT')  
-        api_key = os.getenv('AZURE_OPENAI_APIKEY')  
+        api_key = os.getenv('AZURE_OPENAI_API_KEY')  
         model_name = os.getenv('AZURE_OPENAI_MODELNAME')  
           
         self.client_list["azure_openai_client"] = AzureOpenAIClient(api_key, azure_endpoint, model_name)  
@@ -238,13 +243,13 @@ class TeisecAgent:
         decomposed_tasks=self.decompose_in_tasks(prompt,channel)
         self.send_system(channel,{"message":'Prompt decomposed in '+ str(len(decomposed_tasks))+' tasks'})
         for task in decomposed_tasks:
-            self.send_system(channel,{"message":'('+task['plugin_name']+') '+task['task']})
+            self.send_system(channel,{"message":'('+task['plugin_name']+'-'+task['capability_name']+') '+task['task']})
             plugin_response_object = self.get_plugin(task['plugin_name']).runtask(task, self.session,channel)  
             if plugin_response_object['status']=='error':
                 channel('systemmessage',{"message":f"Error: {plugin_response_object['result'] }"})
                 break   
             else:
-                self.update_session(prompt, plugin_response_object['result'])
+                self.update_session(task['task'], plugin_response_object['result'])
                 processed_response = self.process_response(output_type, prompt, str(plugin_response_object['result']),channel)
                 task_results.append(processed_response)  
                 self.send_response(channel,{"message":processed_response})     

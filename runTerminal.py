@@ -12,10 +12,10 @@ parser.add_argument("auth", choices=["interactive", "client_secret", "default"],
 args = parser.parse_args()  
 auth_type = args.auth  
 teisecAgent= TeisecAgent(auth_type)
-    
+def terminalchannel(messagetype,message_object):
+    print_info(message_object['message'])          
 # AI Assistant Start  
 def main():
-    
     print_help("Terminal Instructions:")  
     print_help("Use 'bye' to exit.")  
     print_help("Use 'clear' to clear the session")  
@@ -36,7 +36,7 @@ def main():
                     print_help(plugin_help)
             else:  
                 # Run Prompt  
-                processed_responses=teisecAgent.run_prompt('terminal',user_input)
+                processed_responses=teisecAgent.run_prompt('terminal',user_input,terminalchannel)
                 for response in processed_responses:
                     print_response(str(response))  
 if __name__ == "__main__":
