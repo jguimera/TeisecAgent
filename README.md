@@ -101,7 +101,7 @@ Below you can find some prompts inside a session:
     AZURE_WORKSPACE_ID=your-azure-workspace-id
     #Azure Open AI details  
     AZURE_OPENAI_ENDPOINT=your-azure-openai-endpoint  
-    AZURE_OPENAI_APIKEY=your-azure-openai-apikey  
+    AZURE_OPENAI_API_KEY=your-azure-openai-apikey  
     AZURE_OPENAI_MODELNAME=your-azure-openai-modelname  
     ASSISTANT_CONTEXT_WINDOW_SIZE=5  
     #Plugins Config

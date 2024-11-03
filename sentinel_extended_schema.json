@@ -1,0 +1,3479 @@
+{
+    "Heartbeat": {
+        "tableDescription": "This table contains heartbeat information from various computers connected to Microsoft Sentinel.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant in Microsoft Azure.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "SourceSystem",
+                "fieldType": "string",
+                "description": "The source system from which the heartbeat data is collected.",
+                "sampleValue": "OpsManager"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the heartbeat data was generated.",
+                "sampleValue": "2024-11-02T16:35:51Z"
+            },
+            {
+                "fieldName": "SourceComputerId",
+                "fieldType": "string",
+                "description": "The unique identifier for the source computer.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "ComputerIP",
+                "fieldType": "string",
+                "description": "The public IP address of the computer.",
+                "sampleValue": "xx.xx.xx.xx"
+            },
+            {
+                "fieldName": "Computer",
+                "fieldType": "string",
+                "description": "The name of the computer generating the heartbeat.",
+                "sampleValue": "-LAPTOP"
+            },
+            {
+                "fieldName": "OSType",
+                "fieldType": "string",
+                "description": "The operating system type of the computer.",
+                "sampleValue": "Windows"
+            },
+            {
+                "fieldName": "OSMajorVersion",
+                "fieldType": "string",
+                "description": "The major version number of the operating system.",
+                "sampleValue": "10"
+            },
+            {
+                "fieldName": "Version",
+                "fieldType": "string",
+                "description": "The version number of the operating system.",
+                "sampleValue": "10.20.18069.0"
+            },
+            {
+                "fieldName": "IsGatewayInstalled",
+                "fieldType": "bool",
+                "description": "Indicates whether a gateway is installed on the computer.",
+                "sampleValue": false
+            },
+            {
+                "fieldName": "RemoteIPCountry",
+                "fieldType": "string",
+                "description": "The country from which the remote IP address originates.",
+                "sampleValue": "Spain"
+            },
+            {
+                "fieldName": "ResourceId",
+                "fieldType": "string",
+                "description": "The unique identifier for the resource associated with the heartbeat.",
+                "sampleValue": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/-RG/providers/Microsoft.HybridCompute/machines/-LAPTOP"
+            }
+        ]
+    },
+    "Operation": {
+        "tableDescription": "This table contains information about operations performed within Microsoft Sentinel.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "Unique identifier for the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "SourceSystem",
+                "fieldType": "string",
+                "description": "The source system from which the operation originates.",
+                "sampleValue": "Azure"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the operation was generated.",
+                "sampleValue": "2024-10-21T00:00:00Z"
+            },
+            {
+                "fieldName": "OperationStatus",
+                "fieldType": "string",
+                "description": "The status of the operation (e.g., Info, Error).",
+                "sampleValue": "Info"
+            },
+            {
+                "fieldName": "Detail",
+                "fieldType": "string",
+                "description": "Detailed information about the operation.",
+                "sampleValue": "Benefit amount used: 0.000202338 GB"
+            },
+            {
+                "fieldName": "OperationCategory",
+                "fieldType": "string",
+                "description": "The category of the operation (e.g., Billing).",
+                "sampleValue": "Billing"
+            },
+            {
+                "fieldName": "OperationKey",
+                "fieldType": "string",
+                "description": "Key that identifies the type of operation performed.",
+                "sampleValue": "Benefit type used: MicrosoftDefender"
+            },
+            {
+                "fieldName": "ErrorId",
+                "fieldType": "string",
+                "description": "Identifier for any error that occurred during the operation.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "CorrelationId",
+                "fieldType": "string",
+                "description": "Identifier used to correlate related operations.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "MG",
+                "fieldType": "string",
+                "description": "Management group associated with the operation.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "ManagementGroupName",
+                "fieldType": "string",
+                "description": "Name of the management group associated with the operation.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "Type",
+                "fieldType": "string",
+                "description": "Type of the operation (e.g., Operation).",
+                "sampleValue": "Operation"
+            }
+        ]
+    },
+    "AzureActivity": {
+        "tableDescription": "This table contains activity logs for Azure resources, detailing various operations performed across the Azure platform.",
+        "schemaDetails": [
+            {
+                "fieldName": "OperationNameValue",
+                "fieldType": "string",
+                "description": "The name of the operation being performed.",
+                "sampleValue": "Microsoft.Network/VirtualNetworks/TaggedTrafficConsumers/Validate/Action"
+            },
+            {
+                "fieldName": "Level",
+                "fieldType": "string",
+                "description": "The severity level of the operation.",
+                "sampleValue": "Information"
+            },
+            {
+                "fieldName": "ActivityStatus",
+                "fieldType": "string",
+                "description": "The status of the activity.",
+                "sampleValue": "Success"
+            },
+            {
+                "fieldName": "ResourceGroup",
+                "fieldType": "string",
+                "description": "The name of the resource group where the activity occurred.",
+                "sampleValue": "RG-PRODUCT-ES-01"
+            },
+            {
+                "fieldName": "SubscriptionId",
+                "fieldType": "string",
+                "description": "The ID of the Azure subscription where the activity took place.",
+                "sampleValue": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+            },
+            {
+                "fieldName": "Caller",
+                "fieldType": "string",
+                "description": "The identity of the caller who initiated the operation.",
+                "sampleValue": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+            },
+            {
+                "fieldName": "CallerIpAddress",
+                "fieldType": "string",
+                "description": "The IP address from which the operation was called.",
+                "sampleValue": "XX.XXX.XXX.XXX"
+            },
+            {
+                "fieldName": "Category",
+                "fieldType": "string",
+                "description": "The category of the operation.",
+                "sampleValue": "Administrative"
+            },
+            {
+                "fieldName": "EventSubmissionTimestamp",
+                "fieldType": "datetime",
+                "description": "The timestamp when the event was submitted.",
+                "sampleValue": "2024-11-02T12:32:30.2675384Z"
+            },
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The ID of the tenant in which the operation was performed.",
+                "sampleValue": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+            },
+            {
+                "fieldName": "SourceSystem",
+                "fieldType": "string",
+                "description": "The source system that generated the activity log.",
+                "sampleValue": "Azure"
+            },
+            {
+                "fieldName": "Properties",
+                "fieldType": "string",
+                "description": "Additional properties related to the operation.",
+                "sampleValue": "{\"eventCategory\":\"Administrative\",\"entity\":\"/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX/resourceGroups/RG-PRODUCT-ES-01/providers/microsoft.network/virtualNetworks/vnet-bvmdrfunctest/taggedTrafficConsumers/Microsoft.Storage.eastus.slice5.instance0\",\"message\":\"microsoft.network/virtualNetworks/taggedTrafficConsumers/validate/action\"}"
+            }
+        ]
+    },
+    "Update": {
+        "tableDescription": "This table contains information about updates applied to systems monitored by Azure Arc and Azure Monitor.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "SourceSystem",
+                "fieldType": "string",
+                "description": "The source system from which the update information is derived.",
+                "sampleValue": "OpsManager"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the update information was generated.",
+                "sampleValue": "2024-11-02T16:59:57Z"
+            },
+            {
+                "fieldName": "ManagementGroupName",
+                "fieldType": "string",
+                "description": "The name of the management group associated with the updates.",
+                "sampleValue": "AOI-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "Title",
+                "fieldType": "string",
+                "description": "The title or description of the update.",
+                "sampleValue": "2024-10 Actualización acumulativa de .NET Framework para Windows 11"
+            },
+            {
+                "fieldName": "MSRCSeverity",
+                "fieldType": "string",
+                "description": "The severity level assigned by the Microsoft Security Response Center.",
+                "sampleValue": "Important"
+            },
+            {
+                "fieldName": "Classification",
+                "fieldType": "string",
+                "description": "The classification of the update, such as security updates or regular updates.",
+                "sampleValue": "Security Updates"
+            },
+            {
+                "fieldName": "PublishedDate",
+                "fieldType": "datetime",
+                "description": "The date when the update was published.",
+                "sampleValue": "2024-10-07T23:00:00Z"
+            },
+            {
+                "fieldName": "UpdateState",
+                "fieldType": "string",
+                "description": "The current state of the update (e.g., Installed, Needed).",
+                "sampleValue": "Installed"
+            },
+            {
+                "fieldName": "Product",
+                "fieldType": "string",
+                "description": "The product that the update is associated with.",
+                "sampleValue": "Windows 11"
+            },
+            {
+                "fieldName": "KBID",
+                "fieldType": "string",
+                "description": "The Knowledge Base article ID associated with the update.",
+                "sampleValue": "5044033"
+            },
+            {
+                "fieldName": "ResourceGroup",
+                "fieldType": "string",
+                "description": "The resource group associated with the update.",
+                "sampleValue": "BV-VM-ARC"
+            }
+        ]
+    },
+    "SigninLogs": {
+        "tableDescription": "This table contains logs of user sign-in activities en Entra ID (Azure Active Directory), including details about the sign-in process and the resources accessed.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier of the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "SourceSystem",
+                "fieldType": "string",
+                "description": "The source system that generated the log entry.",
+                "sampleValue": "Azure AD"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the log entry was generated.",
+                "sampleValue": "2024-11-02T16:56:46Z"
+            },
+            {
+                "fieldName": "OperationName",
+                "fieldType": "string",
+                "description": "The name of the operation performed during the sign-in.",
+                "sampleValue": "Sign-in activity"
+            },
+            {
+                "fieldName": "ResultType",
+                "fieldType": "string",
+                "description": "The result of the sign-in operation. ResultType 0 means sign=in is successful.",
+                "sampleValue": "0"
+            },
+            {
+                "fieldName": "Identity",
+                "fieldType": "string",
+                "description": "The name of the user who attempted to sign in.",
+                "sampleValue": "User Name"
+            },
+            {
+                "fieldName": "AppDisplayName",
+                "fieldType": "string",
+                "description": "The display name of the application that was accessed.",
+                "sampleValue": "Microsoft Azure CLI"
+            },
+            {
+                "fieldName": "IPAddress",
+                "fieldType": "string",
+                "description": "The IP address from which the sign-in attempt originated.",
+                "sampleValue": "xxx.xxx.xxx.xxx"
+            },
+            {
+                "fieldName": "IsInteractive",
+                "fieldType": "bool",
+                "description": "Indicates whether the sign-in was interactive.",
+                "sampleValue": true
+            },
+            {
+                "fieldName": "UserAgent",
+                "fieldType": "string",
+                "description": "The user agent string of the client application used for the sign-in.",
+                "sampleValue": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+            },{
+                "fieldName": "UserPrincipalName",
+                "fieldType": "string",
+                "description": "The principal name of the user who attempted the sign-in.",
+                "sampleValue": "jaime.admin@1233ssa.onmicrosoft.com"
+            },
+            {
+                "fieldName": "Status",
+                "fieldType": "dynamic",
+                "description": "Details about the status of the sign-in attempt.",
+                "sampleValue": "{\"errorCode\":0,\"additionalDetails\":\"MFA requirement satisfied by claim in the token\"}"
+            }
+        ]
+    },
+    "UpdateSummary": {
+        "tableDescription": "This table summarizes the update status of computers managed by Azure Arc an Update Manager.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "SourceSystem",
+                "fieldType": "string",
+                "description": "The source system from which the data is collected.",
+                "sampleValue": "OpsManager"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the record was generated.",
+                "sampleValue": "2024-10-24T09:18:25Z"
+            },
+            {
+                "fieldName": "ManagementGroupName",
+                "fieldType": "string",
+                "description": "The name of the management group associated with the tenant.",
+                "sampleValue": "AOI-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "SourceComputerId",
+                "fieldType": "string",
+                "description": "The unique identifier for the computer source.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "LastUpdateApplied",
+                "fieldType": "datetime",
+                "description": "The timestamp of the last update that was applied.",
+                "sampleValue": "2024-10-24T08:55:20Z"
+            },
+            {
+                "fieldName": "OldestMissingSecurityUpdateInDays",
+                "fieldType": "int",
+                "description": "The number of days since the oldest missing security update.",
+                "sampleValue": 0
+            },
+            {
+                "fieldName": "WindowsUpdateSetting",
+                "fieldType": "string",
+                "description": "The configuration setting for Windows Updates.",
+                "sampleValue": "Scheduled installation"
+            },
+            {
+                "fieldName": "Computer",
+                "fieldType": "string",
+                "description": "The name of the computer.",
+                "sampleValue": "xxxxxxxx"
+            },
+            {
+                "fieldName": "OsVersion",
+                "fieldType": "string",
+                "description": "The version of the operating system installed on the computer.",
+                "sampleValue": "Microsoft Windows 11 Pro"
+            },
+            {
+                "fieldName": "CriticalUpdatesMissing",
+                "fieldType": "int",
+                "description": "The number of critical updates that are missing.",
+                "sampleValue": 0
+            },
+            {
+                "fieldName": "RestartPending",
+                "fieldType": "bool",
+                "description": "Indicates whether a restart is pending after updates.",
+                "sampleValue": true
+            }
+        ]
+    },
+    "AuditLogs": {
+        "tableDescription": "This table contains logs of audit activities within Entra ID (Azure Active Directory), capturing operations related to user and group management.",
+        "schemaDetails": [
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the log entry was generated.",
+                "sampleValue": "2024-10-10T08:03:01Z"
+            },
+            {
+                "fieldName": "OperationName",
+                "fieldType": "string",
+                "description": "The name of the operation that was performed.",
+                "sampleValue": "Update user"
+            },
+            {
+                "fieldName": "Category",
+                "fieldType": "string",
+                "description": "The category of the operation (e.g., UserManagement, GroupManagement).",
+                "sampleValue": "UserManagement"
+            },
+            {
+                "fieldName": "Identity",
+                "fieldType": "string",
+                "description": "The identity of the service or user that performed the operation.",
+                "sampleValue": "MS-PIM"
+            },
+            {
+                "fieldName": "LoggedByService",
+                "fieldType": "string",
+                "description": "The service that logged the operation.",
+                "sampleValue": "Core Directory"
+            },
+            {
+                "fieldName": "Result",
+                "fieldType": "string",
+                "description": "The outcome of the operation (e.g., success or failure).",
+                "sampleValue": "success"
+            },
+            {
+                "fieldName": "ResultReason",
+                "fieldType": "string",
+                "description": "The reason the operation (e.g., New Access or user Request).",
+                "sampleValue": "success"
+            },
+            {
+                "fieldName": "ActivityDisplayName",
+                "fieldType": "string",
+                "description": "A human-readable name of the activity performed.",
+                "sampleValue": "Update user"
+            }, {
+                "fieldName": "InitiatedBy",
+                "fieldType": "dynamic",
+                "description": "User or Service Executing the action",
+                "sampleValue": "{\"user\":{\"displayName\":null,\"id\":\"b89e05ce-ee2-4ad6-877c-2fc03eda70c8\",\"userPrincipalName\":\"ejuenjose@bpepe.com\",\"ipAddress\":\"30.33.29.96\",\"roles\":[]}}"
+            }, {
+                "fieldName": "TargetResources",
+                "fieldType": "dynamic",
+                "description": "Affected resources of the Operation",
+                "sampleValue": " [{\"id\":\"b76f6f91-ssa-f22-b788-80075be331d8\",\"displayName\":\"TenantName\",\"type\":\"Directory\",\"modifiedProperties\":[{\"displayName\":\"Included Updated Properties\",\"oldValue\":null,\"newValue\":\"asd\"}],\"administrativeUnits\":[]}]"
+            }
+            
+        ]
+    },
+    "ThreatIntelligenceIndicator": {
+        "tableDescription": "This table contains threat intelligence indicators used for identifying potential security threats.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "Unique identifier for the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The time when the indicator was generated.",
+                "sampleValue": "2024-11-03T03:46:03Z"
+            },
+            {
+                "fieldName": "SourceSystem",
+                "fieldType": "string",
+                "description": "The source system that generated the indicator.",
+                "sampleValue": "Microsoft Defender Threat Intelligence"
+            },
+            {
+                "fieldName": "Action",
+                "fieldType": "string",
+                "description": "The action associated with the indicator.",
+                "sampleValue": "alert"
+            },
+            {
+                "fieldName": "ConfidenceScore",
+                "fieldType": "real",
+                "description": "The confidence level of the indicator, ranging from 0 to 100.",
+                "sampleValue": 100
+            },
+            {
+                "fieldName": "Description",
+                "fieldType": "string",
+                "description": "A description of the threat or indicator.",
+                "sampleValue": "An attacker used a brute force attack to gain access to a service or device."
+            },
+            {
+                "fieldName": "ExternalIndicatorId",
+                "fieldType": "string",
+                "description": "An identifier for the indicator from an external source.",
+                "sampleValue": "indicator--xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "IndicatorId",
+                "fieldType": "string",
+                "description": "Unique identifier for the threat intelligence indicator.",
+                "sampleValue": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "ThreatType",
+                "fieldType": "string",
+                "description": "Type of threat associated with the indicator.",
+                "sampleValue": "Botnet"
+            },
+            {
+                "fieldName": "Active",
+                "fieldType": "bool",
+                "description": "Indicates whether the indicator is currently active.",
+                "sampleValue": true
+            },
+            {
+                "fieldName": "Tags",
+                "fieldType": "string",
+                "description": "Tags associated with the indicator for categorization.",
+                "sampleValue": "[\"honeypot\"]"
+            },
+            {
+                "fieldName": "TrafficLightProtocolLevel",
+                "fieldType": "string",
+                "description": "Indicates the sensitivity of the information (traffic light protocol).",
+                "sampleValue": "green"
+            }
+        ]
+    },
+    "SecurityAlert": {
+        "tableDescription": "This table contains security alerts generated by Microsoft Sentinel. This table is related to SecurityIncident. SecurityIncident table field 'AlertIds' is a list of 'SystemAlertId' from this table. This table contains the Entities realted to a Security Alert.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant.",
+                "sampleValue": "ba8aca5e-fbeb-42fa-befc-d6ca23880538"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The time when the alert was generated.",
+                "sampleValue": "2024-10-01 09:01:54.097537+0000"
+            },
+            {
+                "fieldName": "DisplayName",
+                "fieldType": "string",
+                "description": "The display name of the alert.",
+                "sampleValue": "SEN-22: Identity - Alert for jaime.admin"
+            },
+            {
+                "fieldName": "AlertName",
+                "fieldType": "string",
+                "description": "The name of the alert.",
+                "sampleValue": "SEN-22: Identity - Alert for jaime.admin"
+            },
+            {
+                "fieldName": "AlertSeverity",
+                "fieldType": "string",
+                "description": "The severity level of the alert.",
+                "sampleValue": "Medium"
+            },
+            {
+                "fieldName": "Description",
+                "fieldType": "string",
+                "description": "A detailed description of the alert.",
+                "sampleValue": "This rule identifies Microsoft Identity Protection alerts and identifies historical information before sending for analysis\n\nSuspicious Login by jaime.admin@asdasfgf22.onmicrosoft.com\n\nMITRE: T1078\nCategory: Azure Identity Protection\n"
+            },
+            {
+                "fieldName": "ProviderName",
+                "fieldType": "string",
+                "description": "The name of the provider generating the alert.",
+                "sampleValue": "ASI Scheduled Alerts"
+            },
+            {
+                "fieldName": "VendorName",
+                "fieldType": "string",
+                "description": "The name of the vendor associated with the alert.",
+                "sampleValue": "Microsoft"
+            },
+            {
+                "fieldName": "VendorOriginalId",
+                "fieldType": "string",
+                "description": "The original external identifier from the vendor for the alert. Don't use it t correlate with SecurityIncident table",
+                "sampleValue": "e8e07c4a-db23-4164-a40d-398ed8da0cb1"
+            },
+            {
+                "fieldName": "SystemAlertId",
+                "fieldType": "string",
+                "description": "The unique identifier for the security alert. Use this field to correlate with SecurityIncident Table, field AlertIds",
+                "sampleValue": "25ef2cba-c3f8-68b6-37f0-f21605ed1564"
+            },
+            {
+                "fieldName": "AlertType",
+                "fieldType": "string",
+                "description": "The type of alert.",
+                "sampleValue": "ba8aca5e-fbeb-42fa-befc-d6ca23880538_c19e6c2e-ae4c-46aa-b642-ab397eec49a2"
+            },
+            {
+                "fieldName": "ConfidenceLevel",
+                "fieldType": "string",
+                "description": "The confidence level of the alert.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "ConfidenceScore",
+                "fieldType": "real",
+                "description": "The confidence score of the alert.",
+                "sampleValue": null
+            },
+            {
+                "fieldName": "IsIncident",
+                "fieldType": "bool",
+                "description": "Indicates whether the alert is part of an incident.",
+                "sampleValue": false
+            },
+            {
+                "fieldName": "RemediationSteps",
+                "fieldType": "string",
+                "description": "Steps recommended for remediation of the alert.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "Entities",
+                "fieldType": "dynamic",
+                "description": "Entities associated with the alert.",
+                "sampleValue": "[{\"$id\":\"2\",\"Name\":\"jaime.admin\",\"UPNSuffix\":\"sdsdsa11.onmicrosoft.com\",\"Type\":\"account\"},{\"$id\":\"3\",\"MailboxPrimaryAddress\":\"jaime.admin@sdsdsa11.onmicrosoft.com\",\"Type\":\"mailbox\"},{\"$id\":\"4\",\"Name\":\"Azure Portal\",\"Type\":\"cloud-application\"}]"
+            },
+            {
+                "fieldName": "SourceSystem",
+                "fieldType": "string",
+                "description": "The source system of the alert.",
+                "sampleValue": "Detection"
+            },
+            {
+                "fieldName": "WorkspaceSubscriptionId",
+                "fieldType": "string",
+                "description": "The subscription ID of the workspace.",
+                "sampleValue": "f8013a22-asas1-4208-91cf-a7de918a7f72"
+            },
+            {
+                "fieldName": "WorkspaceResourceGroup",
+                "fieldType": "string",
+                "description": "The resource group of the workspace.",
+                "sampleValue": "rg-bv-sentinel"
+            },
+            {
+                "fieldName": "ExtendedLinks",
+                "fieldType": "string",
+                "description": "Links for additional context regarding the alert.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "ProductName",
+                "fieldType": "string",
+                "description": "The name of the product generating the alert.",
+                "sampleValue": "Azure Sentinel"
+            },
+            {
+                "fieldName": "ProductComponentName",
+                "fieldType": "string",
+                "description": "The name of the component of the product generating the alert.",
+                "sampleValue": "Scheduled Alerts"
+            },
+            {
+                "fieldName": "AlertLink",
+                "fieldType": "string",
+                "description": "A link to additional details about the alert.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "Status",
+                "fieldType": "string",
+                "description": "The current status of the alert.",
+                "sampleValue": "New"
+            },
+            {
+                "fieldName": "CompromisedEntity",
+                "fieldType": "string",
+                "description": "The entity that has been compromised, if applicable.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "Tactics",
+                "fieldType": "string",
+                "description": "The tactics associated with the alert according to the MITRE framework.",
+                "sampleValue": "InitialAccess, Persistence"
+            },
+            {
+                "fieldName": "Techniques",
+                "fieldType": "dynamic",
+                "description": "Techniques associated with the alert according to the MITRE framework.",
+                "sampleValue": "[\"T1078\",\"T1098\"]"
+            },
+            {
+                "fieldName": "SubTechniques",
+                "fieldType": "string",
+                "description": "Any sub-techniques associated with the alert.",
+                "sampleValue": ""
+            }
+        ]
+    },
+    "BehaviorAnalytics": {
+        "tableDescription": "This table contains behavior analytics data (UEBA)related to user activities and actions within Microsoft Sentinel.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant in which the activities occurred.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "SourceRecordId",
+                "fieldType": "string",
+                "description": "A unique identifier for the source record of the activity.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the activity was generated.",
+                "sampleValue": "2024-11-02T20:40:31Z"
+            },
+            {
+                "fieldName": "TimeProcessed",
+                "fieldType": "datetime",
+                "description": "The timestamp when the activity was processed.",
+                "sampleValue": "2024-11-02T20:49:56Z"
+            },
+            {
+                "fieldName": "ActivityType",
+                "fieldType": "string",
+                "description": "The type of activity that was performed (e.g., LogOn, Administrative).",
+                "sampleValue": "LogOn"
+            },
+            {
+                "fieldName": "ActionType",
+                "fieldType": "string",
+                "description": "The specific action taken during the activity.",
+                "sampleValue": "Sign-in"
+            },
+            {
+                "fieldName": "UserName",
+                "fieldType": "string",
+                "description": "The name of the user who performed the activity.",
+                "sampleValue": "user."
+            },
+            {
+                "fieldName": "UserPrincipalName",
+                "fieldType": "string",
+                "description": "The principal name associated with the user.",
+                "sampleValue": "user.@example.com"
+            },
+            {
+                "fieldName": "EventSource",
+                "fieldType": "string",
+                "description": "The source from which the event originated (e.g., Azure AD, Azure).",
+                "sampleValue": "Azure AD"
+            },
+            {
+                "fieldName": "SourceIPAddress",
+                "fieldType": "string",
+                "description": "The IP address from which the activity originated.",
+                "sampleValue": "xx.xx.xx.xx"
+            },
+            {
+                "fieldName": "SourceIPLocation",
+                "fieldType": "string",
+                "description": "The geographical location of the source IP address.",
+                "sampleValue": "city, country"
+            },
+            {
+                "fieldName": "InvestigationPriority",
+                "fieldType": "int",
+                "description": "The priority level assigned to the investigation of the activity.",
+                "sampleValue": 0
+            }
+        ]
+    },
+    "DeviceInfo": {
+        "tableDescription": "This table contains information about devices managed within Microsoft Defender for Endpoint (XDR)",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant associated with the device.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "DeviceId",
+                "fieldType": "string",
+                "description": "The unique identifier for the device.",
+                "sampleValue": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "DeviceName",
+                "fieldType": "string",
+                "description": "The name of the device.",
+                "sampleValue": "-device-name"
+            },
+            {
+                "fieldName": "OSPlatform",
+                "fieldType": "string",
+                "description": "The operating system platform of the device.",
+                "sampleValue": "Windows11"
+            },
+            {
+                "fieldName": "OSVersion",
+                "fieldType": "string",
+                "description": "The version of the operating system running on the device.",
+                "sampleValue": "10.0"
+            },
+            {
+                "fieldName": "DeviceCategory",
+                "fieldType": "string",
+                "description": "The category of the device (e.g., Endpoint, Server).",
+                "sampleValue": "Endpoint"
+            },
+            {
+                "fieldName": "DeviceSubtype",
+                "fieldType": "string",
+                "description": "The subtype of the device (e.g., Workstation, Server).",
+                "sampleValue": "Workstation"
+            },
+            {
+                "fieldName": "OSBuild",
+                "fieldType": "long",
+                "description": "The build number of the operating system.",
+                "sampleValue": 22621
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the device information was generated.",
+                "sampleValue": "2024-11-01T21:24:56Z"
+            },
+            {
+                "fieldName": "OnboardingStatus",
+                "fieldType": "string",
+                "description": "The onboarding status of the device.",
+                "sampleValue": "Can be onboarded"
+            },
+            {
+                "fieldName": "Vendor",
+                "fieldType": "string",
+                "description": "The manufacturer of the device.",
+                "sampleValue": "Microsoft"
+            },
+            {
+                "fieldName": "ExposureLevel",
+                "fieldType": "string",
+                "description": "The level of exposure of the device.",
+                "sampleValue": "None"
+            }
+        ]
+    },
+    "DeviceEvents": {
+        "tableDescription": "This table contains events from the Devices  managed within Microsoft Defender for Endpoint (XDR)",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "Unique identifier for the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "AccountDomain",
+                "fieldType": "string",
+                "description": "Domain of the account that generated the event.",
+                "sampleValue": "example.com"
+            },
+            {
+                "fieldName": "AccountName",
+                "fieldType": "string",
+                "description": "Name of the account that generated the event.",
+                "sampleValue": "user123"
+            },
+            {
+                "fieldName": "ActionType",
+                "fieldType": "string",
+                "description": "Type of action performed.",
+                "sampleValue": "CreateRemoteThreadApiCall"
+            },
+            {
+                "fieldName": "DeviceId",
+                "fieldType": "string",
+                "description": "Unique identifier for the device.",
+                "sampleValue": "e4945af0e37382879f473029a90e00f0d08e62d5"
+            },
+            {
+                "fieldName": "DeviceName",
+                "fieldType": "string",
+                "description": "Name of the device where the event occurred.",
+                "sampleValue": "device123.example.com"
+            },
+            {
+                "fieldName": "FileName",
+                "fieldType": "string",
+                "description": "Name of the file involved in the event.",
+                "sampleValue": "example.exe"
+            },
+            {
+                "fieldName": "FolderPath",
+                "fieldType": "string",
+                "description": "Path of the folder where the file is located.",
+                "sampleValue": "C:\\Program Files\\Example"
+            },
+            {
+                "fieldName": "ProcessId",
+                "fieldType": "long",
+                "description": "Identifier for the process that generated the event.",
+                "sampleValue": 1234
+            },
+            {
+                "fieldName": "Timestamp",
+                "fieldType": "datetime",
+                "description": "Timestamp of when the event occurred.",
+                "sampleValue": "2024-11-01T23:27:39Z"
+            },
+            {
+                "fieldName": "MD5",
+                "fieldType": "string",
+                "description": "MD5 hash of the file involved in the event.",
+                "sampleValue": "dc32aba4669eafb22fcacd5ec836a107"
+            },
+            {
+                "fieldName": "ReportId",
+                "fieldType": "long",
+                "description": "Identifier for the report associated with the event.",
+                "sampleValue": 36410
+            }
+        ]
+    },
+    "DeviceRegistryEvents": {
+        "tableDescription": "This table logs events related to device registry modifications, including details about the initiating process and its environment from the devices managed within Microsoft Defender for Endpoint (XDR).",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier of the tenant in which the event occurred.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "ActionType",
+                "fieldType": "string",
+                "description": "The type of action performed on the registry, such as setting or deleting a value.",
+                "sampleValue": "RegistryValueSet"
+            },
+            {
+                "fieldName": "DeviceId",
+                "fieldType": "string",
+                "description": "The unique identifier of the device where the registry event took place.",
+                "sampleValue": "eefb8d73-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "DeviceName",
+                "fieldType": "string",
+                "description": "The name of the device where the event was logged.",
+                "sampleValue": "device01.ad.example.com"
+            },
+            {
+                "fieldName": "InitiatingProcessAccountDomain",
+                "fieldType": "string",
+                "description": "The domain of the account that initiated the registry action.",
+                "sampleValue": "nt authority"
+            },
+            {
+                "fieldName": "InitiatingProcessAccountName",
+                "fieldType": "string",
+                "description": "The name of the account that initiated the process.",
+                "sampleValue": "user123"
+            },
+            {
+                "fieldName": "InitiatingProcessCommandLine",
+                "fieldType": "string",
+                "description": "The command line used to start the initiating process.",
+                "sampleValue": "WindowsAzureGuestAgent.exe"
+            },
+            {
+                "fieldName": "InitiatingProcessFileName",
+                "fieldType": "string",
+                "description": "The name of the file that initiated the process.",
+                "sampleValue": "windowsazureguestagent.exe"
+            },
+            {
+                "fieldName": "RegistryKey",
+                "fieldType": "string",
+                "description": "The registry key that was modified.",
+                "sampleValue": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Example\\GuestAgent"
+            },
+            {
+                "fieldName": "RegistryValueName",
+                "fieldType": "string",
+                "description": "The name of the registry value that was modified.",
+                "sampleValue": "HeartbeatLastStatusUpdateTime"
+            },
+            {
+                "fieldName": "RegistryValueData",
+                "fieldType": "string",
+                "description": "The new data for the registry value after the modification.",
+                "sampleValue": "2024-11-02T14:40:25.6760000Z"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the event was generated.",
+                "sampleValue": "2024-11-02T14:40:25.677538Z"
+            }
+        ]
+    },
+    "DeviceNetworkEvents": {
+        "tableDescription": "This table captures network events from devices, detailing actions taken, processes involved, and related network information  from the devices managed within Microsoft Defender for Endpoint (XDR).",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "Unique identifier for the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "ActionType",
+                "fieldType": "string",
+                "description": "Type of action that was performed on the network.",
+                "sampleValue": "ConnectionSuccess"
+            },
+            {
+                "fieldName": "DeviceId",
+                "fieldType": "string",
+                "description": "Unique identifier for the device involved in the network event.",
+                "sampleValue": "xxxxxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "DeviceName",
+                "fieldType": "string",
+                "description": "Name of the device where the event occurred.",
+                "sampleValue": "device01.example.com"
+            },
+            {
+                "fieldName": "InitiatingProcessAccountName",
+                "fieldType": "string",
+                "description": "Name of the account that initiated the process.",
+                "sampleValue": "user123"
+            },
+            {
+                "fieldName": "InitiatingProcessCommandLine",
+                "fieldType": "string",
+                "description": "Command line used to execute the initiating process.",
+                "sampleValue": "process.exe"
+            },
+            {
+                "fieldName": "LocalIP",
+                "fieldType": "string",
+                "description": "Local IP address of the device.",
+                "sampleValue": "192.168.1.1"
+            },
+            {
+                "fieldName": "LocalPort",
+                "fieldType": "int",
+                "description": "Local port number used for the connection.",
+                "sampleValue": 55536
+            },
+            {
+                "fieldName": "RemoteIP",
+                "fieldType": "string",
+                "description": "IP address of the remote device involved in the network event.",
+                "sampleValue": "203.0.113.5"
+            },
+            {
+                "fieldName": "RemotePort",
+                "fieldType": "int",
+                "description": "Port number of the remote device used for the connection.",
+                "sampleValue": 80
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "Timestamp when the event was generated.",
+                "sampleValue": "2024-11-01T23:27:44Z"
+            },
+            {
+                "fieldName": "IsInitiatingProcessRemoteSession",
+                "fieldType": "bool",
+                "description": "Indicates whether the initiating process is a remote session.",
+                "sampleValue": false
+            }
+        ]
+    },
+    "DeviceProcessEvents": {
+        "tableDescription": " This table contains Process details from the devices managed within Microsoft Defender for Endpoint (XDR).",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant in the system.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "AccountDomain",
+                "fieldType": "string",
+                "description": "The domain of the account that initiated the process.",
+                "sampleValue": "nt authority"
+            },
+            {
+                "fieldName": "AccountName",
+                "fieldType": "string",
+                "description": "The name of the account that initiated the process.",
+                "sampleValue": "user_name"
+            },
+            {
+                "fieldName": "ActionType",
+                "fieldType": "string",
+                "description": "The type of action performed, such as process creation.",
+                "sampleValue": "ProcessCreated"
+            },
+            {
+                "fieldName": "DeviceId",
+                "fieldType": "string",
+                "description": "The unique identifier for the device where the process was executed.",
+                "sampleValue": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "DeviceName",
+                "fieldType": "string",
+                "description": "The name of the device where the process was executed.",
+                "sampleValue": "device_name"
+            },
+            {
+                "fieldName": "FileName",
+                "fieldType": "string",
+                "description": "The name of the file associated with the process.",
+                "sampleValue": "WaSecAgentProv.exe"
+            },
+            {
+                "fieldName": "ProcessCommandLine",
+                "fieldType": "string",
+                "description": "The command line used to start the process.",
+                "sampleValue": "\"WaSecAgentProv.exe\" -stopPoll C:\\WindowsAzure\\Logs\\ 5248000"
+            },
+            {
+                "fieldName": "ProcessCreationTime",
+                "fieldType": "datetime",
+                "description": "The timestamp when the process was created.",
+                "sampleValue": "2024-11-01T23:27:40Z"
+            },
+            {
+                "fieldName": "ProcessId",
+                "fieldType": "long",
+                "description": "The unique identifier for the process.",
+                "sampleValue": 3908
+            },
+            {
+                "fieldName": "MD5",
+                "fieldType": "string",
+                "description": "The MD5 hash of the file associated with the process.",
+                "sampleValue": "f69f3653fd1f606cf0b16115136a393d"
+            },
+            {
+                "fieldName": "SHA256",
+                "fieldType": "string",
+                "description": "The SHA256 hash of the file associated with the process.",
+                "sampleValue": "6bbdcf62425a5fbdd467238ab22bb9388091363c4224c5be94f913937316b4f1"
+            }
+        ]
+    },
+    "DeviceFileEvents": {
+        "tableDescription": "This table contains events related to file actions on devices, such as creation, modification, or deletion of files from the devices managed within Microsoft Defender for Endpoint (XDR).",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "Unique identifier for the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "ActionType",
+                "fieldType": "string",
+                "description": "Type of action performed on the file.",
+                "sampleValue": "FileDeleted"
+            },
+            {
+                "fieldName": "DeviceId",
+                "fieldType": "string",
+                "description": "Unique identifier for the device where the action occurred.",
+                "sampleValue": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "DeviceName",
+                "fieldType": "string",
+                "description": "Name of the device where the action occurred.",
+                "sampleValue": "device123.domain.com"
+            },
+            {
+                "fieldName": "FileName",
+                "fieldType": "string",
+                "description": "Name of the file on which the action was performed.",
+                "sampleValue": "file123.tmp"
+            },
+            {
+                "fieldName": "FolderPath",
+                "fieldType": "string",
+                "description": "Path to the folder containing the file.",
+                "sampleValue": "C:\\Windows\\security\\file123.tmp"
+            },
+            {
+                "fieldName": "InitiatingProcessAccountDomain",
+                "fieldType": "string",
+                "description": "Domain of the account that initiated the file action.",
+                "sampleValue": "domain.local"
+            },
+            {
+                "fieldName": "InitiatingProcessAccountName",
+                "fieldType": "string",
+                "description": "Name of the account that initiated the file action.",
+                "sampleValue": "user123"
+            },
+            {
+                "fieldName": "InitiatingProcessFileName",
+                "fieldType": "string",
+                "description": "Name of the process that initiated the file action.",
+                "sampleValue": "process.exe"
+            },
+            {
+                "fieldName": "InitiatingProcessId",
+                "fieldType": "long",
+                "description": "Unique identifier for the process that initiated the file action.",
+                "sampleValue": 1234
+            },
+            {
+                "fieldName": "Timestamp",
+                "fieldType": "datetime",
+                "description": "The date and time when the file action occurred.",
+                "sampleValue": "2024-11-01T23:26:09Z"
+            },
+            {
+                "fieldName": "ReportId",
+                "fieldType": "long",
+                "description": "Unique identifier for the report generated from the file action.",
+                "sampleValue": 66254
+            }
+        ]
+    },
+    "DeviceImageLoadEvents": {
+        "tableDescription": "This table records events related to the loading of images on devices, capturing details about the initiating processes and the images loaded  from the devices managed within Microsoft Defender for Endpoint (XDR).",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant associated with the event.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "ActionType",
+                "fieldType": "string",
+                "description": "The type of action that was performed, such as 'ImageLoaded'.",
+                "sampleValue": "ImageLoaded"
+            },
+            {
+                "fieldName": "DeviceId",
+                "fieldType": "string",
+                "description": "The unique identifier for the device on which the event occurred.",
+                "sampleValue": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "DeviceName",
+                "fieldType": "string",
+                "description": "The name of the device where the event was logged.",
+                "sampleValue": "device-name"
+            },
+            {
+                "fieldName": "FileName",
+                "fieldType": "string",
+                "description": "The name of the file that was loaded.",
+                "sampleValue": "file-name.dll"
+            },
+            {
+                "fieldName": "FolderPath",
+                "fieldType": "string",
+                "description": "The path to the folder where the file is located.",
+                "sampleValue": "C:\\Windows\\System32\\file-name.dll"
+            },
+            {
+                "fieldName": "InitiatingProcessAccountDomain",
+                "fieldType": "string",
+                "description": "The domain of the account that initiated the process.",
+                "sampleValue": "domain"
+            },
+            {
+                "fieldName": "InitiatingProcessAccountName",
+                "fieldType": "string",
+                "description": "The name of the account that initiated the process.",
+                "sampleValue": "account-name"
+            },
+            {
+                "fieldName": "InitiatingProcessFileName",
+                "fieldType": "string",
+                "description": "The name of the process that initiated the loading of the image.",
+                "sampleValue": "process-name.exe"
+            },
+            {
+                "fieldName": "InitiatingProcessId",
+                "fieldType": "long",
+                "description": "The unique identifier for the initiating process.",
+                "sampleValue": 1234
+            },
+            {
+                "fieldName": "Timestamp",
+                "fieldType": "datetime",
+                "description": "The timestamp when the event occurred.",
+                "sampleValue": "2024-11-01T14:03:16Z"
+            },
+            {
+                "fieldName": "SHA256",
+                "fieldType": "string",
+                "description": "The SHA256 hash of the file that was loaded.",
+                "sampleValue": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            }
+        ]
+    },
+    "DeviceLogonEvents": {
+        "tableDescription": "This table logs device logon events including successful and failed logon attempts  from the devices managed within Microsoft Defender for Endpoint (XDR).",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "AccountDomain",
+                "fieldType": "string",
+                "description": "The domain of the account used for logon.",
+                "sampleValue": "example.com"
+            },
+            {
+                "fieldName": "AccountName",
+                "fieldType": "string",
+                "description": "The name of the account attempting to log on.",
+                "sampleValue": "user123"
+            },
+            {
+                "fieldName": "ActionType",
+                "fieldType": "string",
+                "description": "The type of action performed during the logon event.",
+                "sampleValue": "LogonFailed"
+            },
+            {
+                "fieldName": "DeviceId",
+                "fieldType": "string",
+                "description": "The unique identifier for the device.",
+                "sampleValue": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "DeviceName",
+                "fieldType": "string",
+                "description": "The name of the device where the logon attempt occurred.",
+                "sampleValue": "exampleDevice"
+            },
+            {
+                "fieldName": "FailureReason",
+                "fieldType": "string",
+                "description": "The reason for a failed logon attempt.",
+                "sampleValue": "InvalidUserNameOrPassword"
+            },
+            {
+                "fieldName": "LogonType",
+                "fieldType": "string",
+                "description": "The type of logon, such as network or local.",
+                "sampleValue": "Network"
+            },
+            {
+                "fieldName": "RemoteIP",
+                "fieldType": "string",
+                "description": "The IP address of the remote device attempting the logon.",
+                "sampleValue": "xxx.xxx.xxx.xxx"
+            },
+            {
+                "fieldName": "RemoteIPType",
+                "fieldType": "string",
+                "description": "The type of IP address (e.g., Public or Private).",
+                "sampleValue": "Public"
+            },
+            {
+                "fieldName": "Timestamp",
+                "fieldType": "datetime",
+                "description": "The date and time when the logon event was recorded.",
+                "sampleValue": "2024-11-02T06:10:49Z"
+            },
+            {
+                "fieldName": "ReportId",
+                "fieldType": "long",
+                "description": "A unique identifier for the logon event report.",
+                "sampleValue": 20402
+            }
+        ]
+    },
+    "DeviceFileCertificateInfo": {
+        "tableDescription": "This table contains information about device file certificates, including their issuer, signing status, and expiration details from the devices managed within Microsoft Defender for Endpoint (XDR).",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant in which the device resides.",
+                "sampleValue": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+            },
+            {
+                "fieldName": "CertificateSerialNumber",
+                "fieldType": "string",
+                "description": "The serial number of the certificate.",
+                "sampleValue": "33000001c422b2f79b793dacb20000000001c4"
+            },
+            {
+                "fieldName": "CrlDistributionPointUrls",
+                "fieldType": "string",
+                "description": "The URLs for the Certificate Revocation List distribution points.",
+                "sampleValue": "[\"http://www.example.com/crl/example.crl\"]"
+            },
+            {
+                "fieldName": "DeviceId",
+                "fieldType": "string",
+                "description": "The unique identifier for the device.",
+                "sampleValue": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+            },
+            {
+                "fieldName": "DeviceName",
+                "fieldType": "string",
+                "description": "The name of the device associated with the certificate.",
+                "sampleValue": "example-device.ad.example.com"
+            },
+            {
+                "fieldName": "IsRootSignerMicrosoft",
+                "fieldType": "bool",
+                "description": "Indicates whether the certificate is signed by a Microsoft root signer.",
+                "sampleValue": true
+            },
+            {
+                "fieldName": "IsSigned",
+                "fieldType": "bool",
+                "description": "Indicates whether the certificate is signed.",
+                "sampleValue": true
+            },
+            {
+                "fieldName": "IsTrusted",
+                "fieldType": "bool",
+                "description": "Indicates whether the certificate is trusted.",
+                "sampleValue": true
+            },
+            {
+                "fieldName": "Issuer",
+                "fieldType": "string",
+                "description": "The issuer of the certificate.",
+                "sampleValue": "Example Issuer"
+            },
+            {
+                "fieldName": "IssuerHash",
+                "fieldType": "string",
+                "description": "The hash of the issuer's certificate.",
+                "sampleValue": "580a6f4cc4e4b669b9ebdc1b2b3e087b80d0678d"
+            },
+            {
+                "fieldName": "ReportId",
+                "fieldType": "long",
+                "description": "A unique identifier for the report associated with the certificate.",
+                "sampleValue": 45824
+            },
+            {
+                "fieldName": "SHA1",
+                "fieldType": "string",
+                "description": "The SHA1 hash of the certificate.",
+                "sampleValue": "d35a6d77acf8e9ac80e345bde15032ae632a976d"
+            }
+        ]
+    },
+    "SentinelHealth": {
+        "tableDescription": "This table contains health-related metrics and operational logs for Microsoft Sentinel.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier of the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the record was generated.",
+                "sampleValue": "2024-10-31T23:39:38Z"
+            },
+            {
+                "fieldName": "OperationName",
+                "fieldType": "string",
+                "description": "The name of the operation performed.",
+                "sampleValue": "Scheduled analytics rule run"
+            },
+            {
+                "fieldName": "SentinelResourceId",
+                "fieldType": "string",
+                "description": "The unique identifier of the Sentinel resource.",
+                "sampleValue": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-xxxx/providers/Microsoft.OperationalInsights/workspaces/lg-xxxx/providers/Microsoft.SecurityInsights/alertRules/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "SentinelResourceName",
+                "fieldType": "string",
+                "description": "The name of the Sentinel resource.",
+                "sampleValue": "Resource Name Example"
+            },
+            {
+                "fieldName": "Status",
+                "fieldType": "string",
+                "description": "The status of the operation.",
+                "sampleValue": "Success"
+            },
+            {
+                "fieldName": "Description",
+                "fieldType": "string",
+                "description": "A brief description of the operation result.",
+                "sampleValue": "Rule executed successfully, but did not reach the threshold."
+            },
+            {
+                "fieldName": "Reason",
+                "fieldType": "string",
+                "description": "The reason for the operation result.",
+                "sampleValue": "The alert generation threshold was not reached."
+            },
+            {
+                "fieldName": "WorkspaceId",
+                "fieldType": "string",
+                "description": "The unique identifier of the workspace.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "SentinelResourceType",
+                "fieldType": "string",
+                "description": "The type of the Sentinel resource.",
+                "sampleValue": "Analytics Rule"
+            },
+            {
+                "fieldName": "SentinelResourceKind",
+                "fieldType": "string",
+                "description": "The kind of Sentinel resource.",
+                "sampleValue": "Scheduled"
+            },
+            {
+                "fieldName": "RecordId",
+                "fieldType": "string",
+                "description": "The unique identifier for the record.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+        ]
+    },
+    "DeviceNetworkInfo": {
+        "tableDescription": "This table contains information about device network configurations and statuses of devices managed within Microsoft Defender for Endpoint (XDR)",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "DeviceId",
+                "fieldType": "string",
+                "description": "The unique identifier for the device.",
+                "sampleValue": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "DeviceName",
+                "fieldType": "string",
+                "description": "The name of the device.",
+                "sampleValue": "-device-name"
+            },
+            {
+                "fieldName": "MacAddress",
+                "fieldType": "string",
+                "description": "The MAC address of the device.",
+                "sampleValue": "00-00-00-00-00-00"
+            },
+            {
+                "fieldName": "MachineGroup",
+                "fieldType": "string",
+                "description": "The group to which the machine belongs.",
+                "sampleValue": "UnassignedGroup"
+            },
+            {
+                "fieldName": "NetworkAdapterStatus",
+                "fieldType": "string",
+                "description": "The status of the network adapter.",
+                "sampleValue": "Unknown"
+            },
+            {
+                "fieldName": "ReportId",
+                "fieldType": "long",
+                "description": "The identifier for the report associated with the device.",
+                "sampleValue": 123456789012345678
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The time when the record was generated.",
+                "sampleValue": "2024-10-12T04:50:36Z"
+            },
+            {
+                "fieldName": "Timestamp",
+                "fieldType": "datetime",
+                "description": "The timestamp of the last update to the record.",
+                "sampleValue": "2024-06-05T12:54:33Z"
+            },
+            {
+                "fieldName": "TunnelType",
+                "fieldType": "string",
+                "description": "The type of tunnel used by the device, if any.",
+                "sampleValue": "None"
+            },
+            {
+                "fieldName": "NetworkAdapterVendor",
+                "fieldType": "string",
+                "description": "The vendor of the network adapter.",
+                "sampleValue": "Vendor"
+            },
+            {
+                "fieldName": "Type",
+                "fieldType": "string",
+                "description": "The type of information this record represents.",
+                "sampleValue": "DeviceNetworkInfo"
+            }
+        ]
+    },
+    "AlertEvidence": {
+        "tableDescription": "This table contains evidence related to security incidents generated in Microsoft Defender XDR. Do not use it to correlate directly with SecurityIncident Table",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the alert evidence was generated.",
+                "sampleValue": "2024-10-10T08:31:51Z"
+            },
+            {
+                "fieldName": "AlertId",
+                "fieldType": "string",
+                "description": "The unique identifier for the alert associated with the evidence.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "Title",
+                "fieldType": "string",
+                "description": "The title of the alert.",
+                "sampleValue": "SEN-22: Identity - Alert for xxxxxxx"
+            },
+            {
+                "fieldName": "Categories",
+                "fieldType": "string",
+                "description": "Categories associated with the alert.",
+                "sampleValue": "[\"Persistence\"]"
+            },
+            {
+                "fieldName": "AttackTechniques",
+                "fieldType": "string",
+                "description": "The techniques used in the attack.",
+                "sampleValue": "[\"Valid Accounts (T1078)\",\"Account Manipulation (T1098)\"]"
+            },
+            {
+                "fieldName": "EntityType",
+                "fieldType": "string",
+                "description": "The type of entity associated with the alert evidence.",
+                "sampleValue": "User"
+            },
+            {
+                "fieldName": "EvidenceRole",
+                "fieldType": "string",
+                "description": "The role of the evidence in the alert.",
+                "sampleValue": "Impacted"
+            },
+            {
+                "fieldName": "AccountName",
+                "fieldType": "string",
+                "description": "The name of the account associated with the alert.",
+                "sampleValue": "xxxxxxxx"
+            },
+            {
+                "fieldName": "AccountObjectId",
+                "fieldType": "string",
+                "description": "The unique identifier for the account object.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "ApplicationId",
+                "fieldType": "int",
+                "description": "The identifier for the application associated with the alert.",
+                "sampleValue": null
+            },
+            {
+                "fieldName": "Application",
+                "fieldType": "string",
+                "description": "The name of the application associated with the alert.",
+                "sampleValue": "Microsoft Docs"
+            }
+        ]
+    },
+    "AlertInfo": {
+        "tableDescription": "This table contains information about alerts generated within Microsoft Defender XDR. Do not use it to correlate directly with SecurityIncident Table",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant where the alert was generated.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The date and time when the alert was generated.",
+                "sampleValue": "2024-10-08T07:36:51.294836Z"
+            },
+            {
+                "fieldName": "Timestamp",
+                "fieldType": "datetime",
+                "description": "The timestamp for the alert event.",
+                "sampleValue": "2024-10-08T07:36:51.294836Z"
+            },
+            {
+                "fieldName": "AlertId",
+                "fieldType": "string",
+                "description": "The unique identifier for the alert.",
+                "sampleValue": "snxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "Title",
+                "fieldType": "string",
+                "description": "The title or brief description of the alert.",
+                "sampleValue": "SEN-22: Identity - Alert for user."
+            },
+            {
+                "fieldName": "Category",
+                "fieldType": "string",
+                "description": "The category under which the alert falls.",
+                "sampleValue": "Persistence"
+            },
+            {
+                "fieldName": "Severity",
+                "fieldType": "string",
+                "description": "The severity level of the alert.",
+                "sampleValue": "Medium"
+            },
+            {
+                "fieldName": "ServiceSource",
+                "fieldType": "string",
+                "description": "The source service that generated the alert.",
+                "sampleValue": "Microsoft Sentinel"
+            },
+            {
+                "fieldName": "DetectionSource",
+                "fieldType": "string",
+                "description": "The source that detected the alert.",
+                "sampleValue": "Scheduled Alerts"
+            },
+            {
+                "fieldName": "AttackTechniques",
+                "fieldType": "dynamic",
+                "description": "The attack techniques associated with the alert.",
+                "sampleValue": "[\"Valid Accounts (T1078)\",\"Account Manipulation (T1098)\"]"
+            },
+            {
+                "fieldName": "SourceSystem",
+                "fieldType": "string",
+                "description": "The source system from which the alert originated.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "Type",
+                "fieldType": "string",
+                "description": "The type of information represented in the alert.",
+                "sampleValue": "AlertInfo"
+            }
+        ]
+    },
+    "UserPeerAnalytics": {
+        "tableDescription": "This table contains analytics data regarding user peer interactions within the system as part of the UEBA mechanism.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant.",
+                "sampleValue": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the analytics data was generated.",
+                "sampleValue": "2024-10-30T17:59:59Z"
+            },
+            {
+                "fieldName": "AADTenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the Azure Active Directory tenant.",
+                "sampleValue": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+            },
+            {
+                "fieldName": "UserId",
+                "fieldType": "string",
+                "description": "The unique identifier for the user.",
+                "sampleValue": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+            },
+            {
+                "fieldName": "UserPrincipalName",
+                "fieldType": "string",
+                "description": "The principal name of the user, usually in the format of an email address.",
+                "sampleValue": "user@example.com"
+            },
+            {
+                "fieldName": "UserName",
+                "fieldType": "string",
+                "description": "The display name of the user.",
+                "sampleValue": "User"
+            },
+            {
+                "fieldName": "PeerUserId",
+                "fieldType": "string",
+                "description": "The unique identifier for the peer user.",
+                "sampleValue": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+            },
+            {
+                "fieldName": "PeerUserPrincipalName",
+                "fieldType": "string",
+                "description": "The principal name of the peer user.",
+                "sampleValue": "peer@example.com"
+            },
+            {
+                "fieldName": "PeerUserName",
+                "fieldType": "string",
+                "description": "The display name of the peer user.",
+                "sampleValue": "Peer User"
+            },
+            {
+                "fieldName": "Rank",
+                "fieldType": "int",
+                "description": "The rank or score assigned to the peer interaction.",
+                "sampleValue": 1
+            },
+            {
+                "fieldName": "SourceSystem",
+                "fieldType": "string",
+                "description": "The source system from which the data was generated.",
+                "sampleValue": "Azure"
+            },
+            {
+                "fieldName": "Type",
+                "fieldType": "string",
+                "description": "The type of the analytics record.",
+                "sampleValue": "UserPeerAnalytics"
+            }
+        ]
+    },
+    "LASummaryLogs": {
+        "tableDescription": "This table contains summary logs related to the LASummaryLogs in Microsoft Sentinel.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the log entry was generated.",
+                "sampleValue": "2024-11-02T15:04:24Z"
+            },
+            {
+                "fieldName": "BinStartTime",
+                "fieldType": "datetime",
+                "description": "The start time for the log bin.",
+                "sampleValue": "2024-11-02T14:00:00Z"
+            },
+            {
+                "fieldName": "BinSize",
+                "fieldType": "int",
+                "description": "The size of the time bin in minutes.",
+                "sampleValue": 60
+            },
+            {
+                "fieldName": "Status",
+                "fieldType": "string",
+                "description": "The status of the log entry.",
+                "sampleValue": "Succeeded"
+            },
+            {
+                "fieldName": "QueryDurationMs",
+                "fieldType": "long",
+                "description": "The duration of the query in milliseconds.",
+                "sampleValue": 3082
+            },
+            {
+                "fieldName": "ResultsRecordCount",
+                "fieldType": "long",
+                "description": "The number of records returned by the query.",
+                "sampleValue": 38
+            },
+            {
+                "fieldName": "Message",
+                "fieldType": "string",
+                "description": "Any message related to the log entry.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "RuleName",
+                "fieldType": "string",
+                "description": "The name of the rule associated with the log.",
+                "sampleValue": "_rule_name"
+            },
+            {
+                "fieldName": "RuleLastModifiedTime",
+                "fieldType": "datetime",
+                "description": "The last modified time of the rule associated with the log.",
+                "sampleValue": "2024-09-26T08:04:22Z"
+            },
+            {
+                "fieldName": "SourceSystem",
+                "fieldType": "string",
+                "description": "The source system from which the log originated.",
+                "sampleValue": "_source_system"
+            },
+            {
+                "fieldName": "Type",
+                "fieldType": "string",
+                "description": "The type of log entry.",
+                "sampleValue": "LASummaryLogs"
+            },
+            {
+                "fieldName": "_ResourceId",
+                "fieldType": "string",
+                "description": "The resource ID associated with the log entry.",
+                "sampleValue": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/_resource_group/providers/microsoft.operationalinsights/workspaces/_workspace"
+            }
+        ]
+    },
+    "Watchlist": {
+        "tableDescription": "This table contains watchlist entries used for monitoring and security purposes.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the entry was generated.",
+                "sampleValue": "2024-10-21T01:41:52Z"
+            },
+            {
+                "fieldName": "WatchlistId",
+                "fieldType": "string",
+                "description": "The unique identifier for the watchlist.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "WatchlistName",
+                "fieldType": "string",
+                "description": "The name of the watchlist.",
+                "sampleValue": "_Watchlist_Name"
+            },
+            {
+                "fieldName": "WatchlistAlias",
+                "fieldType": "string",
+                "description": "The alias for the watchlist.",
+                "sampleValue": "_watchlist_alias"
+            },
+            {
+                "fieldName": "Source",
+                "fieldType": "string",
+                "description": "The source from which the watchlist was created.",
+                "sampleValue": "_Source.csv"
+            },
+            {
+                "fieldName": "Provider",
+                "fieldType": "string",
+                "description": "The provider of the watchlist.",
+                "sampleValue": "Microsoft"
+            },
+            {
+                "fieldName": "CreatedBy",
+                "fieldType": "dynamic",
+                "description": "Information about the user who created the entry.",
+                "sampleValue": "{\"objectId\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\"email\":\"one.user@example.com\",\"name\":\"User\"}"
+            },
+            {
+                "fieldName": "UpdatedBy",
+                "fieldType": "dynamic",
+                "description": "Information about the user who last updated the entry.",
+                "sampleValue": "{\"objectId\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\"email\":\"one.user@example.com\",\"name\":\"User\"}"
+            },
+            {
+                "fieldName": "CreatedTimeUTC",
+                "fieldType": "datetime",
+                "description": "The time when the entry was created in UTC.",
+                "sampleValue": "2023-06-14T07:37:27Z"
+            },
+            {
+                "fieldName": "LastUpdatedTimeUTC",
+                "fieldType": "datetime",
+                "description": "The time when the entry was last updated in UTC.",
+                "sampleValue": "2023-06-29T06:47:10Z"
+            },
+            {
+                "fieldName": "Notes",
+                "fieldType": "string",
+                "description": "Any additional notes related to the watchlist entry.",
+                "sampleValue": "notes."
+            }
+        ]
+    },
+    "EmailEvents": {
+        "tableDescription": "This table contains events related to email transactions, including details on the sender, recipient, and delivery status.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "NetworkMessageId",
+                "fieldType": "string",
+                "description": "Unique identifier for the email. Use this field to realte this logs with other Email tables.",
+                "sampleValue": "ca04cde5-c123-40ed-2214-08dcdd5eeb20"
+            },
+            {
+                "fieldName": "AttachmentCount",
+                "fieldType": "int",
+                "description": "The number of attachments included in the email.",
+                "sampleValue": 0
+            },
+            {
+                "fieldName": "AuthenticationDetails",
+                "fieldType": "string",
+                "description": "Details regarding the email authentication checks (SPF, DKIM, DMARC).",
+                "sampleValue": "{\"SPF\":\"pass\",\"DKIM\":\"pass\",\"DMARC\":\"pass\",\"CompAuth\":\"pass\"}"
+            },
+            {
+                "fieldName": "DeliveryAction",
+                "fieldType": "string",
+                "description": "The action taken on the email upon delivery.",
+                "sampleValue": "Delivered"
+            },
+            {
+                "fieldName": "EmailDirection",
+                "fieldType": "string",
+                "description": "Indicates the direction of the email, whether inbound or outbound.",
+                "sampleValue": "Inbound"
+            },
+            {
+                "fieldName": "RecipientEmailAddress",
+                "fieldType": "string",
+                "description": "The email address of the recipient.",
+                "sampleValue": "user@example.com"
+            },
+            {
+                "fieldName": "SenderDisplayName",
+                "fieldType": "string",
+                "description": "The display name of the sender.",
+                "sampleValue": "Sender Name"
+            },
+            {
+                "fieldName": "SenderFromAddress",
+                "fieldType": "string",
+                "description": "The email address from which the email was sent.",
+                "sampleValue": "noreply@example.com"
+            },
+            {
+                "fieldName": "Subject",
+                "fieldType": "string",
+                "description": "The subject line of the email.",
+                "sampleValue": "Subject of the email"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The time when the email event was generated.",
+                "sampleValue": "2024-11-03T05:01:07Z"
+            },
+            {
+                "fieldName": "UrlCount",
+                "fieldType": "int",
+                "description": "The number of URLs present in the email.",
+                "sampleValue": 11
+            },
+            {
+                "fieldName": "ThreatTypes",
+                "fieldType": "string",
+                "description": "Any identified threat types associated with the email.",
+                "sampleValue": ""
+            }
+        ]
+    },
+    "EmailUrlInfo": {
+        "tableDescription": "This table contains information about URLs found in emails, including their source and relevant identifiers.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "NetworkMessageId",
+                "fieldType": "string",
+                "description": "The unique identifier for the email message.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "ReportId",
+                "fieldType": "string",
+                "description": "The identifier for the report related to the email.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the information was generated.",
+                "sampleValue": "2024-10-27T04:44:43Z"
+            },
+            {
+                "fieldName": "Timestamp",
+                "fieldType": "datetime",
+                "description": "The timestamp associated with the URL entry.",
+                "sampleValue": "2024-10-27T04:44:43Z"
+            },
+            {
+                "fieldName": "Url",
+                "fieldType": "string",
+                "description": "The URL present in the email.",
+                "sampleValue": "https://www.example.com/sample-image.png"
+            },
+            {
+                "fieldName": "UrlLocation",
+                "fieldType": "string",
+                "description": "The location of the URL within the email content.",
+                "sampleValue": "Body"
+            },
+            {
+                "fieldName": "UrlDomain",
+                "fieldType": "string",
+                "description": "The domain of the URL.",
+                "sampleValue": "www.example.com"
+            },
+            {
+                "fieldName": "SourceSystem",
+                "fieldType": "string",
+                "description": "The system that generated the entry.",
+                "sampleValue": "Unknown"
+            },
+            {
+                "fieldName": "Type",
+                "fieldType": "string",
+                "description": "The type of the entry, indicating it is related to email URLs.",
+                "sampleValue": "EmailUrlInfo"
+            }
+        ]
+    },
+    "SentinelAudit": {
+        "tableDescription": "This table records audit events related to Microsoft Sentinel operations.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "Unique identifier for the tenant.",
+                "sampleValue": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "Timestamp when the operation was generated.",
+                "sampleValue": "2024-10-26T16:54:13Z"
+            },
+            {
+                "fieldName": "OperationName",
+                "fieldType": "string",
+                "description": "Name of the operation performed.",
+                "sampleValue": "Microsoft.SecurityInsights/alertRules/Write"
+            },
+            {
+                "fieldName": "SentinelResourceId",
+                "fieldType": "string",
+                "description": "Unique identifier for the Sentinel resource involved.",
+                "sampleValue": "/SUBSCRIPTIONS/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX/RESOURCEGROUPS/RG-XXXX/PROVIDERS/MICROSOFT.OPERATIONALINSIGHTS/WORKSPACES/LG-XXXX/PROVIDERS/MICROSOFT.SECURITYINSIGHTS/SETTINGS/SENTINELHEALTH"
+            },
+            {
+                "fieldName": "SentinelResourceName",
+                "fieldType": "string",
+                "description": "Name of the Sentinel resource involved.",
+                "sampleValue": "New executable via Office FileUploaded Operation"
+            },
+            {
+                "fieldName": "Status",
+                "fieldType": "string",
+                "description": "Status of the operation.",
+                "sampleValue": "Success"
+            },
+            {
+                "fieldName": "Description",
+                "fieldType": "string",
+                "description": "Detailed description of the operation.",
+                "sampleValue": "Create or update analytics rule."
+            },
+            {
+                "fieldName": "WorkspaceId",
+                "fieldType": "string",
+                "description": "Unique identifier for the workspace.",
+                "sampleValue": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+            },
+            {
+                "fieldName": "SentinelResourceType",
+                "fieldType": "string",
+                "description": "Type of the resource in Sentinel.",
+                "sampleValue": "Analytic Rule"
+            },
+            {
+                "fieldName": "SentinelResourceKind",
+                "fieldType": "string",
+                "description": "Kind of the Sentinel resource.",
+                "sampleValue": "Scheduled"
+            },
+            {
+                "fieldName": "CorrelationId",
+                "fieldType": "string",
+                "description": "Unique identifier for correlating related operations.",
+                "sampleValue": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+            },
+            {
+                "fieldName": "ExtendedProperties",
+                "fieldType": "dynamic",
+                "description": "Additional properties related to the operation.",
+                "sampleValue": "{\"SubscriptionId\":\"XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX\",\"ResourceGroupName\":\"rg-XXXX\",\"WorkspaceName\":\"lg-XXXX\",\"ResourceId\":\"22222222\"}"
+            }
+        ]
+    },
+    "SecurityEvent": {
+        "tableDescription": "This table contains Windows security events generated by the devices monitored in Microsoft Sentinel, including details about accounts, events, and processes.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier of the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the event was generated.",
+                "sampleValue": "2024-10-28T23:27:18Z"
+            },
+            {
+                "fieldName": "SourceSystem",
+                "fieldType": "string",
+                "description": "The source system that generated the event.",
+                "sampleValue": "OpsManager"
+            },
+            {
+                "fieldName": "Account",
+                "fieldType": "string",
+                "description": "The account associated with the event.",
+                "sampleValue": "xxxxxxxx\\xxxxxxxx$"
+            },
+            {
+                "fieldName": "AccountType",
+                "fieldType": "string",
+                "description": "The type of account (e.g., User, Machine).",
+                "sampleValue": "Machine"
+            },
+            {
+                "fieldName": "Computer",
+                "fieldType": "string",
+                "description": "The name of the computer where the event occurred.",
+                "sampleValue": "xxxxx.ad.xxxxxx.com"
+            },
+            {
+                "fieldName": "EventSourceName",
+                "fieldType": "string",
+                "description": "The name of the event source.",
+                "sampleValue": "Microsoft-Windows-Security-Auditing"
+            },
+            {
+                "fieldName": "Channel",
+                "fieldType": "string",
+                "description": "The channel of the event.",
+                "sampleValue": "Security"
+            },
+            {
+                "fieldName": "EventID",
+                "fieldType": "int",
+                "description": "The unique identifier for the event.",
+                "sampleValue": 4688
+            },
+            {
+                "fieldName": "Activity",
+                "fieldType": "string",
+                "description": "The description of the activity represented by the event.",
+                "sampleValue": "4688 - A new process has been created."
+            },
+            {
+                "fieldName": "Process",
+                "fieldType": "string",
+                "description": "The name of the process involved in the event.",
+                "sampleValue": "MpCmdRun.exe"
+            },
+            {
+                "fieldName": "TargetUserName",
+                "fieldType": "string",
+                "description": "The username of the target account involved in the event.",
+                "sampleValue": "xxxxxxxx$"
+            }
+        ]
+    },
+    "SecurityIncident": {
+        "tableDescription": "This table contains details about security incidents detected in Microsoft Sentinel. Field AlertIds contains the list of related Alert Ids from the SecurityAlert table. This table does not contain information of the related Entities.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant.",
+                "sampleValue": "ba8aca5e-sas2-42fa-befc-d6ca23880538"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the incident was generated.",
+                "sampleValue": "2024-09-12 10:31:49.070042+0000"
+            },
+            {
+                "fieldName": "IncidentName",
+                "fieldType": "string",
+                "description": "A unique name assigned to the incident.",
+                "sampleValue": "437b3698-979a-48ff-bdbe-a9470b96023b"
+            },
+            {
+                "fieldName": "Title",
+                "fieldType": "string",
+                "description": "The title of the incident.",
+                "sampleValue": "SEN-22: Identity - Alert for jaime.admin involving one user"
+            },
+            {
+                "fieldName": "Description",
+                "fieldType": "string",
+                "description": "A detailed description of the incident.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "Severity",
+                "fieldType": "string",
+                "description": "The severity level of the incident.",
+                "sampleValue": "Medium"
+            },
+            {
+                "fieldName": "Status",
+                "fieldType": "string",
+                "description": "The current status of the incident.",
+                "sampleValue": "Closed"
+            },
+            {
+                "fieldName": "Classification",
+                "fieldType": "string",
+                "description": "The classification of the incident.",
+                "sampleValue": "Undetermined"
+            },
+            {
+                "fieldName": "ClassificationComment",
+                "fieldType": "string",
+                "description": "Comments related to the classification of the incident.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "ClassificationReason",
+                "fieldType": "string",
+                "description": "The reason for the classification of the incident.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "Owner",
+                "fieldType": "dynamic",
+                "description": "Details about the owner of the incident.",
+                "sampleValue": "{\"objectId\":null,\"email\":null,\"assignedTo\":null,\"userPrincipalName\":null}"
+            },
+            {
+                "fieldName": "ProviderName",
+                "fieldType": "string",
+                "description": "The name of the provider that generated the incident.",
+                "sampleValue": "Microsoft XDR"
+            },
+            {
+                "fieldName": "ProviderIncidentId",
+                "fieldType": "string",
+                "description": "The external incident ID provided by the provider.",
+                "sampleValue": "1838"
+            },
+            {
+                "fieldName": "LastModifiedTime",
+                "fieldType": "datetime",
+                "description": "The timestamp of the last modification made to the incident.",
+                "sampleValue": "2024-09-12 10:31:49.070042+0000"
+            },
+            {
+                "fieldName": "CreatedTime",
+                "fieldType": "datetime",
+                "description": "The timestamp when the incident was created.",
+                "sampleValue": "2024-09-12 10:17:14.186666+0000"
+            },
+            {
+                "fieldName": "ClosedTime",
+                "fieldType": "datetime",
+                "description": "The timestamp when the incident was closed.",
+                "sampleValue": "2024-09-12 10:31:49.069617+0000"
+            },
+            {
+                "fieldName": "IncidentNumber",
+                "fieldType": "int",
+                "description": "A unique number assigned to the incident.",
+                "sampleValue": 16671
+            },
+            {
+                "fieldName": "RelatedAnalyticRuleIds",
+                "fieldType": "dynamic",
+                "description": "IDs of analytic rules related to the incident.",
+                "sampleValue": "[\"c19e6c2e-ae4c-46aa-b642-ab397eec49a2\"]"
+            },
+            {
+                "fieldName": "AlertIds",
+                "fieldType": "dynamic",
+                "description": "IDs of alerts associated with the incident. Each one of this alerts IDs map into SecurityAlert table , SystemAlertId field",
+                "sampleValue": "[\"25ef2cba-c3f8-68b6-37f0-f21605ed1564\"]"
+            },
+            {
+                "fieldName": "Comments",
+                "fieldType": "dynamic",
+                "description": "Comments related to the incident.",
+                "sampleValue": "[]"
+            },
+            {
+                "fieldName": "Tasks",
+                "fieldType": "dynamic",
+                "description": "Tasks associated with the incident.",
+                "sampleValue": "[]"
+            },
+            {
+                "fieldName": "Labels",
+                "fieldType": "dynamic",
+                "description": "Labels assigned to the incident.",
+                "sampleValue": "[{\"labelName\":\"Redirected\",\"labelType\":\"AutoAssigned\"}]"
+            },
+            {
+                "fieldName": "IncidentUrl",
+                "fieldType": "string",
+                "description": "URL for the incident in the Azure portal.",
+                "sampleValue": "https://portal.azure.com/#asset/Microsoft_Azure_Security_Insights/Incident/subscriptions/f8013a22-1cf7-assa-223-a7de918a7f72/resourceGroups/rg-2-sentinel/providers/Microsoft.OperationalInsights/workspaces/lg-11-dev-workspace/providers/Microsoft.SecurityInsights/Incidents/437b3698-979a-48ff-bdbe-a9470b96023b"
+            },
+            {
+                "fieldName": "AdditionalData",
+                "fieldType": "dynamic",
+                "description": "Additional data related to the incident.",
+                "sampleValue": "{\"alertsCount\":0,\"bookmarksCount\":0,\"commentsCount\":0,\"alertProductNames\":[],\"tactics\":[],\"techniques\":[],\"providerIncidentUrl\":\"https://security.microsoft.com/incidents/1838?tid=0d0291d0-aee1-4608-96e6-a6192d3be795\"}"
+            },
+            {
+                "fieldName": "ModifiedBy",
+                "fieldType": "string",
+                "description": "Indicates who modified the incident.",
+                "sampleValue": "Microsoft Defender XDR - alert correlation"
+            },
+            {
+                "fieldName": "SourceSystem",
+                "fieldType": "string",
+                "description": "The system where the incident originated.",
+                "sampleValue": "Azure"
+            }
+        ]
+    },
+    "WindowsEvent": {
+        "tableDescription": "This table contains Windows Event logs collected from various systems for security monitoring and analysis using WEC.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant in Azure.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "SourceSystem",
+                "fieldType": "string",
+                "description": "The source system from which the event was generated.",
+                "sampleValue": "OpsManager"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the event was generated.",
+                "sampleValue": "2024-11-02T16:37:25.626232Z"
+            },
+            {
+                "fieldName": "Provider",
+                "fieldType": "string",
+                "description": "The provider of the event, indicating the source of the data.",
+                "sampleValue": "Microsoft-Windows-Sysmon"
+            },
+            {
+                "fieldName": "Channel",
+                "fieldType": "string",
+                "description": "The channel through which the event was logged.",
+                "sampleValue": "Microsoft-Windows-Sysmon/Operational"
+            },
+            {
+                "fieldName": "Computer",
+                "fieldType": "string",
+                "description": "The name of the computer where the event was generated.",
+                "sampleValue": "xxxxxxxxdc01.ad.xxxxxxxx.com"
+            },
+            {
+                "fieldName": "EventLevel",
+                "fieldType": "int",
+                "description": "The severity level of the event.",
+                "sampleValue": 4
+            },
+            {
+                "fieldName": "EventLevelName",
+                "fieldType": "string",
+                "description": "The descriptive name of the event level.",
+                "sampleValue": "Informational"
+            },
+            {
+                "fieldName": "EventID",
+                "fieldType": "int",
+                "description": "The unique identifier for the event type.",
+                "sampleValue": 10
+            },
+            {
+                "fieldName": "SystemProcessId",
+                "fieldType": "int",
+                "description": "The identifier of the process that generated the event.",
+                "sampleValue": 3852
+            },
+            {
+                "fieldName": "EventData",
+                "fieldType": "dynamic",
+                "description": "Additional data associated with the event.",
+                "sampleValue": "{\"RuleName\":\"technique_id=T1055.001,technique_name=Dynamic-link Library Injection\",\"UtcTime\":\"2024-11-02T16:37:25.6210000Z\"}"
+            },
+            {
+                "fieldName": "RawEventData",
+                "fieldType": "string",
+                "description": "The raw data of the event as collected from the source.",
+                "sampleValue": ""
+            }
+        ]
+    },
+    "Anomalies": {
+        "tableDescription": "This table contains records of anomalies detected by the UEBA module.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant in which the anomaly was detected.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "Id",
+                "fieldType": "string",
+                "description": "The unique identifier for the specific anomaly.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the anomaly was generated.",
+                "sampleValue": "2024-11-02T05:42:03Z"
+            },
+            {
+                "fieldName": "AnomalyTemplateName",
+                "fieldType": "string",
+                "description": "The name of the template used to identify the anomaly.",
+                "sampleValue": "Anomalous Azure operations"
+            },
+            {
+                "fieldName": "Score",
+                "fieldType": "real",
+                "description": "The score indicating the severity of the anomaly.",
+                "sampleValue": 0.72
+            },
+            {
+                "fieldName": "Description",
+                "fieldType": "string",
+                "description": "A brief description of the anomaly.",
+                "sampleValue": "The User performed unusual Azure operations"
+            },
+            {
+                "fieldName": "StartTime",
+                "fieldType": "datetime",
+                "description": "The start time of the period during which the anomaly was detected.",
+                "sampleValue": "2024-11-01T05:08:49Z"
+            },
+            {
+                "fieldName": "EndTime",
+                "fieldType": "datetime",
+                "description": "The end time of the period during which the anomaly was detected.",
+                "sampleValue": "2024-11-01T18:36:09Z"
+            },
+            {
+                "fieldName": "UserName",
+                "fieldType": "string",
+                "description": "The username associated with the anomaly.",
+                "sampleValue": "user@example.com"
+            },
+            {
+                "fieldName": "SourceIpAddress",
+                "fieldType": "string",
+                "description": "The IP address from which the anomaly was detected.",
+                "sampleValue": "192.0.2.1"
+            },
+            {
+                "fieldName": "Tactics",
+                "fieldType": "string",
+                "description": "The tactics associated with the detected anomaly.",
+                "sampleValue": "[\"InitialAccess\"]"
+            },
+            {
+                "fieldName": "Techniques",
+                "fieldType": "string",
+                "description": "The techniques used in the detected anomaly.",
+                "sampleValue": "[\"T1190\"]"
+            }
+        ]
+    },
+    "AADNonInteractiveUserSignInLogs": {
+        "tableDescription": "This table contains logs related to non-interactive user sign-ins in Entra ID (Azure Active Directory).",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "SourceSystem",
+                "fieldType": "string",
+                "description": "The source system from which the log was generated.",
+                "sampleValue": "Azure AD"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the log entry was generated.",
+                "sampleValue": "2024-10-04T10:16:19Z"
+            },
+            {
+                "fieldName": "OperationName",
+                "fieldType": "string",
+                "description": "The name of the operation recorded in the log.",
+                "sampleValue": "Sign-in activity"
+            },
+            {
+                "fieldName": "ResultType",
+                "fieldType": "string",
+                "description": "The result type of the sign-in operation.",
+                "sampleValue": "0"
+            },
+            {
+                "fieldName": "DurationMs",
+                "fieldType": "long",
+                "description": "The duration of the operation in milliseconds.",
+                "sampleValue": 0
+            },
+            {
+                "fieldName": "CorrelationId",
+                "fieldType": "string",
+                "description": "A unique identifier for correlating related logs.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "Identity",
+                "fieldType": "string",
+                "description": "The identity of the user who initiated the sign-in.",
+                "sampleValue": "User Name"
+            },
+            {
+                "fieldName": "Location",
+                "fieldType": "string",
+                "description": "The geographical location from which the sign-in was attempted.",
+                "sampleValue": "BE"
+            },
+            {
+                "fieldName": "AppDisplayName",
+                "fieldType": "string",
+                "description": "The display name of the application used during the sign-in.",
+                "sampleValue": "Power BI Service"
+            },
+            {
+                "fieldName": "IPAddress",
+                "fieldType": "string",
+                "description": "The IP address from which the sign-in attempt was made.",
+                "sampleValue": "208.127.140.43"
+            },
+            {
+                "fieldName": "UserType",
+                "fieldType": "string",
+                "description": "The type of user attempting to sign in.",
+                "sampleValue": "Guest"
+            }
+        ]
+    },
+    "OfficeActivity": {
+        "tableDescription": "This table contains records of management activities performed in Microsoft Office applications, capturing user interactions and system events. IT does not contains details of emails sent or recieved.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant in Microsoft services.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "Application",
+                "fieldType": "string",
+                "description": "The name of the application where the activity occurred.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "UserDomain",
+                "fieldType": "string",
+                "description": "The domain associated with the user performing the activity.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "Activity",
+                "fieldType": "string",
+                "description": "The specific activity that was performed by the user.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "UserAgent",
+                "fieldType": "string",
+                "description": "The user agent string of the client used to access the application.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the activity record was generated.",
+                "sampleValue": "2024-11-03T01:18:03Z"
+            },
+            {
+                "fieldName": "Operation",
+                "fieldType": "string",
+                "description": "The specific operation that was performed by the user.",
+                "sampleValue": "TeamsSessionStarted"
+            },
+            {
+                "fieldName": "UserType",
+                "fieldType": "string",
+                "description": "The type of user that performed the activity (e.g., Regular, Admin).",
+                "sampleValue": "Regular"
+            },
+            {
+                "fieldName": "UserId",
+                "fieldType": "string",
+                "description": "The identifier of the user who performed the activity.",
+                "sampleValue": "user@example.com"
+            },
+            {
+                "fieldName": "OfficeWorkload",
+                "fieldType": "string",
+                "description": "The Office workload in which the activity took place.",
+                "sampleValue": "MicrosoftTeams"
+            },
+            {
+                "fieldName": "ResultStatus",
+                "fieldType": "string",
+                "description": "The outcome status of the operation performed.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "ClientIP",
+                "fieldType": "string",
+                "description": "The IP address of the client from which the activity was performed.",
+                "sampleValue": ""
+            }
+        ]
+    },
+    "FunctionAppLogs": {
+        "tableDescription": "This table contains logs from Azure Function Apps, capturing events and messages related to the execution and management of function instances.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier of the Azure tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the log entry was generated.",
+                "sampleValue": "2024-10-29T20:47:01Z"
+            },
+            {
+                "fieldName": "Category",
+                "fieldType": "string",
+                "description": "The category of the log entry, indicating the source of the message.",
+                "sampleValue": "Microsoft.Azure.WebJobs.Host.DrainModeManager"
+            },
+            {
+                "fieldName": "Location",
+                "fieldType": "string",
+                "description": "The geographic location of the Azure resource.",
+                "sampleValue": "East US"
+            },
+            {
+                "fieldName": "Message",
+                "fieldType": "string",
+                "description": "The log message providing details about the event.",
+                "sampleValue": "DrainMode mode enabled"
+            },
+            {
+                "fieldName": "HostVersion",
+                "fieldType": "string",
+                "description": "The version of the host environment for the function app.",
+                "sampleValue": "4.1036.2.2"
+            },
+            {
+                "fieldName": "FunctionInvocationId",
+                "fieldType": "string",
+                "description": "The unique identifier for the invocation of the function.",
+                "sampleValue": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "FunctionName",
+                "fieldType": "string",
+                "description": "The name of the function being executed.",
+                "sampleValue": "FunctionName"
+            },
+            {
+                "fieldName": "HostInstanceId",
+                "fieldType": "string",
+                "description": "The unique identifier of the host instance running the function.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "Level",
+                "fieldType": "string",
+                "description": "The severity level of the log entry.",
+                "sampleValue": "Information"
+            },
+            {
+                "fieldName": "ExceptionDetails",
+                "fieldType": "string",
+                "description": "Details about any exceptions that occurred during function execution.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "AppName",
+                "fieldType": "string",
+                "description": "The name of the application associated with the function app.",
+                "sampleValue": "-application-name"
+            }
+        ]
+    },
+    "IdentityInfo": {
+        "tableDescription": "This table contains identity information for users within the organization.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The date and time when the entry was generated.",
+                "sampleValue": "2024-10-28T08:15:42Z"
+            },
+            {
+                "fieldName": "AccountName",
+                "fieldType": "string",
+                "description": "The name of the account.",
+                "sampleValue": "user123"
+            },
+            {
+                "fieldName": "AccountUPN",
+                "fieldType": "string",
+                "description": "The User Principal Name of the account.",
+                "sampleValue": "user123@domain.com"
+            },
+            {
+                "fieldName": "AccountObjectId",
+                "fieldType": "string",
+                "description": "The unique identifier for the account object.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "AccountDisplayName",
+                "fieldType": "string",
+                "description": "The display name of the account.",
+                "sampleValue": "User"
+            },
+            {
+                "fieldName": "GivenName",
+                "fieldType": "string",
+                "description": "The given name of the user.",
+                "sampleValue": ""
+            },
+            {
+                "fieldName": "Surname",
+                "fieldType": "string",
+                "description": "The surname of the user.",
+                "sampleValue": "User"
+            },
+            {
+                "fieldName": "MailAddress",
+                "fieldType": "string",
+                "description": "The primary email address of the user.",
+                "sampleValue": "user123@domain.com"
+            },
+            {
+                "fieldName": "Phone",
+                "fieldType": "string",
+                "description": "The phone number of the user.",
+                "sampleValue": "+1 123 456 7890"
+            },
+            {
+                "fieldName": "IsAccountEnabled",
+                "fieldType": "bool",
+                "description": "Indicates whether the account is enabled.",
+                "sampleValue": true
+            },
+            {
+                "fieldName": "UserType",
+                "fieldType": "string",
+                "description": "The type of user account.",
+                "sampleValue": "Member"
+            }
+        ]
+    },
+    "AzureDiagnostics": {
+        "tableDescription": "This table contains diagnostic logs from Azure resources monitored in Microsoft Sentinel.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the log entry was generated.",
+                "sampleValue": "2023-10-15T12:34:56Z"
+            },
+            {
+                "fieldName": "ResourceId",
+                "fieldType": "string",
+                "description": "The unique identifier for the Azure resource.",
+                "sampleValue": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/ResourceGroup/providers/Microsoft.Compute/virtualMachines/VM"
+            },
+            {
+                "fieldName": "Category",
+                "fieldType": "string",
+                "description": "The category of the log entry.",
+                "sampleValue": "AuditEvent"
+            },
+            {
+                "fieldName": "ResourceGroup",
+                "fieldType": "string",
+                "description": "The name of the resource group containing the resource.",
+                "sampleValue": "ResourceGroup"
+            },
+            {
+                "fieldName": "SubscriptionId",
+                "fieldType": "string",
+                "description": "The unique identifier for the subscription.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "OperationName",
+                "fieldType": "string",
+                "description": "The name of the operation performed.",
+                "sampleValue": "Microsoft.Compute/virtualMachines/start/action"
+            },
+            {
+                "fieldName": "ResultType",
+                "fieldType": "string",
+                "description": "The result type of the operation.",
+                "sampleValue": "Succeeded"
+            },
+            {
+                "fieldName": "CallerIPAddress",
+                "fieldType": "string",
+                "description": "The IP address of the caller.",
+                "sampleValue": "192.0.2.1"
+            },
+            {
+                "fieldName": "httpStatusCode_d",
+                "fieldType": "real",
+                "description": "The HTTP status code returned by the operation.",
+                "sampleValue": 200
+            },
+            {
+                "fieldName": "Message",
+                "fieldType": "string",
+                "description": "A message providing additional context about the operation.",
+                "sampleValue": "Operation completed successfully."
+            }
+        ]
+    },
+    "EmailAttachmentInfo": {
+        "tableDescription": "This table contains information about email attachments related to emails in the organization.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant associated with the email.",
+                "sampleValue": "xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "FileName",
+                "fieldType": "string",
+                "description": "The name of the email attachment file.",
+                "sampleValue": "document.pdf"
+            },
+            {
+                "fieldName": "FileType",
+                "fieldType": "string",
+                "description": "The type of the email attachment file (e.g., PDF, DOCX).",
+                "sampleValue": "application/pdf"
+            },
+            {
+                "fieldName": "NetworkMessageId",
+                "fieldType": "string",
+                "description": "The unique identifier for the email message in the network. Use this field to correlate with other email tables",
+                "sampleValue": "msg-xxxx-xxxx-xxxx-xxxx"
+            },
+            {
+                "fieldName": "RecipientEmailAddress",
+                "fieldType": "string",
+                "description": "The email address of the recipient.",
+                "sampleValue": "user@example.com"
+            },
+            {
+                "fieldName": "SenderDisplayName",
+                "fieldType": "string",
+                "description": "The display name of the sender of the email.",
+                "sampleValue": "John Doe"
+            },
+            {
+                "fieldName": "SHA256",
+                "fieldType": "string",
+                "description": "The SHA256 hash of the email attachment file.",
+                "sampleValue": "abcd1234efgh5678ijkl9012mnopqrstuvwx"
+            },
+            {
+                "fieldName": "ThreatTypes",
+                "fieldType": "string",
+                "description": "The types of threats associated with the email attachment.",
+                "sampleValue": "Malware, Phishing"
+            },
+            {
+                "fieldName": "ThreatNames",
+                "fieldType": "string",
+                "description": "The names of specific threats identified in the email attachment.",
+                "sampleValue": "Trojan:Win32/Generic"
+            },
+            {
+                "fieldName": "FileSize",
+                "fieldType": "long",
+                "description": "The size of the email attachment file in bytes.",
+                "sampleValue": 204800
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The time when the email attachment information was generated.",
+                "sampleValue": "2023-10-01T12:00:00Z"
+            },
+            {
+                "fieldName": "SourceSystem",
+                "fieldType": "string",
+                "description": "The system that generated the email attachment information.",
+                "sampleValue": "Microsoft Exchange"
+            }
+        ]
+    },
+    "EmailPostDeliveryEvents": {
+        "tableDescription": "This table contains post-delivery events related to email actions taken in my organization.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "Unique identifier for the tenant.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "Action",
+                "fieldType": "string",
+                "description": "The action taken on the email.",
+                "sampleValue": "Moved to junk folder"
+            },
+            {
+                "fieldName": "ActionResult",
+                "fieldType": "string",
+                "description": "Result of the action taken.",
+                "sampleValue": "Success"
+            },
+            {
+                "fieldName": "ActionTrigger",
+                "fieldType": "string",
+                "description": "The trigger that initiated the action.",
+                "sampleValue": "SpecialAction"
+            },
+            {
+                "fieldName": "ActionType",
+                "fieldType": "string",
+                "description": "Type of action performed.",
+                "sampleValue": "Spam ZAP"
+            },
+            {
+                "fieldName": "DeliveryLocation",
+                "fieldType": "string",
+                "description": "The location where the email was delivered.",
+                "sampleValue": "Junk"
+            },
+            {
+                "fieldName": "InternetMessageId",
+                "fieldType": "string",
+                "description": "Unique identifier for the internet message.",
+                "sampleValue": "<20241025052610.xxxxxxxxxxxxxxxx@azns.microsoft.com>"
+            },
+            {
+                "fieldName": "NetworkMessageId",
+                "fieldType": "string",
+                "description": "Unique identifier for the email. Use this field to correlate with other email tables",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "RecipientEmailAddress",
+                "fieldType": "string",
+                "description": "Email address of the recipient.",
+                "sampleValue": "user@example.com"
+            },
+            {
+                "fieldName": "ReportId",
+                "fieldType": "string",
+                "description": "Unique identifier for the report related to the email action.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx-15919824191504693625"
+            },
+            {
+                "fieldName": "ThreatTypes",
+                "fieldType": "string",
+                "description": "Type of threat detected.",
+                "sampleValue": "Spam"
+            },
+            {
+                "fieldName": "DetectionMethods",
+                "fieldType": "dynamic",
+                "description": "Methods used for threat detection.",
+                "sampleValue": "{\"Spam\":[\"Fingerprint matching\"]}"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The time when the event was generated.",
+                "sampleValue": "2024-10-25T07:54:32Z"
+            }
+        ]
+    },
+    "HuntingBookmark": {
+        "tableDescription": "This table contains bookmarks used for hunting activities in Microsoft Sentinel, providing metadata about each bookmark.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant associated with the bookmark.",
+                "sampleValue": "-tenant-id"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The date and time when the bookmark was generated.",
+                "sampleValue": "2023-10-01T12:00:00Z"
+            },
+            {
+                "fieldName": "BookmarkId",
+                "fieldType": "string",
+                "description": "The unique identifier for the bookmark.",
+                "sampleValue": "-bookmark-id"
+            },
+            {
+                "fieldName": "BookmarkName",
+                "fieldType": "string",
+                "description": "The name given to the bookmark.",
+                "sampleValue": "-bookmark-name"
+            },
+            {
+                "fieldName": "BookmarkType",
+                "fieldType": "string",
+                "description": "The type of the bookmark (e.g., query, alert).",
+                "sampleValue": "-bookmark-type"
+            },
+            {
+                "fieldName": "CreatedBy",
+                "fieldType": "string",
+                "description": "The user who created the bookmark.",
+                "sampleValue": "-user"
+            },
+            {
+                "fieldName": "UpdatedBy",
+                "fieldType": "string",
+                "description": "The user who last updated the bookmark.",
+                "sampleValue": "-user"
+            },
+            {
+                "fieldName": "CreatedTime",
+                "fieldType": "datetime",
+                "description": "The date and time when the bookmark was created.",
+                "sampleValue": "2023-10-01T11:00:00Z"
+            },
+            {
+                "fieldName": "LastUpdatedTime",
+                "fieldType": "datetime",
+                "description": "The date and time when the bookmark was last updated.",
+                "sampleValue": "2023-10-02T12:00:00Z"
+            },
+            {
+                "fieldName": "EventTime",
+                "fieldType": "datetime",
+                "description": "The date and time of the event associated with the bookmark.",
+                "sampleValue": "2023-10-01T10:00:00Z"
+            },
+            {
+                "fieldName": "QueryText",
+                "fieldType": "string",
+                "description": "The query text associated with the bookmark.",
+                "sampleValue": "-query-text"
+            },
+            {
+                "fieldName": "Notes",
+                "fieldType": "string",
+                "description": "Additional notes related to the bookmark.",
+                "sampleValue": "-notes"
+            }
+        ]
+    },
+    "IntuneDeviceComplianceOrg": {
+        "tableDescription": "This table contains compliance information for devices managed by Intune within an organization.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant in which the device is managed.",
+                "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The timestamp when the compliance record was generated.",
+                "sampleValue": "2023-10-01T12:34:56Z"
+            },
+            {
+                "fieldName": "OperationName",
+                "fieldType": "string",
+                "description": "The name of the operation performed related to the device compliance.",
+                "sampleValue": "DeviceComplianceCheck"
+            },
+            {
+                "fieldName": "Result",
+                "fieldType": "string",
+                "description": "The result of the compliance check operation.",
+                "sampleValue": "Compliant"
+            },
+            {
+                "fieldName": "DeviceName",
+                "fieldType": "string",
+                "description": "The name of the device being checked for compliance.",
+                "sampleValue": "Device-1234"
+            },
+            {
+                "fieldName": "UPN",
+                "fieldType": "string",
+                "description": "The User Principal Name of the user associated with the device.",
+                "sampleValue": "user@example.com"
+            },
+            {
+                "fieldName": "ComplianceState",
+                "fieldType": "string",
+                "description": "The current compliance state of the device.",
+                "sampleValue": "Compliant"
+            },
+            {
+                "fieldName": "OSDescription",
+                "fieldType": "string",
+                "description": "The description of the operating system running on the device.",
+                "sampleValue": "Windows 10 Pro"
+            },
+            {
+                "fieldName": "DeviceId",
+                "fieldType": "string",
+                "description": "The unique identifier for the device.",
+                "sampleValue": "device-unique-id-123"
+            },
+            {
+                "fieldName": "UserId",
+                "fieldType": "string",
+                "description": "The unique identifier for the user associated with the device.",
+                "sampleValue": "user-id-123"
+            },
+            {
+                "fieldName": "DeviceType",
+                "fieldType": "string",
+                "description": "The type of device (e.g., mobile, desktop, tablet).",
+                "sampleValue": "Desktop"
+            },
+            {
+                "fieldName": "ManagementAgents",
+                "fieldType": "string",
+                "description": "The management agents installed on the device.",
+                "sampleValue": "Intune"
+            }
+        ]
+    },
+    "IntuneDevices": {
+        "tableDescription": "This table contains information about devices managed by Intune, including their compliance state, ownership, and other relevant device attributes.",
+        "schemaDetails": [
+            {
+                "fieldName": "TenantId",
+                "fieldType": "string",
+                "description": "The unique identifier for the tenant in which the device is registered.",
+                "sampleValue": "-tenant-id"
+            },
+            {
+                "fieldName": "TimeGenerated",
+                "fieldType": "datetime",
+                "description": "The date and time when the device information was generated.",
+                "sampleValue": "2023-10-01T12:34:56Z"
+            },
+            {
+                "fieldName": "OperationName",
+                "fieldType": "string",
+                "description": "The name of the operation performed on the device.",
+                "sampleValue": "DeviceComplianceCheck"
+            },
+            {
+                "fieldName": "Result",
+                "fieldType": "string",
+                "description": "The result of the operation performed on the device.",
+                "sampleValue": "Success"
+            },
+            {
+                "fieldName": "DeviceId",
+                "fieldType": "string",
+                "description": "The unique identifier for the device.",
+                "sampleValue": "-device-id"
+            },
+            {
+                "fieldName": "DeviceName",
+                "fieldType": "string",
+                "description": "The name of the device.",
+                "sampleValue": "-device-name"
+            },
+            {
+                "fieldName": "UPN",
+                "fieldType": "string",
+                "description": "The User Principal Name associated with the device user.",
+                "sampleValue": "-user@domain.com"
+            },
+            {
+                "fieldName": "LastContact",
+                "fieldType": "datetime",
+                "description": "The last time the device contacted the Intune service.",
+                "sampleValue": "2023-10-01T12:00:00Z"
+            },
+            {
+                "fieldName": "OSVersion",
+                "fieldType": "string",
+                "description": "The version of the operating system running on the device.",
+                "sampleValue": "Windows 10 Pro"
+            },
+            {
+                "fieldName": "CompliantState",
+                "fieldType": "string",
+                "description": "Indicates whether the device is compliant with the organization's policies.",
+                "sampleValue": "Compliant"
+            },
+            {
+                "fieldName": "Ownership",
+                "fieldType": "string",
+                "description": "Indicates whether the device is corporate-owned or personal.",
+                "sampleValue": "Corporate"
+            },
+            {
+                "fieldName": "Manufacturer",
+                "fieldType": "string",
+                "description": "The manufacturer of the device.",
+                "sampleValue": "Manufacturer"
+            }
+        ]
+    }
+}

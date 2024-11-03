@@ -37,7 +37,7 @@ def main():
             else:  
                 # Run Prompt  
                 processed_responses=teisecAgent.run_prompt('terminal',user_input,terminalchannel)
-                for response in processed_responses:
-                    print_response(str(response))  
+                #for response in processed_responses:
+                #    print_response(str(response))  
 if __name__ == "__main__":
     main()

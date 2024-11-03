@@ -107,14 +107,14 @@ class TeisecAgent:
             Your task is to select the most appropriate plugins and capabilities to fulfill the user's request.
             Evaluate whether the user's prompt can be addressed by a single capability or if it needs to be broken down into multiple sequential tasks.
             When decomposing the prompt, remember that each task will have access to the results of the previous tasks as context.
-            Ensure each task description includes all necessary details to achieve the expected results. 
+            Ensure each task description includes all necessary details to achieve the expected results including expected output fields to be used in the following tasks like Ids of items of the next task. 
             There is no limit on the length of the Task description.
             Always return the output as an array, even if it contains only one task. The output must be in JSON format, adhering to the following schema:
             [  
                 {  
                     "plugin_name": "<selected_plugin_name>",  
                     "capability_name": "<selected_capability_name>",  
-                    "task": "<Task detailed description>"  
+                    "task": "<Detailed task description including expected output>"  
                 }  
             ]  
             Below is the list of available plugins and their capabilities, which you will use to decompose the user's prompt into tasks:
@@ -250,7 +250,7 @@ class TeisecAgent:
                 break   
             else:
                 self.update_session(task['task'], plugin_response_object['result'])
-                processed_response = self.process_response(output_type, prompt, str(plugin_response_object['result']),channel)
+                processed_response = self.process_response(output_type, task['task'], str(plugin_response_object['result']),channel)
                 task_results.append(processed_response)  
                 self.send_response(channel,{"message":processed_response})     
                 self.send_debug(channel,{"message":f"Session Lenght: {len(self.session)}"})  
