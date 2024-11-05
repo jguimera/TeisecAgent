@@ -46,8 +46,7 @@ Every time the user submits a prompt the tool executes this steps:
 Below you can find some prompts inside a session:
 ### Incident Investigation
 `Show me the list incidents with status New in Sentinel for the last 30 days. Show me the incident number, title and severity. Make sure you only show me the last entry for each incident.`
-`Show me main details of the last instance of incident number XXXXX. Limit the results to 6 more important fields and include the list related of Alert IDs`
-`Use the AlertIds from previous incident get the relevant details of the above security alerts. Include the description and the related entities`
+`Find the alerts related to incident 16782 and from those alerts get the related entities. For the related entities find the most recent Signin logs (72h) and the Audit logs of the actions affecting or performed by the entity during the last 6 days and create a summary of the whole investigation`
 `Get the signin logs in the last 24 hours for the users included in the previous alerts`
 `Produce an Executive Summary of the investigated incident` 
 ![Screenshot3](./images/TeisecAgent-SigninLogs.png)

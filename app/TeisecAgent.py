@@ -116,7 +116,8 @@ class TeisecAgent:
                     "capability_name": "<selected_capability_name>",  
                     "task": "<Detailed task description including expected output>"  
                 }  
-            ]  
+            ]
+            Don't add any other text to the response, only the JSON object.  
             Below is the list of available plugins and their capabilities, which you will use to decompose the user's prompt into tasks:
             '''
         system_message=system_message+f'{self.plugin_capabilities}'

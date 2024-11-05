@@ -43,8 +43,9 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         :return: plugin capabilities object  
         """  
         capabilities={
-            "generateandrunkql":"This capability allows to generate and run one KQL query to retrieve logs and events from Microsoft Sentinel. This capability should be used when the user ask about retrieving new incidents, alerts or any other data that is not already in the context or needs to be retrieved from and external url. Other type of common data retrieved by this capabilitiy are Signin, Audit, Device, Email and Azure logs. Do not use this capabilitiy if the user ask for only KQL generation without runing it"
-            ,"onlygeneratekql":"This capability allows to generate one KQL query for Microsoft Sentinel without runing the query. This capability should be used when the user ask about only generating a query for Sentinel without running it."
+            "generateandrunkql":"This capability allows to generate and run one KQL query to retrieve logs and events from Microsoft Sentinel. This capability should be used when the user asks about retrieving new incidents, alerts or any other data that is not already in the context or needs to be retrieved from and external url. Other type of common data retrieved by this capabilitiy are Signin, Audit, Device, Email and Azure logs. Do not use this capabilitiy if the user ask for only KQL generation without runing it"
+            ,"onlygeneratekql":"This capability allows to generate one KQL query for Microsoft Sentinel without runing the query. This capability should be used when the user asks about only generating a query for Sentinel without running it."
+            ,"extractandrunkql":"This capability allows to extract and run one KQL query for Microsoft Sentinel from the user prompt or the session. This capability should be used when the user asks for extraction of a query or tu run a specific predefined query."
             }
         return  capabilities
   
@@ -52,8 +53,12 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         """  
         Retrieve and store the schema of Azure Sentinel tables.  
         """  
-        query = "Usage | summarize by DataType"  
-        query_results = self.sentinelClient.run_query(query, printresults=False)  
+        query = "Usage | summarize by DataType"
+        query_results_object = self.sentinelClient.run_query(query, printresults=False) 
+        if query_results_object['status']=='error':
+            print_plugin_debug(self.name, f"Error obtaining Table lists. No using Schema for Table generation") 
+            return {}
+        query_results=query_results_object['result']
         current_consolidated_schema = {}  
         default_schema = {} 
         workspace_schema = {} 
@@ -78,20 +83,26 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
                 print_plugin_debug(self.name, f"Table  {table_name} not found in existing schemas. Generating schema and saving in Workspace custom Schema.")
                 table_schema = f"{table_name} | getschema kind=csl"
                 try:
-                    table_schema_results = self.sentinelClient.run_query(table_schema, printresults=False)
-                    current_table_schema = table_schema_results[0]['Schema']  
+                    table_schema_results_object = self.sentinelClient.run_query(table_schema, printresults=False)
+                    current_table_schema = table_schema_results_object['result'][0]['Schema']  
                     table_rows_query = f"{table_name} | where TimeGenerated > ago(30d) |take 3"  
-                    table_rows_query_results = self.sentinelClient.run_query(table_rows_query, printresults=False)   
-                    extended_prompt =f"Below you have the schema and some sample rows of the content of table {table_name} in Microsoft Sentinel.\n"
-                    extended_prompt +='I need you to create an JSON object with the most important fields and its description, type and sample anonymized data. When producing the output anonymize all user names, emails , domains and Tenant Ids. Limit the number of fields to 12\n'
-                    extended_prompt +='Only Return a JSON object that follows this schema {"tableDescription":"This is the description of the Table","schemaDetails":[{"fieldName":"FieldName1","fieldType":"string","description":"This is the description of FieldName1","sampleValue":"This is an anonymized sample Value for fieldName1"},{"fieldName":"FieldName2","fieldType":"dynamic","description":"This is the description of FieldName2","sampleValue":"This is an anonymized sample Value for fieldName2"}]}\n'
-                    extended_prompt +=f"This is the table Schema:\n {current_table_schema}\n" 
-                    extended_prompt +=f"This is the sample data rows:\n {table_rows_query_results}\n"  
-                    extended_schema = self.runpromptonAzureAI(extended_prompt,[])['result'].replace("```json", "").replace("```", "").strip()    
-                    obj = json.loads(extended_schema) 
-                    current_consolidated_schema[table_name]=obj
-                    workspace_schema[table_name]=obj
+                    table_rows_query_result_object = self.sentinelClient.run_query(table_rows_query, printresults=False)
+                    if table_rows_query_result_object['status']=='error':
+                        print(table_rows_query_result_object)
+                        print_plugin_debug(self.name, f"Error obtaining Schema for Table {table_name}. Table not supported or other error") 
+                    else:
+                        table_rows_query_results=table_rows_query_result_object['result']
+                        extended_prompt =f"Below you have the schema and some sample rows of the content of table {table_name} in Microsoft Sentinel.\n"
+                        extended_prompt +='I need you to create an JSON object with the most important fields and its description, type and sample anonymized data. When producing the output anonymize all user names, emails , domains and Tenant Ids. Limit the number of fields to 12\n'
+                        extended_prompt +='Only Return a JSON object that follows this schema {"tableDescription":"This is the description of the Table","schemaDetails":[{"fieldName":"FieldName1","fieldType":"string","description":"This is the description of FieldName1","sampleValue":"This is an anonymized sample Value for fieldName1"},{"fieldName":"FieldName2","fieldType":"dynamic","description":"This is the description of FieldName2","sampleValue":"This is an anonymized sample Value for fieldName2"}]}\n'
+                        extended_prompt +=f"This is the table Schema:\n {current_table_schema}\n" 
+                        extended_prompt +=f"This is the sample data rows:\n {table_rows_query_results}\n"  
+                        extended_schema = self.runpromptonAzureAI(extended_prompt,[])['result'].replace("```json", "").replace("```", "").strip()    
+                        obj = json.loads(extended_schema) 
+                        current_consolidated_schema[table_name]=obj
+                        workspace_schema[table_name]=obj
                 except Exception as err:
+                    #raise(err)
                     print_plugin_debug(self.name, f"Error obtaining Schema for Table {table_name}. Table not supported")  
         #Save to workspace file for future runs. 
         with open(current_workspace_name+'.json', 'w+', encoding='utf-8') as f:  
@@ -105,6 +116,7 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         """  
         print_plugin_debug(self.name, "Updating and Loading Sentinel Schema for current Workspace")  
         return self.generateSentinelSchema()
+
     def runKQLQuery(self, query, session,channel):  
         """  
         Generate a KQL query from a prompt and run it.  
@@ -112,11 +124,17 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         :param prompt: Input prompt  
         :param session: Session context  
         :return: Result of the KQL query  
-        """ 
-        query_results=self.sentinelClient.run_query(query, printresults=False)
-        result_object={"status":"success","result":query_results,"session_tokens":0}   
-        return  result_object 
-    def generateKQL(self, prompt, session,channel):  
+        """
+        query_results_object=self.sentinelClient.run_query(query, printresults=False)
+        if query_results_object['status']=='error':
+            channel('systemmessage',{"message":f"Error Running KQL: Trying to fix it"})
+            print_plugin_debug(self.name, f"Error Running KQL: Trying to fix it")  
+            new_query=self.fixKQLQuery(query, query_results_object['result'],[],channel)
+            query_results_object=self.sentinelClient.run_query(new_query['result'], printresults=False)
+        query_results_object["session_tokens"]=0   
+        return  query_results_object 
+    
+    def generateNewKQL(self, prompt, session,channel):  
         """  
         Generate a KQL query from a prompt and run it.  
   
@@ -134,14 +152,51 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
             "- Remember that this prompt is part of a session with previous prompts and responses; therefore, you can use information from previous responses in the session if the prompt makes reference to previous results or data above.\n"  
             "- You can only use the fields detailed in the provided table schema.\n" 
         )
+        return self.generateKQL(extended_prompt, session,channel)
+    def extractKQL(self, prompt, session,channel):  
+        """  
+        extract a KQL query from a prompt and session.  
+  
+        :param prompt: Input prompt  
+        :param session: Session context  
+        :return: Result of the KQL query  
+        """  
+        extended_prompt = (  
+            "You need to extract the KQL following these instructions and the prompt below.\n"   
+            "- Make sure the KQL query does not contains any empty lines as this breaks the KQL code.\n "
+            "- Your response must only contain the KQL code. No additional code must be added before or after the KQL code.\n "  
+            "- Remember that this prompt is part of a session with previous prompts and responses; therefore, you can use information from previous responses in the session if the prompt makes reference to previous results or data above.\n"  
+            "This is the user prompt:\n"
+            f"{prompt}\n"
+        )
+        return self.generateKQL(extended_prompt, session,channel)
+    def fixKQLQuery(self, query, error,session,channel):  
+        extended_prompt = (  
+        "I have run  the KQL query below in Microsoft Sentinel and I have received the error below as a result. I need you to fix the KQL query considering the provided error.\n" 
+        "Make sure the KQL query follows KQL syntax.\n "
+        "Make sure the KQL query does not contains any empty lines as this breaks the KQL code.\n "
+        "Your response must only contain the KQL code. No additional code or text must be added before or after the KQL code.\n "
+        "- Original KQL Query:\n" 
+        f"{query}\n"
+        "- Received Error:\n"  
+        f"{error}\n"
+        )
+        return self.generateKQL(extended_prompt, session,channel)
+    def generateKQL(self, extended_prompt, session,channel):  
+        """  
+        Generate a KQL query from a prompt and run it.  
+  
+        :param prompt: Input prompt  
+        :param session: Session context  
+        :return: Result of the KQL query  
+        """  
         prompt_result_object = self.runpromptonAzureAI(extended_prompt, session) 
         if prompt_result_object['status']=='error':
             channel('systemmessage',{"message":f"Error (Generating KQL): {prompt_result_object['result'] }"})
             return prompt_result_object
         else:
         # Clean KQL tags from the result  
-            query = prompt_result_object['result'].replace("```kql", "").replace("```kusto", "").replace("```", "").strip()  
-            #print_plugin_debug(self.name, f"Generated Query:\n {query}")  
+            query = prompt_result_object['result'].replace("```kql", "").replace("```kusto", "").replace("```", "").strip()
             channel('debugmessage',{"message":f"Generated KQL Query:\n {query}"})
             result_object={"status":prompt_result_object['status'],"result":query,"session_tokens":prompt_result_object['session_tokens']} 
             return  result_object
@@ -166,7 +221,7 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
             print_plugin_debug(self.name, f"Table '{table}' not found in schema. Generating Query without schema")  
             extended_prompt = prompt  
           
-        query_object= self.generateKQL(extended_prompt, session,channel)  
+        query_object= self.generateNewKQL(extended_prompt, session,channel)  
         return query_object
   
     def findTable(self, prompt, session,channel):  
@@ -215,7 +270,7 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
             table = self.findTable(prompt, session,channel)  
             query_object= self.generateKQLWithSchemaAndTable(prompt, table, session,channel)
         else: 
-            query_object= self.generateKQL(prompt, session,channel)
+            query_object= self.generateNewKQL(prompt, session,channel)
         return query_object
     def runtask(self, task, session,channel):  
         """  
@@ -230,3 +285,7 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         else:
             if task["capability_name"]=="onlygeneratekql":
                 return self.generateQuery(task["task"], session,channel)
+            else:
+                if task["capability_name"]=="extractandrunkql":
+                    query_object = self.extractKQL( task["task"], session,channel)
+                    return self.runKQLQuery(query_object["result"], session,channel)

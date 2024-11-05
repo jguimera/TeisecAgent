@@ -36,6 +36,7 @@ class SentinelClient:
         self.logs_client=LogsQueryClient(self.credential)
 
     def run_query(self,query,printresults=False):
+        results_object={}
         try:
             response = self.logs_client.query_workspace(
                 workspace_id=self.workspace_id,
@@ -54,9 +55,10 @@ class SentinelClient:
                 if printresults:
                     print(df)
                 #return df.to_json(orient = 'split')
-                return df.to_dict(orient="records")
+                results_object={"status":"success","result":df.to_dict(orient="records")}
         except HttpResponseError as err:
-            return (err)
+            results_object={"status":"error","result":err}
+        return results_object
     def _get_incident_api_url (self,incident_name):
         url = self.API_url.replace("{subscriptionId}",self.subscriptionId).replace("{resourceGroupName}",self.resourceGroupName).replace("{workspaceName}",self.workspaceName)
         url=url+"incidents/"+incident_name+"?api-version="+self.API_version_incidents
