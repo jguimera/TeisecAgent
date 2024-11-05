@@ -29,12 +29,13 @@ Every time the user submits a prompt the tool executes this steps:
   
 - GPT: Run prompts using Azure OpenAi client. It uses the previous prompts and responses as context.
 - Sentinel KQL: 
-    - Generate (and run) KQL queries in your Sentinel instance. It uses available tables and actual Sentinel Schema to generate valid KQL queries. Currently, KQL queries with only one table are generated. 
-    - This plugin will use Azure OpenAI to create an extended Sentinel Schema. THe first time the tool is executed It runs a prompt for each table with 3 sample log entries to extract the table description and the most relevant fields. This task will be perfomed only the first time the tool is run. If you want to avoid this cost and not use the Sentinel Schema feature
+    - Generate (and run) KQL queries in your Sentinel instance. It uses available tables and actual Sentinel Schema to generate valid KQL queries. 
+    - This plugin uses a Sentinel Schema with the most common tables [Link to file](https://github.com/jguimera/TeisecAgent/blob/main/sentinel_extended_schema.json)
+    - It will use Azure OpenAI to create a local extended Sentinel Schema for the available tables in the connected workspace. The first time the tool is executed it runs a prompt for each table with 3 sample log entries to extract the table description and the most relevant fields. This task will be perfomed only the first time the tool is run. If you want to avoid this cost and not use the Sentinel Schema feature you can disable it in the Environment variables. 
+    - Currently, KQL queries with only one table are generated. 
 - FetchURL: Fetch and process data from public URLs. The plugin logic removes unnecesary code (Javascript and CSS) from the downloaded site to reduce token consumption.
 
 ## Future improvements
-- Add multiple capabiities to plugins. Currently only one per plugin is available.
 - Better Session management (sumarization to reduce the tokens)
 - Generate KQL queries with multiple tables
 - Retry failed prompts/queries 
