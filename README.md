@@ -4,10 +4,10 @@ Teisec Agent is a Python-based AI assistant designed to interact with Security S
 The goal of this project is to evaluate the usage and limits of using AI as part of Security Operations.
 Currently its implemented to be run locally and by one user at a time. All the prompts run in the same session. 
 ![Screenshot1](./images/TeisecAgent-AlertSummary.png)
-## Disclaimer
-- Please be aware that using this tool will generate costs on your Azure OpenAI instance. It's important to monitor your usage to avoid unexpected charges. The more data that is processes by the LLM the higher the cost. See Sentinel plugin description below to understand possible cost increases. 
-- This tool does not incorporate any security measures. It is essential to understand that any data entered into the tool is not protected. Avoid using real or sensitive data, and ensure that you take necessary precautions to safeguard your information.
-- This tool is designed solely for research and testing purposes and is not suited for production environments. It has not undergone rigorous testing or optimization for live deployment. Use it at your own risk, and be prepared for potential instability or issues.
+> [!DISCLAIMER]
+>- Please be aware that using this tool will generate costs on your Azure OpenAI instance. It's important to monitor your usage to avoid unexpected charges. The more data that is processes by the LLM the higher the cost. See Sentinel plugin description below to understand possible cost increases.
+>- This tool does not incorporate any security measures. It is essential to understand that any data entered into the tool is not protected. Avoid using real or sensitive data, and ensure that you take necessary precautions to safeguard your information.
+>- This tool is designed solely for research and testing purposes and is not suited for production environments. It has not undergone rigorous testing or optimization for live deployment. Use it at your own risk, and be prepared for potential instability or issues.
 ## Main Features  
 These are the main features of the tool:  
 - Prompt decomposition in multiple tasks.
@@ -33,12 +33,12 @@ Every time the user submits a prompt the tool executes this steps:
     - This plugin uses a Sentinel Schema with the most common tables [Link to file](https://github.com/jguimera/TeisecAgent/blob/main/sentinel_extended_schema.json)
     - It will use Azure OpenAI to create a local extended Sentinel Schema for the available tables in the connected workspace. The first time the tool is executed it runs a prompt for each table with 3 sample log entries to extract the table description and the most relevant fields. This task will be perfomed only the first time the tool is run. If you want to avoid this cost and not use the Sentinel Schema feature you can disable it in the Environment variables. 
     - Currently, KQL queries with only one table are generated. 
+    - If the query fails running, the  plugin use the returned error to fry and fix the query and run it again. Currently only on retry is performed.
 - FetchURL: Fetch and process data from public URLs. The plugin logic removes unnecesary code (Javascript and CSS) from the downloaded site to reduce token consumption.
 
 ## Future improvements
 - Better Session management (sumarization to reduce the tokens)
 - Generate KQL queries with multiple tables
-- Retry failed prompts/queries 
 - Multiuser/mutisession
 - Additional plugins (Graph API / Defender XDR)
   
@@ -46,7 +46,7 @@ Every time the user submits a prompt the tool executes this steps:
 Below you can find some prompts inside a session:
 ### Incident Investigation
 `Show me the list incidents with status New in Sentinel for the last 30 days. Show me the incident number, title and severity. Make sure you only show me the last entry for each incident.`
-`Find the alerts related to incident 16782 and from those alerts get the related entities. For the related entities find the most recent Signin logs (72h) and the Audit logs of the actions affecting or performed by the entity during the last 6 days and create a summary of the whole investigation`
+`Find Sentinel incident number 16701 including the related Alerts IDs. retrieve the related entities of those alerts. For the related entities find the most recent Signinlogs (72h), the Azure Activity and Audit logs of the actions initiated by the entity during the last 6 days. Lastly create a summary of the whole investigation including a timeline of all the events`
 `Get the signin logs in the last 24 hours for the users included in the previous alerts`
 `Produce an Executive Summary of the investigated incident` 
 ![Screenshot3](./images/TeisecAgent-SigninLogs.png)

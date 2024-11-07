@@ -341,10 +341,10 @@
                 "sampleValue": "0"
             },
             {
-                "fieldName": "Identity",
+                "fieldName": "UserDisplayName",
                 "fieldType": "string",
-                "description": "The name of the user who attempted to sign in.",
-                "sampleValue": "User Name"
+                "description": "The display name of the user who attempted to sign in.",
+                "sampleValue": "John Doe"
             },
             {
                 "fieldName": "AppDisplayName",
@@ -372,7 +372,7 @@
             },{
                 "fieldName": "UserPrincipalName",
                 "fieldType": "string",
-                "description": "The principal name of the user who attempted the sign-in.",
+                "description": "The principal name of the user who attempted the sign-in. This serves as an ID of the user. Tipically this is the Email of the user",
                 "sampleValue": "jaime.admin@1233ssa.onmicrosoft.com"
             },
             {
@@ -482,12 +482,6 @@
                 "sampleValue": "UserManagement"
             },
             {
-                "fieldName": "Identity",
-                "fieldType": "string",
-                "description": "The identity of the service or user that performed the operation.",
-                "sampleValue": "MS-PIM"
-            },
-            {
                 "fieldName": "LoggedByService",
                 "fieldType": "string",
                 "description": "The service that logged the operation.",
@@ -511,17 +505,16 @@
                 "description": "A human-readable name of the activity performed.",
                 "sampleValue": "Update user"
             }, {
-                "fieldName": "InitiatedBy",
-                "fieldType": "dynamic",
-                "description": "User or Service Executing the action",
-                "sampleValue": "{\"user\":{\"displayName\":null,\"id\":\"b89e05ce-ee2-4ad6-877c-2fc03eda70c8\",\"userPrincipalName\":\"ejuenjose@bpepe.com\",\"ipAddress\":\"30.33.29.96\",\"roles\":[]}}"
-            }, {
                 "fieldName": "TargetResources",
                 "fieldType": "dynamic",
-                "description": "Affected resources of the Operation",
+                "description": "Target Resources or entities of the audited Operation",
                 "sampleValue": " [{\"id\":\"b76f6f91-ssa-f22-b788-80075be331d8\",\"displayName\":\"TenantName\",\"type\":\"Directory\",\"modifiedProperties\":[{\"displayName\":\"Included Updated Properties\",\"oldValue\":null,\"newValue\":\"asd\"}],\"administrativeUnits\":[]}]"
-            }
-            
+            },{
+                "fieldName": "InitiatedBy",
+                "fieldType": "dynamic",
+                "description": "Entity (User, Service,...) initinating, performing or triggering the audited action",
+                "sampleValue": "{\"user\":{\"displayName\":null,\"id\":\"b89e05ce-ee2-4ad6-877c-2fc03eda70c8\",\"userPrincipalName\":\"ejuenjose@bpepe.com\",\"ipAddress\":\"30.33.29.96\",\"roles\":[]}}"
+            }            
         ]
     },
     "ThreatIntelligenceIndicator": {

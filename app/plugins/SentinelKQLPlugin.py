@@ -43,9 +43,9 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         :return: plugin capabilities object  
         """  
         capabilities={
-            "generateandrunkql":"This capability allows to generate and run one KQL query to retrieve logs and events from Microsoft Sentinel. This capability should be used when the user asks about retrieving new incidents, alerts or any other data that is not already in the context or needs to be retrieved from and external url. Other type of common data retrieved by this capabilitiy are Signin, Audit, Device, Email and Azure logs. Do not use this capabilitiy if the user ask for only KQL generation without runing it"
-            ,"onlygeneratekql":"This capability allows to generate one KQL query for Microsoft Sentinel without runing the query. This capability should be used when the user asks about only generating a query for Sentinel without running it."
-            ,"extractandrunkql":"This capability allows to extract and run one KQL query for Microsoft Sentinel from the user prompt or the session. This capability should be used when the user asks for extraction of a query or tu run a specific predefined query."
+            "onlygeneratekql":"This capability allows to generate one KQL query for Microsoft Sentinel without runing the query. This capability should be used when the user asks about only generating a query for Sentinel without running it."
+            ,"extractandrunkql":"This capability allows to extract a KQL query from the prompt and run it in Microsoft Sentinel. This capability must only be selected when the KQL query can be found inside the prompt itself."
+            ,"generateandrunkql":"This capability allows to generate and run one KQL query to retrieve logs, events, incidents and alerts from Microsoft Sentinel. This capability should be used when the user asks about searching or retrieving any data from Microsoft Sentinel like new incidents, alerts or any other data that is not already in the context or needs to be retrieved from and external url. Other type of common data retrieved by this capabilitiy are Signin, Audit, Device, Email and Azure logs. Do not use this capabilitiy if the user ask for only KQL generation without runing it"
             }
         return  capabilities
   
@@ -78,9 +78,9 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
             table_name=table['DataType']
             if table_name in global_schema.keys():
                 current_consolidated_schema[table_name]=global_schema[table_name]
-                print_plugin_debug(self.name, f"Found Table  {table_name} in existing schemas. Added to Consolidated")
+                print_plugin_debug(self.name, f"Schema found for table  {table_name}")
             else:
-                print_plugin_debug(self.name, f"Table  {table_name} not found in existing schemas. Generating schema and saving in Workspace custom Schema.")
+                print_plugin_debug(self.name, f"Schema for Table  {table_name} not found. Generating schema and saving in Workspace Custom Schema file.")
                 table_schema = f"{table_name} | getschema kind=csl"
                 try:
                     table_schema_results_object = self.sentinelClient.run_query(table_schema, printresults=False)
@@ -88,7 +88,6 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
                     table_rows_query = f"{table_name} | where TimeGenerated > ago(30d) |take 3"  
                     table_rows_query_result_object = self.sentinelClient.run_query(table_rows_query, printresults=False)
                     if table_rows_query_result_object['status']=='error':
-                        print(table_rows_query_result_object)
                         print_plugin_debug(self.name, f"Error obtaining Schema for Table {table_name}. Table not supported or other error") 
                     else:
                         table_rows_query_results=table_rows_query_result_object['result']
