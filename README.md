@@ -4,10 +4,10 @@ Teisec Agent is a Python-based AI assistant designed to interact with Security S
 The goal of this project is to evaluate the usage and limits of using AI as part of Security Operations.
 Currently its implemented to be run locally and by one user at a time. All the prompts run in the same session. 
 ![Screenshot1](./images/TeisecAgent-AlertSummary.png)
-> [!DISCLAIMER]
->- Please be aware that using this tool will generate costs on your Azure OpenAI instance. It's important to monitor your usage to avoid unexpected charges. The more data that is processes by the LLM the higher the cost. See Sentinel plugin description below to understand possible cost increases.
->- This tool does not incorporate any security measures. It is essential to understand that any data entered into the tool is not protected. Avoid using real or sensitive data, and ensure that you take necessary precautions to safeguard your information.
->- This tool is designed solely for research and testing purposes and is not suited for production environments. It has not undergone rigorous testing or optimization for live deployment. Use it at your own risk, and be prepared for potential instability or issues.
+> [!CAUTION]
+> - Please be aware that using this tool will generate costs on your Azure OpenAI instance. It's important to monitor your usage to avoid unexpected charges. The more data that is processes by the LLM the higher the cost. See Sentinel plugin description below to understand possible cost increases.
+> - This tool does not incorporate any security measures. It is essential to understand that any data entered into the tool is not protected. Avoid using real or sensitive data, and ensure that you take necessary precautions to safeguard your information.
+> - This tool is designed solely for research and testing purposes and is not suited for production environments. It has not undergone rigorous testing or optimization for live deployment. Use it at your own risk, and be prepared for potential instability or issues.
 ## Main Features  
 These are the main features of the tool:  
 - Prompt decomposition in multiple tasks.
