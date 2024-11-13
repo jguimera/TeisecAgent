@@ -2,6 +2,7 @@ import os
 from azure.identity import InteractiveBrowserCredential, ClientSecretCredential, DefaultAzureCredential  
 from app.clients.SentinelClient import SentinelClient  
 from app.clients.AzureOpenAIClient import AzureOpenAIClient  
+from app.clients.GraphAPIClient import GraphAPIClient 
 from app.plugins.SentinelKQLPlugin import SentinelKQLPlugin  
 from app.plugins.GPTPlugin import GPTPlugin  
 from app.plugins.FetchURLPlugin import FetchURLPlugin  
@@ -71,7 +72,10 @@ class TeisecAgent:
         model_name = os.getenv('AZURE_OPENAI_MODELNAME')  
           
         self.client_list["azure_openai_client"] = AzureOpenAIClient(api_key, azure_endpoint, model_name)  
-  
+
+        #Requires Mail.Read Application Permission if used with Service Principal
+        self.client_list["graph_api_client"] = GraphAPIClient(  
+            self.credential) 
     def load_plugins(self):  
         """  
         Load plugins for the assistant. Currently hardcoded, but can be extended to auto-load from the plugins folder.  

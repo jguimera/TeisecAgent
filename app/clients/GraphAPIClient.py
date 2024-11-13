@@ -1,0 +1,38 @@
+import requests
+import json
+import uuid
+import os
+from datetime import datetime, timezone, timedelta
+from azure.identity import ClientSecretCredential,UsernamePasswordCredential 
+from azure.core.exceptions import (
+    ClientAuthenticationError,
+    HttpResponseError,
+    ServiceRequestError,
+    ResourceNotFoundError,
+    AzureError
+)
+class GraphAPIClient:
+    login_url="https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token"
+    API_base_url="https://graph.microsoft.com/v1.0"
+    scope="https://graph.microsoft.com/.default"
+
+    def __init__(self,credential):
+
+        self.access_token_timestamp=0
+        self.credential=credential
+
+    def _get_access_token (self):
+        now_ts=datetime.now().timestamp()
+        self.access_token=self.credential.get_token(self.scope).token
+        self.access_token_timestamp=now_ts
+        return self.access_token
+        
+    def get_email (self,mailbox,networkmessageid):
+        print ("Invoking Graph API - Get Email")
+        access_token=self._get_access_token()
+        url = self.API_base_url+'/users/'+mailbox+"/messages?$filter=internetMessageId eq '"+networkmessageid+"'"
+        headers = {
+           'authorization': 'Bearer ' + access_token
+        }
+        response = requests.request("GET", url, headers=headers)
+        return response.json()
