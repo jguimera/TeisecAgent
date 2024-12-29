@@ -19,7 +19,6 @@ def main():
     print_help("Terminal Instructions:")  
     print_help("Use 'bye' to exit.")  
     print_help("Use 'clear' to clear the session")  
-    print_help("Use 'help' to show the help of the enabled plugins")  
     while True:  
         user_input = input(f"{Fore.GREEN}Prompt:{Fore.WHITE}")  
         if not user_input:
@@ -30,10 +29,6 @@ def main():
                 break  
             elif user_input.lower() == "clear":   
                 teisecAgent.clear_session()
-            elif user_input.lower() == "help":   
-                plugin_help_list=teisecAgent.get_plugin_help()
-                for plugin_help in plugin_help_list:
-                    print_help(plugin_help)
             else:  
                 # Run Prompt  
                 processed_responses=teisecAgent.run_prompt('terminal',user_input,terminalchannel)

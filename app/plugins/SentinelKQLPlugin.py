@@ -29,13 +29,6 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         if loadSchema:  
             self.sentinel_schema = self.loadSentinelSchema()  
   
-    def pluginhelp(self):  
-        """  
-        Provide help instructions for this plugin.  
-  
-        :return: Help instructions string  
-        """  
-        return "Use 'kql' in your prompt to generate and run KQL adhering to the Sentinel schema."  
     def plugincapabilities(self):  
         """  
         Provide the plugin capabilities.  

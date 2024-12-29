@@ -8,8 +8,6 @@ class GPTPlugin(TeisecAgentPlugin):
         return result_object
     def runprompt(self,prompt,session,channel):
         return self.runpromptonAzureAI(prompt,session)
-    def pluginhelp(self):
-        return "If your prompt doens't match any other plugin checks it will be submited to the GPT model"
     def plugincapabilities(self):  
         """  
         Provide the plugin capabilities.  

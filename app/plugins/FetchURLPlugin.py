@@ -18,16 +18,7 @@ class FetchURLPlugin(TeisecAgentPlugin):
         :param azureOpenAIClient: Azure OpenAI Client instance  
         """  
         super().__init__(name, description, plugintype)  
-        self.azureOpenAIClient = azureOpenAIClient  
-  
-    def pluginhelp(self):  
-        """  
-        Provide help instructions for this plugin.  
-  
-        :return: Help instructions string  
-        """  
-        return "Use 'fetch', 'url', or 'download' in your prompt to retrieve data from a URL and process it."  
-  
+        self.azureOpenAIClient = azureOpenAIClient    
     def plugincapabilities(self):  
         """  
         Provide the plugin capabilities.  
