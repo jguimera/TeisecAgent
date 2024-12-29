@@ -54,6 +54,7 @@ class GraphAPIPlugin(TeisecAgentPlugin):
             '''You need to extract either from the prompt below or the previous messages in the session a set of parameters to be used by other methods in this agentic system.
                 Always return the output as an object. The output must be in JSON format, adhering to the following schema: 
                 {  
+                    "parameters_found":"yes or no (if the parameters were found in the prompt or the session context)",
                     "mailbox": "<user mailbox address to extract the email from>",  
                     "internetmessageid": "<Email Internet Message Id>"
                 }  
@@ -102,7 +103,11 @@ class GraphAPIPlugin(TeisecAgentPlugin):
         """ 
         if task["capability_name"]=="getemaildetails":
             parameters_object = self.extractParameters( task["task"], session,channel)
-            return self.getEmailDetails(parameters_object, session,channel)
+            if parameters_object['parameters_found']=="yes":    
+                return self.getEmailDetails(parameters_object, session,channel)
+            else:
+                result_object={"status":"error","result":"Parameters not found","session_tokens":0} 
+                return result_object
         else:
             result_object={"status":"error","result":"Capability not found","session_tokens":0} 
             return result_object

@@ -36,5 +36,9 @@ class GraphAPIClient:
            'authorization': 'Bearer ' + access_token
         }
         response = requests.request("GET", url, headers=headers)
-        print(response)
-        return response.json()
+        
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"Error: {response.status_code} - {response.text}")
+            response.raise_for_status()
