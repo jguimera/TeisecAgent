@@ -34,6 +34,8 @@ Every time the user submits a prompt the tool executes this steps:
     - It will use Azure OpenAI to create a local extended Sentinel Schema for the available tables in the connected workspace. The first time the tool is executed it runs a prompt for each table with 3 sample log entries to extract the table description and the most relevant fields. This task will be perfomed only the first time the tool is run. If you want to avoid this cost and not use the Sentinel Schema feature you can disable it in the Environment variables. 
     - Currently, KQL queries with only one table are generated. 
     - If the query fails running, the  plugin use the returned error to fry and fix the query and run it again. Currently only on retry is performed.
+- Graph API:
+    - Retrieve Email Body and Headers using the InternetMessageId and the mailbox address as input parameters. This plugin requires Client Secret credentials to work. 
 - FetchURL: Fetch and process data from public URLs. The plugin logic removes unnecesary code (Javascript and CSS) from the downloaded site to reduce token consumption.
 
 ## Future improvements
@@ -57,12 +59,13 @@ Below you can find some prompts inside a session:
 `Fetch this url https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization and optimize the query of the above Sentinel Analytic rule`
 ![Screenshot5](./images/TeisecAgent-FetchURL.png)
 ### Email Analysis
-`List the last 5 email received by a user containing 'jaime' in the email address in my organization using Sentinel`
-`Search in Sentinel get all the details of the second email from the list above`
-`Get the email details using the graphAPI of the previous email`
-`Using GPT summarize the full body of the previous email`
-`Can you see any indicators of phishing?`
-
+`List the last 5 email received by a user containing 'jaime' in the email address in my organization using Sentinel` 
+`Use a Sentinel query to get all the details of the second email from the list above` 
+`Get the email details using the graphAPI of the previous email` 
+`Using GPT summarize the full body of the previous email` 
+`Can you see any indicators of phishing?` 
+![Screenshot3](./images/TeisecAgent-EmailDetails.png)
+![Screenshot4](./images/TeisecAgent-EmailAnalysis.png)
 ## Setup  
   
 ### Prerequisites  
