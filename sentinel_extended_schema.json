@@ -2092,11 +2092,18 @@
                 "sampleValue": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
             },
             {
+                "fieldName": "InternetMessageId",
+                "fieldType": "string",
+                "description": "Unique identifier for the email. Use this field to retrieve the content of the Email from the user mailbox.",
+                "sampleValue": "<9a596e9d-91ec-4ae7-b3e6-32a36a66c3d0@az.southcentralus.microsoft.com>"
+            },
+            {
                 "fieldName": "NetworkMessageId",
                 "fieldType": "string",
-                "description": "Unique identifier for the email. Use this field to realte this logs with other Email tables.",
+                "description": "Unique identifier for the email. Use this field to correlate this logs with other Email tables in Sentinel.",
                 "sampleValue": "ca04cde5-c123-40ed-2214-08dcdd5eeb20"
             },
+            
             {
                 "fieldName": "AttachmentCount",
                 "fieldType": "int",
@@ -2118,7 +2125,7 @@
             {
                 "fieldName": "EmailDirection",
                 "fieldType": "string",
-                "description": "Indicates the direction of the email, whether inbound or outbound.",
+                "description": "Indicates the direction of the email, whether inbound or outbound. This fields helps understand if the email has been send from or to the organization.",
                 "sampleValue": "Inbound"
             },
             {

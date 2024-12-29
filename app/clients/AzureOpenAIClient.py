@@ -23,7 +23,7 @@ class AzureOpenAIClient():
         session_tokens=''
         #print(prompt)
         with open('promptaudit.log', 'a', encoding='utf-8') as f:  
-            f.write(''.join(prompt))
+            f.write('\n'.join(prompt))
             f.close()
             #json.dump(table_schemas, f, ensure_ascii=False, indent=4)
         try:
@@ -50,6 +50,7 @@ class AzureOpenAIClient():
         result_object={"status":status,"result":result,"session_tokens":session_tokens}
         #print(result)
         with open('promptaudit.log', 'a', encoding='utf-8') as f:  
+            f.write("\n")
             f.write(result)
             f.close()
         return result_object

@@ -3,6 +3,7 @@ from azure.identity import InteractiveBrowserCredential, ClientSecretCredential,
 from app.clients.SentinelClient import SentinelClient  
 from app.clients.AzureOpenAIClient import AzureOpenAIClient  
 from app.clients.GraphAPIClient import GraphAPIClient 
+from app.plugins.GraphAPIPlugin import GraphAPIPlugin  
 from app.plugins.SentinelKQLPlugin import SentinelKQLPlugin  
 from app.plugins.GPTPlugin import GPTPlugin  
 from app.plugins.FetchURLPlugin import FetchURLPlugin  
@@ -83,6 +84,10 @@ class TeisecAgent:
         # TODO: Auto-load from all plugins available inside the plugins subfolder  
         loadSchema=(os.getenv('SENTINELKQL_LOADSCHEMA', 'True')=='True' )
         self.plugin_list = {  
+            "GraphAPIPlugin":GraphAPIPlugin(  
+                "GraphAPIPlugin", "Plugin to retrieve data from the Microsoft GraphAPI", "API",   
+                self.client_list["azure_openai_client"], self.client_list["graph_api_client"]
+            ),
             "SentinelKQLPlugin": SentinelKQLPlugin(  
                 "SentinelKQLPlugin", "Plugin to generate and run KQL queries in Sentinel", "API",   
                 self.client_list["azure_openai_client"], self.client_list["sentinel_client"],loadSchema

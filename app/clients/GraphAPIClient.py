@@ -27,12 +27,14 @@ class GraphAPIClient:
         self.access_token_timestamp=now_ts
         return self.access_token
         
-    def get_email (self,mailbox,networkmessageid):
+    def get_email (self,mailbox,internetmessageid):
         print ("Invoking Graph API - Get Email")
         access_token=self._get_access_token()
-        url = self.API_base_url+'/users/'+mailbox+"/messages?$filter=internetMessageId eq '"+networkmessageid+"'"
+        url = self.API_base_url+'/users/'+mailbox+"/messages?$filter=internetMessageId eq '"+internetmessageid+"'"
+        print(url)
         headers = {
            'authorization': 'Bearer ' + access_token
         }
         response = requests.request("GET", url, headers=headers)
+        print(response)
         return response.json()

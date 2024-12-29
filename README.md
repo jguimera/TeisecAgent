@@ -56,6 +56,12 @@ Below you can find some prompts inside a session:
 `I need to craft a Sentinel Analytic Rule to detect the behaviour describe above. Generate the Sentinel Analytic rule to be deployed as an ARM template. Produce the output in json format`
 `Fetch this url https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization and optimize the query of the above Sentinel Analytic rule`
 ![Screenshot5](./images/TeisecAgent-FetchURL.png)
+### Email Analysis
+`List the last 5 email received by a user containing 'jaime' in the email address in my organization using Sentinel`
+`Search in Sentinel get all the details of the second email from the list above`
+`Get the email details using the graphAPI of the previous email`
+`Using GPT summarize the full body of the previous email`
+`Can you see any indicators of phishing?`
 
 ## Setup  
   
