@@ -30,7 +30,7 @@ class GraphAPIClient:
     def get_email (self,mailbox,internetmessageid):
         print ("Invoking Graph API - Get Email")
         access_token=self._get_access_token()
-        url = self.API_base_url+'/users/'+mailbox+"/messages?$filter=internetMessageId eq '"+internetmessageid+"'"
+        url = self.API_base_url+'/users/'+mailbox+"/messages??$select=subject,body,internetMessageHeaders&$filter=internetMessageId eq '"+internetmessageid+"'"
         print(url)
         headers = {
            'authorization': 'Bearer ' + access_token
@@ -38,7 +38,9 @@ class GraphAPIClient:
         response = requests.request("GET", url, headers=headers)
         
         if response.status_code == 200:
-            return response.json()
+            result_object={ "status":"success","result":response.json(),"session_tokens":0}
+            return result_object
         else:
-            print(f"Error: {response.status_code} - {response.text}")
-            response.raise_for_status()
+            error_message=f"Error: {response.status_code} - {response.text}"
+            print(error_message)
+            result_object={ "status":"error","result":error_message,"session_tokens":0}

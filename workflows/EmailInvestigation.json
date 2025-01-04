@@ -23,13 +23,19 @@
                 "title": "Extract Email Data",
                 "plugin_id": "GraphAPIPlugin",
                 "capability_name": "getemaildetails",
-                "prompt_text": "Get the Body and headers of the previous email."
+                "prompt_text": "Retrieve the Body and headers of the email listed in the previous step. You must use the recipient email address and the InternetMessageId from the results above."
             },
             {
                 "title": "Analyze Email Content",
                 "plugin_id": "GPTPlugin",
                 "capability_name": "runprompt",
-                "prompt_text": "Analyze the content of the email for suspicious links, attachments, and keywords."
+                "prompt_text": "Run an analysis of the content of the email above for suspicious links, attachments, and keywords."
+            },
+            {
+                "title": "Analyze Email Headers",
+                "plugin_id": "GPTPlugin",
+                "capability_name": "runprompt",
+                "prompt_text": "Run an analysis of the Headers of the email above for suspicious email authentication details. Extract also the list of IP addresses and Domains related to this email from the Header information."
             }
             ,
             {
