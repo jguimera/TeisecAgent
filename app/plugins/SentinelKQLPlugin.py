@@ -27,7 +27,9 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         self.default_schema_file = 'sentinel_extended_schema.json'
         self.sentinel_schema = None  
         if loadSchema:  
-            self.sentinel_schema = self.loadSentinelSchema()  
+            self.sentinel_schema = self.loadSentinelSchema() 
+            self.table_descriptions=self.generateTablesDescription()
+             
   
     def plugincapabilities(self):  
         """  
@@ -38,7 +40,7 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         capabilities={
             "onlygeneratekql":"This capability allows to generate one KQL query for Microsoft Sentinel without runing the query. This capability should be used when the user asks about only generating a query for Sentinel without running it."
             ,"extractandrunkql":"This capability allows to extract a KQL query from the prompt and run it in Microsoft Sentinel. This capability must only be selected when the KQL query can be found inside the prompt itself."
-            ,"generateandrunkql":"This capability allows to generate and run one KQL query to retrieve logs, events, incidents and alerts from Microsoft Sentinel. This capability should be used when the user asks about searching or retrieving any data from Microsoft Sentinel like new incidents, alerts or any other data that is not already in the context or needs to be retrieved from and external url. Other type of common data retrieved by this capabilitiy are Signin, Audit, Device, Email and Azure logs. Do not use this capabilitiy if the user ask for only KQL generation without runing it"
+            ,"generateandrunkql":f"This capability allows to generate and run one KQL query to retrieve logs, events, incidents and alerts from Microsoft Sentinel. This capability should be used when the user asks about searching or retrieving any data from Microsoft Sentinel like new incidents, alerts or any other data that is not already in the context or needs to be retrieved from and external url. Do not use this capabilitiy if the user ask for only KQL generation without runing it. The specific tables that Sentinel has access to are {self.table_descriptions}"
             }
         return  capabilities
   
@@ -281,3 +283,12 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
                 if task["capability_name"]=="extractandrunkql":
                     query_object = self.extractKQL( task["task"], session,channel)
                     return self.runKQLQuery(query_object["result"], session,channel)
+
+    def generateTablesDescription(self):
+        """  
+        Generate a tables description of what the Sentinel KQL plugin can do based on the tables described in self.sentinel_schema.  
+        """  
+        table_descriptions = []
+        for table_name, table_info in self.sentinel_schema.items():
+            table_descriptions.append(f"Table: {table_name}\nDescription: {table_info['tableDescription']}\nFields: {', '.join([field['fieldName'] for field in table_info['schemaDetails']])}\n")
+        return table_descriptions 
