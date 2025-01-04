@@ -9,7 +9,7 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
     Plugin to generate and run KQL queries adhering to the Sentinel schema.  
     """  
   
-    def __init__(self, name, description, plugintype, azureOpenAIClient, sentinelClient, loadSchema=True):  
+    def __init__(self, name, description, plugintype, azureOpenAIClient, sentinelClient, loadSchema=True, additional_capabilities=[]):  
         """  
         Initialize the SentinelKQLPlugin.  
   
@@ -19,6 +19,7 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         :param azureOpenAIClient: Azure OpenAI Client instance  
         :param sentinelClient: Sentinel Client instance  
         :param loadSchema: Boolean to determine if the schema should be loaded  
+        :param additional_capabilities: List of additional capabilities to be added  
         """  
         super().__init__(name, description, plugintype)  
         self.azureOpenAIClient = azureOpenAIClient  
@@ -28,22 +29,87 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         self.sentinel_schema = None  
         if loadSchema:  
             self.sentinel_schema = self.loadSentinelSchema() 
-            self.table_descriptions=self.generateTablesDescription()
-             
-  
+            self.table_descriptions = self.generateTablesDescription()
+        self.additional_capabilities = additional_capabilities
+        self.custom_capabilities = self.load_custom_capabilities()
+
+    def load_custom_capabilities(self):
+        """  
+        Load custom capabilities from the additional_capabilities list.  
+        """  
+        custom_capabilities = {}
+        for capability in self.additional_capabilities:
+            custom_capabilities[capability['title']] = {
+                "description": capability['description'],
+                "parameters": capability['parameters'],
+                "kql_query": capability['kql_query']
+            }
+            print_plugin_debug(self.name, f"Loaded custom capability: {capability['title']}")
+        return custom_capabilities
+
     def plugincapabilities(self):  
         """  
         Provide the plugin capabilities.  
   
         :return: plugin capabilities object  
         """  
-        capabilities={
-            "onlygeneratekql":"This capability allows to generate one KQL query for Microsoft Sentinel without runing the query. This capability should be used when the user asks about only generating a query for Sentinel without running it."
-            ,"extractandrunkql":"This capability allows to extract a KQL query from the prompt and run it in Microsoft Sentinel. This capability must only be selected when the KQL query can be found inside the prompt itself."
-            ,"generateandrunkql":f"This capability allows to generate and run one KQL query to retrieve logs, events, incidents and alerts from Microsoft Sentinel. This capability should be used when the user asks about searching or retrieving any data from Microsoft Sentinel like new incidents, alerts or any other data that is not already in the context or needs to be retrieved from and external url. Do not use this capabilitiy if the user ask for only KQL generation without runing it. The specific tables that Sentinel has access to are {self.table_descriptions}"
+        capabilities = {
+            "onlygeneratekql": "This capability allows to generate one KQL query for Microsoft Sentinel without running the query. This capability should be used when the user asks about only generating a query for Sentinel without running it.",
+            "extractandrunkql": "This capability allows to extract a KQL query from the prompt and run it in Microsoft Sentinel. This capability must only be selected when the KQL query can be found inside the prompt itself.",
+            "generateandrunkql": f"This capability allows to generate and run one KQL query to retrieve logs, events, incidents and alerts from Microsoft Sentinel. This capability should be used when the user asks about searching or retrieving any data from Microsoft Sentinel like new incidents, alerts or any other data that is not already in the context or needs to be retrieved from an external URL. Do not use this capability if the user asks for only KQL generation without running it. The specific tables that Sentinel has access to are {self.table_descriptions}"
+        }
+        capabilities.update(self.custom_capabilities)
+        return capabilities
+
+    def extract_capability_parameters(self, input_parameters, prompt, session, channel):
+        """  
+        Extract and replace the input parameters of the plugin from the user prompt and the current session.  
+        """  
+        extended_prompt = (
+            '''You need to extract the input parameters for the plugin from the prompt below or the previous messages in the session.
+            Always return the output as an object. The output must be in JSON format, adhering to the following schema:
+            {
+                "parameters_found": "yes or no (if the parameters were found in the prompt or the session context)",
+                "parameters": {
+                    "parameter_name_1": "parameter_value_1",
+                    "parameter_name_2": "parameter_value_2",
+                    ...
+                }
             }
-        return  capabilities
-  
+            Don't add any other text to the response, only the JSON object.
+            '''
+            f"These are the parameters required for the capability: {input_parameters}\n"
+            f"The following user prompt gives you the instructions to fill the values of the parameter object. The values might be inside the prompt itself or inside the previous messages in the session context (Do not run):\n {prompt}\n"
+        )
+        print_plugin_debug(self.name, f"Running prompt to extract parameters: {extended_prompt}")
+        parameters = self.runpromptonAzureAI(extended_prompt, session)['result']  
+        parameters_clean = parameters.replace("```plaintext", "").replace("```json", "").replace("```html", "").replace("```", "")  
+        print_plugin_debug(self.name, f"Extracted parameters: {parameters_clean}")  
+        try:
+            # Parse the cleaned result into a JSON object
+            obj = json.loads(parameters_clean)
+            return obj
+        except:
+            # Handle JSON parsing errors
+            channel('systemmessage', {"message": f"Error: {'Error generating parameters.'}"})
+            obj = {}
+            return obj
+
+    def run_custom_capability(self, capability_name, task, session, channel):
+        """  
+        Run a custom capability.  
+        """  
+        capability = self.custom_capabilities[capability_name]
+        parameters_object = self.extract_capability_parameters(capability['parameters'], task["task"], session, channel)
+        if parameters_object['parameters_found'] == "yes":
+            kql_query = capability['kql_query']
+            for param_name, param_value in parameters_object['parameters'].items():
+                kql_query = kql_query.replace(f"{{{{{param_name}}}}}", param_value)
+            return self.runKQLQuery(kql_query, session, channel)
+        else:
+            result_object = {"status": "error", "result": "Parameters not found", "session_tokens": 0}
+            return result_object
+
     def generateSentinelSchema(self):  
         """  
         Retrieve and store the schema of Azure Sentinel tables.  
@@ -273,16 +339,19 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         :param session: Session context  
         :return: Result of the task execution 
         """ 
-        if task["capability_name"]=="generateandrunkql":
-            query_object = self.generateQuery( task["task"], session,channel)
-            return self.runKQLQuery(query_object["result"], session,channel)
+        if task["capability_name"] in self.custom_capabilities:
+            return self.run_custom_capability(task["capability_name"], task, session, channel)
+        elif task["capability_name"] == "generateandrunkql":
+            query_object = self.generateQuery(task["task"], session, channel)
+            return self.runKQLQuery(query_object["result"], session, channel)
+        elif task["capability_name"] == "onlygeneratekql":
+            return self.generateQuery(task["task"], session, channel)
+        elif task["capability_name"] == "extractandrunkql":
+            query_object = self.extractKQL(task["task"], session, channel)
+            return self.runKQLQuery(query_object["result"], session, channel)
         else:
-            if task["capability_name"]=="onlygeneratekql":
-                return self.generateQuery(task["task"], session,channel)
-            else:
-                if task["capability_name"]=="extractandrunkql":
-                    query_object = self.extractKQL( task["task"], session,channel)
-                    return self.runKQLQuery(query_object["result"], session,channel)
+            result_object = {"status": "error", "result": "Capability not found", "session_tokens": 0}
+            return result_object
 
     def generateTablesDescription(self):
         """  
@@ -291,4 +360,4 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         table_descriptions = []
         for table_name, table_info in self.sentinel_schema.items():
             table_descriptions.append(f"Table: {table_name}\nDescription: {table_info['tableDescription']}\nFields: {', '.join([field['fieldName'] for field in table_info['schemaDetails']])}\n")
-        return table_descriptions 
+        return table_descriptions

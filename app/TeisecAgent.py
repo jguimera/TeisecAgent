@@ -75,12 +75,31 @@ class TeisecAgent:
         #Requires Mail.Read Application Permission if used with Service Principal
         self.client_list["graph_api_client"] = GraphAPIClient(  
             self.credential) 
+    def load_capabilities(self):
+        """  
+        Load custom capabilities from the capabilities folder.  
+        """  
+        capabilities_folder = os.path.join(os.getcwd(), 'capabilities')
+        custom_capabilities = {}
+        for filename in os.listdir(capabilities_folder):
+            if filename.endswith('.json'):
+                filepath = os.path.join(capabilities_folder, filename)
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    capabilities = json.load(f)
+                    for capability in capabilities['custom_capabilities']:
+                        plugin_name = capability['plugin_name']
+                        if plugin_name not in custom_capabilities:
+                            custom_capabilities[plugin_name] = []
+                        custom_capabilities[plugin_name].append(capability)
+        return custom_capabilities
+
     def load_plugins(self):  
         """  
         Load plugins for the assistant. Currently hardcoded, but can be extended to auto-load from the plugins folder.  
         """  
         # TODO: Auto-load from all plugins available inside the plugins subfolder  
         loadSchema=(os.getenv('SENTINELKQL_LOADSCHEMA', 'True')=='True' )
+        custom_capabilities = self.load_capabilities()
         self.plugin_list = {  
             "GraphAPIPlugin":GraphAPIPlugin(  
                 "GraphAPIPlugin", "Plugin to retrieve data from the Microsoft GraphAPI", "API",   
@@ -88,7 +107,7 @@ class TeisecAgent:
             ),
             "SentinelKQLPlugin": SentinelKQLPlugin(  
                 "SentinelKQLPlugin", "Plugin to generate and run KQL queries in Sentinel", "API",   
-                self.client_list["azure_openai_client"], self.client_list["sentinel_client"],loadSchema
+                self.client_list["azure_openai_client"], self.client_list["sentinel_client"], loadSchema, custom_capabilities.get("SentinelKQLPlugin", [])
             ),  
             "FetchURLPlugin": FetchURLPlugin(  
                 "FetchURLPlugin", "Plugin to fetch HTML sites", "API",   
@@ -262,7 +281,7 @@ class TeisecAgent:
             shortcut = prompt[1:].split(' ')[0]
             workflow = self.get_workflow(shortcut)
             if workflow:
-                self.send_system(channel, {"message": f"Running workflow: {workflow['workflow']['title']}"})
+                self.send_system(channel, {"message": f"Running workflow: {workflow['workflow']['title']}"} )
                 return self.run_workflow(output_type, workflow, prompt, channel)
             else:
                 self.send_system(channel, {"message": f"Workflow shortcut '{shortcut}' not found."})
