@@ -1,0 +1,34 @@
+{
+    "custom_capabilities": [
+        {
+            "plugin_name": "SentinelKQLPlugin",
+            "title": "InvestigateDomainListThreatIntelligence",
+            "description": "Investigate a list of domains by correlating them to the ThreatIntelligenceIndicator table in Sentinel.",
+            "type": "KQL",
+            "parameters": [
+                {
+                    "name": "domains",
+                    "type": "string",
+                    "description": "A comma-separated list of domains to be investigated. Each domain should be enclosed in single quotes.",
+                    "sample_value": "'example.com', 'test.com'"
+                }
+            ],
+            "kql_query": "ThreatIntelligenceIndicator | where DomainName in ({{domains}}) | project Description, Action, ConfidenceScore, ThreatType, ThreatSeverity,Tags"
+        },
+        {
+            "plugin_name": "SentinelKQLPlugin",
+            "title": "InvestigateIPListThreatIntelligence",
+            "description": "Investigate a list of IP addresses by correlating them to the ThreatIntelligenceIndicator table in Sentinel.",
+            "type": "KQL",
+            "parameters": [
+                {
+                    "name": "ipAddresses",
+                    "type": "string",
+                    "description": "A comma-separated list of IP addresses to be investigated. Each IP address should be enclosed in single quotes.",
+                    "sample_value": "'192.168.1.1', '203.0.113.5'"
+                }
+            ],
+            "kql_query": "ThreatIntelligenceIndicator | where NetworkSourceIP in ({{ipAddresses}}) | project Description, Action, ConfidenceScore, ThreatType, ThreatSeverity,Tags"
+        }
+    ]
+}
