@@ -1,0 +1,62 @@
+{
+    "custom_capabilities": [
+        {
+            "plugin_name": "SentinelKQLPlugin",
+            "title": "GetRecentSignInLogs",
+            "description": "Retrieve the most recent sign-in logs for a specific user.",
+            "type": "KQL",
+            "parameters": [
+                "userPrincipalName"
+            ],
+            "kql_query": "SigninLogs | where UserPrincipalName == '{{userPrincipalName}}' | order by TimeGenerated desc | take 10"
+        },
+        {
+            "plugin_name": "SentinelKQLPlugin",
+            "title": "GetFailedSignInAttempts24h",
+            "description": "Retrieve the failed sign-in attempts for a specific user within the last 24 hours.",
+            "type": "KQL",
+            "parameters": [
+                "userPrincipalName"
+            ],
+            "kql_query": "SigninLogs | where UserPrincipalName == '{{userPrincipalName}}' and ResultType != 0 and TimeGenerated > ago(24h) | order by TimeGenerated desc"
+        },
+        {
+            "plugin_name": "SentinelKQLPlugin",
+            "title": "GetSecurityAlerts",
+            "description": "Retrieve the security alerts generated in the last 7 days.",
+            "type": "KQL",
+            "parameters": [],
+            "kql_query": "SecurityAlert | where TimeGenerated > ago(7d) | order by TimeGenerated desc"
+        },
+        {
+            "plugin_name": "SentinelKQLPlugin",
+            "title": "GetUserAuditLogs",
+            "description": "Retrieve audit logs for a specific user.",
+            "type": "KQL",
+            "parameters": [
+                "userPrincipalName"
+            ],
+            "kql_query": "AuditLogs | where InitiatedBy.user.userPrincipalName == '{{userPrincipalName}}' | order by TimeGenerated desc | take 10"
+        },
+        {
+            "plugin_name": "SentinelKQLPlugin",
+            "title": "GetUserDeviceEvents",
+            "description": "Retrieve device events for a specific user.",
+            "type": "KQL",
+            "parameters": [
+                "userPrincipalName"
+            ],
+            "kql_query": "DeviceEvents | where AccountName == '{{userPrincipalName}}' | order by Timestamp desc | take 10"
+        },
+        {
+            "plugin_name": "SentinelKQLPlugin",
+            "title": "GetUserBehaviorAnalytics",
+            "description": "Retrieve behavior analytics data for a specific user.",
+            "type": "KQL",
+            "parameters": [
+                "userPrincipalName"
+            ],
+            "kql_query": "BehaviorAnalytics | where UserPrincipalName == '{{userPrincipalName}}' | order by TimeGenerated desc | take 10"
+        }
+    ]
+}
