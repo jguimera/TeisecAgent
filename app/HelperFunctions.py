@@ -22,3 +22,14 @@ def saveToFile(content):
                 f.close()
             response='File Saved:'+user_input
         return response
+def print_intro_message():  
+    """  
+    Print the introductory message for the assistant.  
+    """  
+    message = '''
+╔╦╗╔═╗╦╔═╗╔═╗╔═╗  ╔═╗╔═╗╔═╗╔╗╔╔╦╗
+ ║ ║╣ ║╚═╗║╣ ║    ╠═╣║ ╦║╣ ║║║ ║ 
+ ╩ ╚═╝╩╚═╝╚═╝╚═╝  ╩ ╩╚═╝╚═╝╝╚╝ ╩ 
+            '''
+    print(f"{Fore.GREEN}{message}{Fore.WHITE}")  
+    print_info("Welcome to Teisec Agent")  

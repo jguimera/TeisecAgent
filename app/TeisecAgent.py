@@ -21,7 +21,7 @@ class TeisecAgent:
         self.plugin_capabilities={}
         self.session = []  
         self.context_window_size = int(os.getenv('ASSISTANT_CONTEXT_WINDOW_SIZE', 5))  
-        self.print_intro_message()  
+        print_intro_message()  
         if auth_type!=None:
             self.auth(auth_type)  
             self.create_clients()  
@@ -29,11 +29,11 @@ class TeisecAgent:
             self.load_plugin_capabilities()
         self.workflow_list = {}
         self.load_workflows()
-    def launch_auth(self, auth_type):
+    def launch_auth(self,auth_type):
         self.auth(auth_type)  
         self.create_clients()  
         self.load_plugins()  
-        self.load_plugin_capabilities()
+        self.load_plugin_capabilities()    
     def auth(self, auth_type):  
         """  
         Authenticate with Azure using different credential types based on the provided auth_type.  
@@ -127,7 +127,6 @@ class TeisecAgent:
         for plugin_name in self.plugin_list.keys():
             plugincapability=self.plugin_list[plugin_name].plugincapabilities()
             self.plugin_capabilities[plugin_name]= plugincapability
-        print(self.plugin_capabilities)
     def load_workflows(self):
         """  
         Load workflows from the workflows folder.  
@@ -194,27 +193,6 @@ class TeisecAgent:
         Get the plugin instance by its ID.  
         """  
         return self.plugin_list[plugin_id]  
-    def get_plugin_help(self):  
-        """  
-        Get the plugin help information.  
-        """
-        plugin_help_list=[]  
-        for plugin_name in self.plugin_list.keys():  
-            plugin = self.plugin_list[plugin_name]  
-            plugin_help = plugin.pluginhelp()
-            plugin_help_list.append(plugin_help) 
-        return plugin_help_list 
-    def print_intro_message(self):  
-        """  
-        Print the introductory message for the assistant.  
-        """  
-        message = """
-╔╦╗╔═╗╦╔═╗╔═╗╔═╗  ╔═╗╔═╗╔═╗╔╗╔╔╦╗
- ║ ║╣ ║╚═╗║╣ ║    ╠═╣║ ╦║╣ ║║║ ║ 
- ╩ ╚═╝╩╚═╝╚═╝╚═╝  ╩ ╩╚═╝╚═╝╝╚╝ ╩ 
-            """ 
-        print(f"{Fore.GREEN}{message}{Fore.WHITE}")  
-        print_info("Welcome to Teisec Agent")  
     def process_response(self, output_type, user_input, response,channel):  
         """  
         Process the response to format it for specific output types (Terminal, HTML, etc.).  
