@@ -9,8 +9,11 @@ from app.plugins.GPTPlugin import GPTPlugin
 from app.plugins.FetchURLPlugin import FetchURLPlugin  
 from colorama import Fore  
 from app.HelperFunctions import *  
+from app.Prompts import TeisecPrompts
 import json 
 import time  
+import string
+
 class TeisecAgent:  
     def __init__(self, auth_type):  
         self.client_list = {}  
@@ -85,10 +88,11 @@ class TeisecAgent:
             if filename.endswith('.json'):
                 filepath = os.path.join(capabilities_folder, filename)
                 with open(filepath, 'r', encoding='utf-8') as f:
+                    print_debug(f"Loading custom capabilities from {filename}")
                     capabilities = json.load(f)
                     for capability in capabilities['custom_capabilities']:
                         plugin_name = capability['plugin_name']
-                        if plugin_name not in custom_capabilities:
+                        if (plugin_name not in custom_capabilities):
                             custom_capabilities[plugin_name] = []
                         custom_capabilities[plugin_name].append(capability)
         return custom_capabilities
@@ -123,6 +127,7 @@ class TeisecAgent:
         for plugin_name in self.plugin_list.keys():
             plugincapability=self.plugin_list[plugin_name].plugincapabilities()
             self.plugin_capabilities[plugin_name]= plugincapability
+        print(self.plugin_capabilities)
     def load_workflows(self):
         """  
         Load workflows from the workflows folder.  
@@ -139,35 +144,23 @@ class TeisecAgent:
         Get the workflow by its shortcut.  
         """  
         return self.workflow_list.get(shortcut, None)
+    
+    def replace_template_placeholders(self, template_name, **kwargs):
+        """  
+        Replace placeholders in the template with provided values.  
+        """  
+        template = string.Template(TeisecPrompts[template_name])
+        return template.safe_substitute(**kwargs)
+
     def decompose_in_tasks(self, prompt, channel):  
         """  
         Select the appropriate plugin based on the input prompt.  
         """  
         # System message to guide the AI assistant on how to decompose the prompt into tasks
-        system_message='''  
-            You are an AI assistant designed to process user prompts by utilizing one or more capabilities from the available plugins. You will receive both the user prompt and the session's previous messages. 
-            Your task is to select the most appropriate plugins and capabilities to fulfill the user's request.
-            Evaluate whether the user's prompt can be addressed by a single capability or if it needs to be broken down into multiple sequential tasks.
-            When decomposing the prompt, remember that each task will have access to the results of the previous tasks as context.
-            Ensure each task description includes all necessary details to achieve the expected results including expected output fields to be used in the following tasks like Ids of items of the next task. 
-            There is no limit on the length of the Task description.
-            Always return the output as an array, even if it contains only one task. The output must be in JSON format, adhering to the following schema:
-            [  
-                {  
-                    "plugin_name": "<selected_plugin_name>",  
-                    "capability_name": "<selected_capability_name>",  
-                    "task": "<Detailed task description including expected output>"  
-                }  
-            ]
-            Don't add any other text to the response, only the JSON object.  
-            Below is the list of available plugins and their capabilities, which you will use to decompose the user's prompt into tasks:
-            '''
-        system_message=system_message+f'{self.plugin_capabilities}'
+        system_message = self.replace_template_placeholders("Core.Decompose.System", AgentCapabilities=self.plugin_capabilities)
+        
         # User prompt to be decomposed into tasks
-        extended_user_prompt = (
-            'Please, considering the session context, decompose the following user prompt in one or multiple tasks:\n'
-            f'{prompt}'
-            )
+        extended_user_prompt = self.replace_template_placeholders("Core.Decompose.User", UserPrompt=prompt)
         
         # Create a new session with the system message and the current session
         system_object = {"role": "system", "content": system_message}
@@ -227,35 +220,11 @@ class TeisecAgent:
         Process the response to format it for specific output types (Terminal, HTML, etc.).  
         """  
         if output_type == 'terminal':  
-            extended_prompt = (  
-                'Below you have a prompt and the response associated with it. '  
-                'Based on the prompt I need you to format the provided response to be shown in a terminal console. '  
-                'If the response is a JSON object format it in a table for the terminal output unless specified otherwise below. '  
-                'Make sure that the output table fits the screen. If a field takes more than 40 characters you should truncate it.\n'
-                'Make sure you remove any reference to BlueVoyant or BV from the results. You can replace it with the text SEN.\n'   
-                f'This is the original prompt (only use it to format the output): {user_input}\n'  
-                f'This is the original prompt response (this is the data you have to format): \n{response}'  
-            )  
+            extended_prompt = self.replace_template_placeholders("Core.Output.Terminal", UserInput=user_input, Response=response)  
         elif output_type == 'html':  
-            extended_prompt = (  
-                'Below you have a prompt and the response associated with it. '  
-                'Based on the original prompt I need you to format the provided response to be shown in a browser in HTML format. Your response will be embedded inside a chat session.'  
-                'You do not need to include the whole HTML document, only a div element with the results. No style is needed.'
-                'If the original prompt is asking to only generate a code, either JSON, KQL or YAML please wrap the code in iside a code block like this: <div class="relative bg-gray-100 rounded-lg dark:bg-gray-100 p-4"><div class="max-h-full"><pre><code id="code-block" class="text-sm text-black-500 dark:text-black-500 whitespace-pre"> Returned Code </code></pre></div></div>'
-                'If the original prompt is asking to retrieve some data and the response is a JSON object, you must format it in a table for the HTML output. '  
-                'Make sure that the output html table is responsive. If a field takes more than 40 characters you can truncate it.\n'  
-                f'This is the original prompt (only use it to format the output): {user_input}\n'  
-                f'This is the original prompt response (this is the data you have to format): \n{response}'  
-            )  
+            extended_prompt = self.replace_template_placeholders("Core.Output.HTML", UserInput=user_input, Response=response)    
         elif output_type == 'other':  
-            extended_prompt = (  
-                'Below you have a prompt and the response associated with it. '  
-                'Based on the prompt I need you to format the provided response to be shown using plain text format. '  
-                'If the response is a JSON object format it in a table for the plain text output. '  
-                'Make sure that the output html table is responsive. If a field takes more than 40 characters you can truncate it.\n'  
-                f'This is the original prompt (only use it to format the output): {user_input}\n'  
-                f'This is the original prompt response (this is the data you have to format): \n{response}'  
-            )  
+            extended_prompt = self.replace_template_placeholders("Core.Output.Other", UserInput=user_input, Response=response)  
         prompt_result_object = self.plugin_list["GPTPlugin"].runprompt(extended_prompt, [],channel)  
         if prompt_result_object['status']=='error':
             channel('systemmessage',{"message":f"Error: {prompt_result_object['result'] }"})
@@ -320,23 +289,7 @@ class TeisecAgent:
         """  
         Extract and replace the input parameters of the workflow from the user prompt and the current session.  
         """  
-        extended_prompt = (
-            '''You need to extract the input parameters for the workflow from the prompt below or the previous messages in the session.
-            Always return the output as an object. The output must be in JSON format, adhering to the following schema:
-            {
-                "parameters_found": "yes or no (if the parameters were found in the prompt or the session context)",
-                "parameters": {
-                    "parameter_name_1": "parameter_value_1",
-                    "parameter_name_2": "parameter_value_2",
-                    ...
-                }
-            }
-            Don't add any other text to the response, only the JSON object.
-            '''
-            f"These are the parameters required for the workflow: {workflow['workflow']['input_parameters']}\n"
-            f"This is the Prompt from where you can extract some of the required details to produce the requested output (Do not run):\n {prompt}\n"
-        )
-        print(extended_prompt)
+        extended_prompt = self.replace_template_placeholders("Workflows.ExtractParameters.System", UserInput=prompt, Parameters=workflow['workflow']['input_parameters'])  
         parameters = self.plugin_list["GPTPlugin"].runprompt(extended_prompt, session, channel)['result']
         parameters_clean = parameters.replace("```plaintext", "").replace("```json", "").replace("```html", "").replace("```", "")
         print_plugin_debug("TeisecAgent", f"Extracted parameters: {parameters_clean}")
