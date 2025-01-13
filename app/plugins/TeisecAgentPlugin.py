@@ -11,10 +11,12 @@ class TeisecAgentPlugin:
         return self.name
     def runprompt(self,prompt,session,channel):
         print(self.prompt)
-    def runtask(self,task,session,channel):
+    def runtask(self,task,session,channel,parameters_object):
         result_object={"status":"success","result":"","session_tokens":0}   
         print(self.task)
         return result_object
     def plugincapabilities(self):  
-        capabilities={'plugincapabilitiy':"This capability allows for."}
+        capabilities={'plugincapabilitiy': {
+                "description":"This capability allows for."}
+        }
         return  capabilities

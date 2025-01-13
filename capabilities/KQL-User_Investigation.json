@@ -6,7 +6,12 @@
             "description": "Retrieve the most recent sign-in logs for a specific user.",
             "type": "KQL",
             "parameters": [
-                "userPrincipalName"
+                {
+                    "name": "userPrincipalName",
+                    "type": "string",
+                    "description": "The user principal name of the user.",
+                    "sample_value": "user@example.com"
+                }
             ],
             "kql_query": "SigninLogs | where UserPrincipalName == '{{userPrincipalName}}' | order by TimeGenerated desc | take 10"
         },
@@ -16,7 +21,12 @@
             "description": "Retrieve the failed sign-in attempts for a specific user within the last 24 hours.",
             "type": "KQL",
             "parameters": [
-                "userPrincipalName"
+                {
+                    "name": "userPrincipalName",
+                    "type": "string",
+                    "description": "The user principal name of the user.",
+                    "sample_value": "user@example.com"
+                }
             ],
             "kql_query": "SigninLogs | where UserPrincipalName == '{{userPrincipalName}}' and ResultType != 0 and TimeGenerated > ago(24h) | order by TimeGenerated desc"
         },
@@ -34,7 +44,12 @@
             "description": "Retrieve audit logs for a specific user.",
             "type": "KQL",
             "parameters": [
-                "userPrincipalName"
+                {
+                    "name": "userPrincipalName",
+                    "type": "string",
+                    "description": "The user principal name of the user.",
+                    "sample_value": "user@example.com"
+                }
             ],
             "kql_query": "AuditLogs | where InitiatedBy.user.userPrincipalName == '{{userPrincipalName}}' | order by TimeGenerated desc | take 10"
         },
@@ -44,7 +59,12 @@
             "description": "Retrieve device events for a specific user.",
             "type": "KQL",
             "parameters": [
-                "userPrincipalName"
+                {
+                    "name": "userPrincipalName",
+                    "type": "string",
+                    "description": "The user principal name of the user.",
+                    "sample_value": "user@example.com"
+                }
             ],
             "kql_query": "DeviceEvents | where AccountName == '{{userPrincipalName}}' | order by Timestamp desc | take 10"
         },
@@ -54,7 +74,12 @@
             "description": "Retrieve behavior analytics data for a specific user.",
             "type": "KQL",
             "parameters": [
-                "userPrincipalName"
+                {
+                    "name": "userPrincipalName",
+                    "type": "string",
+                    "description": "The user principal name of the user.",
+                    "sample_value": "user@example.com"
+                }
             ],
             "kql_query": "BehaviorAnalytics | where UserPrincipalName == '{{userPrincipalName}}' | order by TimeGenerated desc | take 10"
         }

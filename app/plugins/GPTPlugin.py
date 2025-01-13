@@ -14,9 +14,11 @@ class GPTPlugin(TeisecAgentPlugin):
   
         :return: plugin capabilities object  
         """  
-        capabilities={'runprompt':"This capability allows run a prompt without retrieving any additional external data. This plugin should be use if the user prompt doesn't require any additional or external data. THe main usage is to summarize current data or to generate new data based on the current context."}
+        capabilities={'runprompt':{
+                "description":"This capability allows run a prompt without retrieving any additional external data. This plugin should be use if the user prompt doesn't require any additional or external data. THe main usage is to summarize current data or to generate new data based on the current context."}  
+        } 
         return  capabilities
-    def runtask(self, task, session,channel):  
+    def runtask(self, task, session,channel,parameters_object):  
         """  
         Convenience method to run the tasks inside the plugin.  
         :param task: Input task  

@@ -54,9 +54,12 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         :return: plugin capabilities object  
         """  
         capabilities = {
-            "onlygeneratekql": "This capability allows to generate one KQL query for Microsoft Sentinel without running the query. This capability should be used when the user asks about only generating a query for Sentinel without running it.",
-            "extractandrunkql": "This capability allows to extract a KQL query from the prompt and run it in Microsoft Sentinel. This capability must only be selected when the KQL query can be found inside the prompt itself.",
-            "generateandrunkql": f"This capability allows to generate and run one KQL query to retrieve logs, events, incidents and alerts from Microsoft Sentinel. This capability should be used when the user asks about searching or retrieving any data from Microsoft Sentinel like new incidents, alerts or any other data that is not already in the context or needs to be retrieved from an external URL. Do not use this capability if the user asks for only KQL generation without running it. The specific tables that Sentinel has access to are {self.table_descriptions}"
+            "onlygeneratekql": {
+                "description":"This capability allows to generate one KQL query for Microsoft Sentinel without running the query. This capability should be used when the user asks about only generating a query for Sentinel without running it."},    
+            "extractandrunkql": {
+                "description": "This capability allows to extract a KQL query from the prompt and run it in Microsoft Sentinel. This capability must only be selected when the KQL query can be found inside the prompt itself."},
+            "generateandrunkql": {
+                "description": f"This capability allows to generate and run one KQL query to retrieve logs, events, incidents and alerts from Microsoft Sentinel. This capability should be used when the user asks about searching or retrieving any data from Microsoft Sentinel like new incidents, alerts or any other data that is not already in the context or needs to be retrieved from an external URL. Do not use this capability if the user asks for only KQL generation without running it. The specific tables that Sentinel has access to are {self.table_descriptions}"}
         }
         capabilities.update(self.custom_capabilities)
         return capabilities
@@ -95,12 +98,11 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
             obj = {}
             return obj
 
-    def run_custom_capability(self, capability_name, task, session, channel):
+    def run_custom_capability(self, capability_name, task, session, channel,parameters_object):
         """  
         Run a custom capability.  
         """  
         capability = self.custom_capabilities[capability_name]
-        parameters_object = self.extract_capability_parameters(capability['parameters'], task["task"], session, channel)
         if parameters_object['parameters_found'] == "yes":
             kql_query = capability['kql_query']
             for param_name, param_value in parameters_object['parameters'].items():
@@ -332,7 +334,7 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         else: 
             query_object= self.generateNewKQL(prompt, session,channel)
         return query_object
-    def runtask(self, task, session,channel):  
+    def runtask(self, task, session,channel,parameters_object):  
         """  
         Convenience method to run the tasks inside the plugin.  
         :param task: Input task  
@@ -340,7 +342,7 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         :return: Result of the task execution 
         """ 
         if task["capability_name"] in self.custom_capabilities:
-            return self.run_custom_capability(task["capability_name"], task, session, channel)
+            return self.run_custom_capability(task["capability_name"], task, session, channel,parameters_object)
         elif task["capability_name"] == "generateandrunkql":
             query_object = self.generateQuery(task["task"], session, channel)
             return self.runKQLQuery(query_object["result"], session, channel)

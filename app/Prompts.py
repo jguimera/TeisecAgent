@@ -96,11 +96,11 @@ This is the list of available capabilities that you can use to define the workfl
 ### Output  
 The final output must be a JSON object that defines the complete workflow.  
 ''',
-"Workflows.ExtractParameters.System": '''
-            You need to extract the input parameters for the workflow from the prompt below or the previous messages in the session.
+"Core.ExtractParameters.System": '''
+            You need to extract the input parameters for the next action from the prompt below or the previous messages in the session.
             Always return the output as an object. The output must be in JSON format, adhering to the following schema:
             {
-                "parameters_found": "yes or no (if the parameters were found in the prompt or the session context)",
+                "parameters_found": "yes or no (if all the parameters were found in the prompt or the session context)",
                 "parameters": {
                     "parameter_name_1": "parameter_value_1",
                     "parameter_name_2": "parameter_value_2",
@@ -108,8 +108,9 @@ The final output must be a JSON object that defines the complete workflow.
                 }
             }
             Don't add any other text to the response, only the JSON object.
-            These are the parameters required for the workflow: ${Parameters}
-            This is the Prompt from where you can extract some of the required details to produce the requested output (Do not run): ${UserInput}
+            These are the parameters required for the next step: ${Parameters}
+            The following user prompt gives you the instructions to fill the values of the parameter object. The values might be inside the prompt itself or inside the previous messages in the session context (Do not run):
+            ${UserInput}
 ''',
     "Core.Decompose.System":'''  
             You are an AI assistant designed to process user prompts by utilizing one or more capabilities from the available plugins. You will receive both the user prompt and the session's previous messages. 
@@ -132,6 +133,7 @@ The final output must be a JSON object that defines the complete workflow.
             ''',
     "Core.Decompose.User":'''Please, considering the session context, decompose the following user prompt in one or multiple tasks:
                              ${UserPrompt}''',
+    "Core.Main.System":''' You are an AI system specializing in security analytics and investigations, your task is to retrieve and analyze security data from various platforms based on the user request."}]''',
     "Core.Output.Terminal":'''Below you have a prompt and the response associated with it.   
                 Based on the prompt I need you to format the provided response to be shown in a terminal console. 
                 If the response is a JSON object format it in a table for the terminal output unless specified otherwise below.

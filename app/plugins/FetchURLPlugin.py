@@ -25,7 +25,9 @@ class FetchURLPlugin(TeisecAgentPlugin):
   
         :return: plugin capabilities object  
         """  
-        capabilities={'fetchurl':"This capability retrieves data from external urls or site to be processed inside the session.It requires a valid URL in the prompt "}
+        capabilities={'fetchurl':{
+                "description":"This capability retrieves data from external urls or site to be processed inside the session.It requires a valid URL in the prompt "}
+        }
         return  capabilities
     def clean_html(self, html_content):  
         """  
@@ -100,7 +102,7 @@ class FetchURLPlugin(TeisecAgentPlugin):
             return result_object
         else:
             return result_object
-    def runtask(self, task, session,channel):  
+    def runtask(self, task, session,channel,parameters_object):  
         """  
         Convenience method to run the tasks inside the plugin.  
         :param task: Input task  

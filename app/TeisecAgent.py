@@ -19,7 +19,7 @@ class TeisecAgent:
         self.client_list = {}  
         self.plugin_list = {} 
         self.plugin_capabilities={}
-        self.session = []  
+        self.session = [{"role":"system","content":TeisecPrompts["Core.Main.System"]}]  
         self.context_window_size = int(os.getenv('ASSISTANT_CONTEXT_WINDOW_SIZE', 5))  
         print_intro_message()  
         if auth_type!=None:
@@ -123,10 +123,14 @@ class TeisecAgent:
             )  
         }  
     def load_plugin_capabilities(self):
-        self.plugin_capabilities={}
+        self.plugin_capabilities=[]
         for plugin_name in self.plugin_list.keys():
             plugincapability=self.plugin_list[plugin_name].plugincapabilities()
-            self.plugin_capabilities[plugin_name]= plugincapability
+            plugin={
+                "plugin_name":plugin_name,
+                "capabilities":plugincapability
+            }
+            self.plugin_capabilities.append(plugin)
     def load_workflows(self):
         """  
         Load workflows from the workflows folder.  
@@ -234,9 +238,32 @@ class TeisecAgent:
                 self.send_system(channel, {"message": f"Workflow shortcut '{shortcut}' not found."})
                 return []
         else:
-            return self.run_decomposed_prompt(output_type, prompt, channel)
+            return self.decompose_and_run_prompt(output_type, prompt, channel)
 
-    def run_decomposed_prompt(self, output_type, prompt, channel=None):
+    def run_task(self, task, channel=None):
+        #get plugin and Capability
+        plugin_name=task['plugin_name']
+        try:
+            plugin=self.get_plugin(plugin_name)
+            capability=plugin.plugincapabilities()[task['capability_name']]
+        except: 
+            channel('systemmessage', {"message": f"Error: Plugin or Capability not found."})    
+            return {"status": "error", "result": f"Error: Plugin or Capability not found."}
+        
+        #check if capabilitiy has input parameters
+        parameters_object=None
+        if 'parameters' in capability:
+            #extract parameters
+            parameters_object=self.extract_parameters(capability['parameters'],task['task'],self.session,channel)
+        #run task
+        plugin_response_object = plugin.runtask(task, self.session, channel,parameters_object)
+        if plugin_response_object['status'] == 'error':
+                channel('systemmessage', {"message": f"Error: {plugin_response_object['result'] }"})   
+        else:
+            self.update_session(task['task'], plugin_response_object['result'])
+            self.send_debug(channel, {"message": f"Session Length: {len(self.session)}"})
+        return plugin_response_object
+    def decompose_and_run_prompt(self, output_type, prompt, channel=None):
         """  
         Run the provided prompt using task decomposition.  
         """  
@@ -246,16 +273,10 @@ class TeisecAgent:
         self.send_system(channel, {"message": 'Prompt decomposed in ' + str(len(decomposed_tasks)) + ' tasks'})
         for task in decomposed_tasks:
             self.send_system(channel, {"message": '(' + task['plugin_name'] + '-' + task['capability_name'] + ') ' + task['task']})
-            plugin_response_object = self.get_plugin(task['plugin_name']).runtask(task, self.session, channel)  
-            if plugin_response_object['status'] == 'error':
-                channel('systemmessage', {"message": f"Error: {plugin_response_object['result'] }"})
-                break   
-            else:
-                self.update_session(task['task'], plugin_response_object['result'])
-                processed_response = self.process_response(output_type, task['task'], str(plugin_response_object['result']), channel)
-                task_results.append(processed_response)  
-                self.send_response(channel, {"message": processed_response})     
-                self.send_debug(channel, {"message": f"Session Length: {len(self.session)}"})  
+            plugin_response_object=self.run_task(task,channel)
+            processed_response = self.process_response(output_type, task['task'], str(plugin_response_object['result']), channel)
+            task_results.append(processed_response)  
+            self.send_response(channel, {"message": processed_response})      
         # Stop the timer  
         end_time = time.time()  
         # Calculate the elapsed time  
@@ -263,11 +284,11 @@ class TeisecAgent:
         self.send_system(channel, {"message": f"Processing Time: {elapsed_time} seconds"}) 
         return task_results
 
-    def extract_workflow_parameters(self, workflow, prompt, session, channel):
+    def extract_parameters(self, parameters, prompt, session, channel):
         """  
-        Extract and replace the input parameters of the workflow from the user prompt and the current session.  
+        Extract and replace the input parameters from the user prompt and the current session.  
         """  
-        extended_prompt = self.replace_template_placeholders("Workflows.ExtractParameters.System", UserInput=prompt, Parameters=workflow['workflow']['input_parameters'])  
+        extended_prompt = self.replace_template_placeholders("Core.ExtractParameters.System", UserInput=prompt, Parameters=parameters)  
         parameters = self.plugin_list["GPTPlugin"].runprompt(extended_prompt, session, channel)['result']
         parameters_clean = parameters.replace("```plaintext", "").replace("```json", "").replace("```html", "").replace("```", "")
         print_plugin_debug("TeisecAgent", f"Extracted parameters: {parameters_clean}")
@@ -287,7 +308,7 @@ class TeisecAgent:
         """  
         start_time = time.time()  
         task_results = []
-        parameters_object = self.extract_workflow_parameters(workflow, prompt, self.session, channel)
+        parameters_object = self.extract_parameters(workflow['workflow']['input_parameters'], prompt, self.session, channel)
         if parameters_object['parameters_found'] == "yes":
             for step in workflow['workflow']['steps']:
                 task_prompt = step['prompt_text']
@@ -299,7 +320,7 @@ class TeisecAgent:
                     "task": task_prompt
                 }
                 self.send_system(channel, {"message": '(' + task['plugin_name'] + '-' + task['capability_name'] + ') ' + task['task']})
-                plugin_response_object = self.get_plugin(task['plugin_name']).runtask(task, self.session, channel)  
+                plugin_response_object=self.run_task(task,channel)
                 if plugin_response_object['status'] == 'error':
                     channel('systemmessage', {"message": f"Error: {plugin_response_object['result'] }"})
                     break   

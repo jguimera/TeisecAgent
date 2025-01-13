@@ -24,6 +24,11 @@
                 "plugin_id": "GraphAPIPlugin",
                 "capability_name": "getemaildetails",
                 "prompt_text": "Retrieve the Body and headers of the email listed in the previous step. You must use the recipient email address and the InternetMessageId from the results above."
+            },            {
+                "title": "Render Email",
+                "plugin_id": "GPTPlugin",
+                "capability_name": "runprompt",
+                "prompt_text": "Render the body of the email in a format that mimics what a user would see inside an email client. Include the email content as it would appear to the recipient, with appropriate formatting and layout."
             },
             {
                 "title": "Analyze Email Content",

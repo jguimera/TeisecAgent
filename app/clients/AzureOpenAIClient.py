@@ -1,5 +1,7 @@
+import json
 from openai import AzureOpenAI,BadRequestError,APIConnectionError
 from colorama import Fore
+from app.Prompts import TeisecPrompts
 class AzureOpenAIClient():
     def __init__(self,api_key,azure_endpoint,model_name):
         self.model_name=model_name
@@ -15,7 +17,7 @@ class AzureOpenAIClient():
             message_object=session
         else:
             #session without System Message. Using Default
-            message_object = [{"role":"system","content":"As an AI specializing in security analytics, your task is to retrieve and analyze security data from various platforms."}]
+            message_object = [{"role":"system","content":TeisecPrompts["Core.Main.System"]}]
             message_object.extend(session)
         message_object.append({"role":"user","content":prompt})
         result=''
@@ -23,7 +25,10 @@ class AzureOpenAIClient():
         session_tokens=''
         #print(prompt)
         with open('promptaudit.log', 'a', encoding='utf-8') as f:  
-            f.write('\n'.join(prompt))
+            f.write("\nSESSION:\n")
+            f.write(json.dumps(session, ensure_ascii=False, indent=4))
+            f.write('\nPROMPT:\n')
+            f.write(prompt)
             f.close()
             #json.dump(table_schemas, f, ensure_ascii=False, indent=4)
         try:
@@ -50,7 +55,7 @@ class AzureOpenAIClient():
         result_object={"status":status,"result":result,"session_tokens":session_tokens}
         #print(result)
         with open('promptaudit.log', 'a', encoding='utf-8') as f:  
-            f.write("\n")
+            f.write("\nRESULT\n")
             f.write(result)
             f.close()
         return result_object

@@ -30,7 +30,7 @@ class GraphAPIClient:
     def get_email (self,mailbox,internetmessageid):
         print ("Invoking Graph API - Get Email")
         access_token=self._get_access_token()
-        url = self.API_base_url+'/users/'+mailbox+"/messages??$select=subject,body,internetMessageHeaders&$filter=internetMessageId eq '"+internetmessageid+"'"
+        url = self.API_base_url+'/users/'+mailbox+"/messages?$select=subject,body,internetMessageHeaders&$filter=internetMessageId eq '"+internetmessageid+"'"
         print(url)
         headers = {
            'authorization': 'Bearer ' + access_token
