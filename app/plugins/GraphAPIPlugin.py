@@ -9,7 +9,7 @@ class GraphAPIPlugin(TeisecAgentPlugin):
     Plugin to generate and run KQL queries adhering to the Sentinel schema.  
     """  
   
-    def __init__(self, name, description, plugintype, azureOpenAIClient, graphAPIClient):  
+    def __init__(self, name, description, plugintype, graphAPIClient):  
         """  
         Initialize the GraphAPIKQLPlugin.  
   
@@ -20,7 +20,6 @@ class GraphAPIPlugin(TeisecAgentPlugin):
         :param graphAPIClient: GraphAPI Client instance  
         """  
         super().__init__(name, description, plugintype)  
-        self.azureOpenAIClient = azureOpenAIClient  
         self.graphAPIClient = graphAPIClient  
   
     def plugincapabilities(self):  
@@ -39,16 +38,6 @@ class GraphAPIPlugin(TeisecAgentPlugin):
                 }
         }    
         return  capabilities
-    def runpromptonAzureAI(self, prompt, session):  
-        """  
-        Run a given prompt on the Azure OpenAI client.  
-  
-        :param prompt: Input prompt  
-        :param session: Session context  
-        :return: Response from Azure OpenAI Client  
-        """
-        result_object= self.azureOpenAIClient.runPrompt(prompt, session)
-        return result_object
     def getEmailDetails(self, parametersObject, session,channel):  
         """  
         Convenience method to run the prompt and retrieve the Email details.  
@@ -65,7 +54,7 @@ class GraphAPIPlugin(TeisecAgentPlugin):
             #result_object={"status":"error","result":emailDetails_object["result"],"session_tokens":0}
         #result_object={"status":"sucess","result":emailDetails_object["result"],"session_tokens":0} 
         return emailDetails_object
-    def runtask(self, task, session,channel,parameters_object):  
+    def runtask(self, task, session,channel,parameters_object,scope='GraphAPIPlugin'):  
         """  
         Convenience method to run the tasks inside the plugin.  
         :param task: Input task  
@@ -76,10 +65,10 @@ class GraphAPIPlugin(TeisecAgentPlugin):
             #print(session)
             #parameters_object = self.extract_capability_parameters(paramaters,task["task"] , session,channel)
             if parameters_object['parameters_found']=="yes":    
-                return self.getEmailDetails(parameters_object['parameters'], session,channel)
+                result_object= self.getEmailDetails(parameters_object['parameters'], session,channel)
             else:
                 result_object={"status":"error","result":"Parameters not found","session_tokens":0} 
-                return result_object
         else:
             result_object={"status":"error","result":"Capability not found","session_tokens":0} 
-            return result_object
+        result_object["prompt"]=task["task"]
+        return result_object

@@ -11,7 +11,7 @@ class AzureOpenAIClient():
         api_version="2024-02-15-preview"
         )
     
-    def runPrompt(self,prompt,session=[]):
+    def runPrompt(self,prompt,session=[],scope='core'):
         if (len(session)>0 and session[0]['role']=='system'):
             #session already contains System message
             message_object=session
@@ -24,7 +24,7 @@ class AzureOpenAIClient():
         status='success'
         session_tokens=''
         #print(prompt)
-        with open('promptaudit.log', 'a', encoding='utf-8') as f:  
+        with open('log/'+scope+'.log', 'a', encoding='utf-8') as f:  
             f.write("\nSESSION:\n")
             f.write(json.dumps(session, ensure_ascii=False, indent=4))
             f.write('\nPROMPT:\n')

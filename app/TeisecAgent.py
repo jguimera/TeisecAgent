@@ -13,6 +13,8 @@ from app.Prompts import TeisecPrompts
 import json 
 import time  
 import string
+import concurrent
+from concurrent.futures import ThreadPoolExecutor
 
 class TeisecAgent:  
     def __init__(self, auth_type):  
@@ -106,8 +108,7 @@ class TeisecAgent:
         custom_capabilities = self.load_capabilities()
         self.plugin_list = {  
             "GraphAPIPlugin":GraphAPIPlugin(  
-                "GraphAPIPlugin", "Plugin to retrieve data from the Microsoft GraphAPI", "API",   
-                self.client_list["azure_openai_client"], self.client_list["graph_api_client"]
+                "GraphAPIPlugin", "Plugin to retrieve data from the Microsoft GraphAPI", "API", self.client_list["graph_api_client"]
             ),
             "SentinelKQLPlugin": SentinelKQLPlugin(  
                 "SentinelKQLPlugin", "Plugin to generate and run KQL queries in Sentinel", "API",   
@@ -169,10 +170,11 @@ class TeisecAgent:
         system_object = {"role": "system", "content": system_message}
         new_session = []
         new_session.append(system_object)
-        new_session = new_session + self.session
+
+        new_session = new_session + self.session[1:]
         
         # Run the prompt through the GPTPlugin to get the task list
-        task_list_object = self.plugin_list["GPTPlugin"].runprompt(extended_user_prompt, new_session, channel)
+        task_list_object = self.plugin_list["GPTPlugin"].runprompt(extended_user_prompt, new_session, channel, scope='Core-Decompose')
         channel('debugmessage', {"message": f"Session Tokens (plugin selection): {task_list_object['session_tokens'] }"})  
         
         # Handle errors in the task list generation
@@ -182,7 +184,7 @@ class TeisecAgent:
         else:
             # Clean tags from the result
             selected_plugin_string_clean = task_list_object['result'].replace("```plaintext", "").replace("```json", "").replace("```html", "").replace("```", "")  
-            self.update_session(extended_user_prompt, selected_plugin_string_clean)
+            #self.update_session(extended_user_prompt, selected_plugin_string_clean)
             try:
                 # Parse the cleaned result into a JSON object
                 obj = json.loads(selected_plugin_string_clean) 
@@ -207,7 +209,7 @@ class TeisecAgent:
             extended_prompt = self.replace_template_placeholders("Core.Output.HTML", UserInput=user_input, Response=response)    
         elif output_type == 'other':  
             extended_prompt = self.replace_template_placeholders("Core.Output.Other", UserInput=user_input, Response=response)  
-        prompt_result_object = self.plugin_list["GPTPlugin"].runprompt(extended_prompt, [],channel)  
+        prompt_result_object = self.plugin_list["GPTPlugin"].runprompt(extended_prompt, [],channel, scope='Core-Output')  
         if prompt_result_object['status']=='error':
             channel('systemmessage',{"message":f"Error: {prompt_result_object['result'] }"})
             return  ''   
@@ -289,7 +291,7 @@ class TeisecAgent:
         Extract and replace the input parameters from the user prompt and the current session.  
         """  
         extended_prompt = self.replace_template_placeholders("Core.ExtractParameters.System", UserInput=prompt, Parameters=parameters)  
-        parameters = self.plugin_list["GPTPlugin"].runprompt(extended_prompt, session, channel)['result']
+        parameters = self.plugin_list["GPTPlugin"].runprompt(extended_prompt, session, channel, scope='Core-ParametersExtraction')['result']
         parameters_clean = parameters.replace("```plaintext", "").replace("```json", "").replace("```html", "").replace("```", "")
         print_plugin_debug("TeisecAgent", f"Extracted parameters: {parameters_clean}")
         try:
@@ -310,26 +312,24 @@ class TeisecAgent:
         task_results = []
         parameters_object = self.extract_parameters(workflow['workflow']['input_parameters'], prompt, self.session, channel)
         if parameters_object['parameters_found'] == "yes":
-            for step in workflow['workflow']['steps']:
-                task_prompt = step['prompt_text']
-                for param_name, param_value in parameters_object['parameters'].items():
-                    task_prompt = task_prompt.replace(f"{{{{{param_name}}}}}", param_value)
-                task = {
-                    "plugin_name": step['plugin_id'],
-                    "capability_name": step['capability_name'],
-                    "task": task_prompt
-                }
-                self.send_system(channel, {"message": '(' + task['plugin_name'] + '-' + task['capability_name'] + ') ' + task['task']})
-                plugin_response_object=self.run_task(task,channel)
-                if plugin_response_object['status'] == 'error':
-                    channel('systemmessage', {"message": f"Error: {plugin_response_object['result'] }"})
-                    break   
+            for workflow_task in workflow['workflow']['tasks']:
+                tasks_to_run=[]
+                if 'parallel_tasks' in workflow_task:
+                    tasks_to_run.extend(workflow_task['parallel_tasks'])
                 else:
-                    self.update_session(task['task'], plugin_response_object['result'])
-                    processed_response = self.process_response(output_type, task['task'], str(plugin_response_object['result']), channel)
-                    task_results.append(processed_response)  
-                    self.send_response(channel, {"message": processed_response})     
-                    self.send_debug(channel, {"message": f"Session Length: {len(self.session)}"})  
+                    tasks_to_run.append(workflow_task)
+                for task_to_run in tasks_to_run:
+                    plugin_response_object=self.run_workflow_task( task_to_run,parameters_object, channel)
+                    self.send_system(channel, {"message": '(' + task_to_run['plugin_id'] + '-' + task_to_run['capability_name'] + ') ' + plugin_response_object['prompt']})
+                    if plugin_response_object['status'] == 'error':
+                        channel('systemmessage', {"message": f"Error: {plugin_response_object['result'] }"})
+                        break   
+                    else:
+                        self.update_session(plugin_response_object['prompt'], plugin_response_object['result'])
+                        processed_response = self.process_response(output_type, plugin_response_object['prompt'], str(plugin_response_object['result']), channel)
+                        task_results.append(processed_response)  
+                        self.send_response(channel, {"message": processed_response})     
+                        self.send_debug(channel, {"message": f"Session Length: {len(self.session)}"})  
         else:
             self.send_system(channel, {"message": "Error: Required parameters not found in the prompt or session."})
         # Stop the timer  
@@ -338,7 +338,25 @@ class TeisecAgent:
         elapsed_time = round(end_time - start_time)
         self.send_system(channel, {"message": f"Processing Time: {elapsed_time} seconds"}) 
         return task_results
-
+    def run_workflow_task(self, workflow_task,parameters_object, channel=None):
+        task_prompt = workflow_task['prompt_text']
+        for param_name, param_value in parameters_object['parameters'].items():
+            task_prompt = task_prompt.replace(f"{{{{{param_name}}}}}", param_value)
+        task = {
+            "plugin_name": workflow_task['plugin_id'],
+            "capability_name": workflow_task['capability_name'],
+            "task": task_prompt
+        }
+        #self.send_system(channel, {"message": '(' + task['plugin_name'] + '-' + task['capability_name'] + ') ' + task['task']})
+        plugin_response_object=self.run_task(task,channel) 
+        return plugin_response_object       
+    def run_parallel_workflow(self, output_type, workflow, prompt, channel=None):
+        results = []  
+        # Using ThreadPoolExecutor to process items in parallel  
+        with concurrent.futures.ThreadPoolExecutor( max_workers=10) as executor:  
+            # Map the processing function to the items and collect the results  
+            for result in executor.map(runPromptonItem, UCList):  
+                results.append(result)  
     def update_session(self, prompt, plugin_response):  
         """  
         Update the session with the latest prompt and response.  
@@ -346,8 +364,8 @@ class TeisecAgent:
         user_object = {"role": "user", "content": [{"type": "text", "text": prompt}]}  
         assistant_object = {"role": "assistant", "content": [{"type": "text", "text": str(plugin_response)}]}  
         if len(self.session) >= self.context_window_size * 2:  
-            self.session.pop(0)  # Remove the oldest element twice (Assistant and User)  
-            self.session.pop(0)  
+            self.session.pop(1)  # Remove the oldest element twice (Assistant and User) . First Item is the System Message 
+            self.session.pop(1)  
         self.session.append(user_object)  
         self.session.append(assistant_object)  
     def clear_session(self):  
@@ -355,4 +373,5 @@ class TeisecAgent:
         Clear the current session.  
         """  
         print_info("Session Cleared")  
-        self.session.clear()
+        #self.session.clear()
+        self.session = [{"role":"system","content":TeisecPrompts["Core.Main.System"]}]  

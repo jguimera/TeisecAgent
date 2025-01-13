@@ -78,7 +78,7 @@ class FetchURLPlugin(TeisecAgentPlugin):
             return f"Failed to retrieve content. URL couldn't be extracted from the prompt."  
         except ChunkedEncodingError as e:  
             return f"Failed to retrieve content. URL couldn't be extracted from the prompt."  
-    def fetchAndClean(self, prompt, session,channel):  
+    def fetchAndClean(self, prompt, session,channel,scope='FetchURLPlugin'):  
         """  
         Extract the URL from the prompt and process it.  
   
@@ -93,7 +93,7 @@ class FetchURLPlugin(TeisecAgentPlugin):
         )  
   
         # Use the Azure OpenAI Client to extract the URL from the prompt  
-        result_object = self.azureOpenAIClient.runPrompt(extended_prompt, session)  
+        result_object = self.azureOpenAIClient.runPrompt(extended_prompt, session, scope)  
         if result_object['status']=='success':
             # Download and clean the content from the extracted URL
             prompt_result=result_object['result']
@@ -102,11 +102,13 @@ class FetchURLPlugin(TeisecAgentPlugin):
             return result_object
         else:
             return result_object
-    def runtask(self, task, session,channel,parameters_object):  
+    def runtask(self, task, session,channel,parameters_object,scope='FetchURLPlugin'):  
         """  
         Convenience method to run the tasks inside the plugin.  
         :param task: Input task  
         :param session: Session context  
         :return: Result of the task execution 
         """
-        return self.fetchAndClean(task["task"],session,channel)
+        result_object=self.fetchAndClean(task["task"],session,channel)
+        result_object["prompt"]=task["task"]
+        return result_object

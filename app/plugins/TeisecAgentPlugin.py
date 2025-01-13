@@ -9,10 +9,8 @@ class TeisecAgentPlugin:
         print(self.name)
     def getname(self):
         return self.name
-    def runprompt(self,prompt,session,channel):
-        print(self.prompt)
-    def runtask(self,task,session,channel,parameters_object):
-        result_object={"status":"success","result":"","session_tokens":0}   
+    def runtask(self,task,session,channel,parameters_object,scope='Core'):
+        result_object={"status":"success","result":"","session_tokens":0,"prompt":task["task"]}
         print(self.task)
         return result_object
     def plugincapabilities(self):  
