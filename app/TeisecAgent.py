@@ -174,7 +174,9 @@ class TeisecAgent:
         new_session = new_session + self.session[1:]
         
         # Run the prompt through the GPTPlugin to get the task list
-        task_list_object = self.plugin_list["GPTPlugin"].runprompt(extended_user_prompt, new_session, channel, scope='Core-Decompose')
+        task={}
+        task["task"]=extended_user_prompt
+        task_list_object = self.plugin_list["GPTPlugin"].runtask(task, new_session, channel, [],scope='Core-Decompose')
         channel('debugmessage', {"message": f"Session Tokens (plugin selection): {task_list_object['session_tokens'] }"})  
         
         # Handle errors in the task list generation
@@ -209,7 +211,9 @@ class TeisecAgent:
             extended_prompt = self.replace_template_placeholders("Core.Output.HTML", UserInput=user_input, Response=response)    
         elif output_type == 'other':  
             extended_prompt = self.replace_template_placeholders("Core.Output.Other", UserInput=user_input, Response=response)  
-        prompt_result_object = self.plugin_list["GPTPlugin"].runprompt(extended_prompt, [],channel, scope='Core-Output')  
+        task={}
+        task["task"]=extended_prompt
+        prompt_result_object = self.plugin_list["GPTPlugin"].runtask(task, [],channel, [],scope='Core-Output')  
         if prompt_result_object['status']=='error':
             channel('systemmessage',{"message":f"Error: {prompt_result_object['result'] }"})
             return  ''   
@@ -291,7 +295,9 @@ class TeisecAgent:
         Extract and replace the input parameters from the user prompt and the current session.  
         """  
         extended_prompt = self.replace_template_placeholders("Core.ExtractParameters.System", UserInput=prompt, Parameters=parameters)  
-        parameters = self.plugin_list["GPTPlugin"].runprompt(extended_prompt, session, channel, scope='Core-ParametersExtraction')['result']
+        task={}
+        task["task"]=extended_prompt
+        parameters = self.plugin_list["GPTPlugin"].runtask(task, session, channel, [],scope='Core-ParametersExtraction')['result']
         parameters_clean = parameters.replace("```plaintext", "").replace("```json", "").replace("```html", "").replace("```", "")
         print_plugin_debug("TeisecAgent", f"Extracted parameters: {parameters_clean}")
         try:
