@@ -1,5 +1,7 @@
 from colorama import Fore
 import json
+import string
+from app.Prompts import TeisecPrompts
 def print_info(text):
     print(f"{Fore.GREEN}[Info] {Fore.WHITE}"+text)
 def print_debug(text):
@@ -33,3 +35,9 @@ def print_intro_message():
             '''
     print(f"{Fore.GREEN}{message}{Fore.WHITE}")  
     print_info("Welcome to Teisec Agent")  
+def replace_template_placeholders( template_name, **kwargs):
+    """  
+    Replace placeholders in the template with provided values.  
+    """  
+    template = string.Template(TeisecPrompts[template_name])
+    return template.safe_substitute(**kwargs)

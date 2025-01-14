@@ -51,8 +51,6 @@ class GraphAPIPlugin(TeisecAgentPlugin):
         if emailDetails_object['status']=='error':
             channel('systemmessage',{"message":f"Error obtaining Email: {emailDetails_object["result"]}"})
             print_plugin_debug(self.name, f"Error obtaining Email: {emailDetails_object["result"]}")   
-            #result_object={"status":"error","result":emailDetails_object["result"],"session_tokens":0}
-        #result_object={"status":"sucess","result":emailDetails_object["result"],"session_tokens":0} 
         return emailDetails_object
     def runtask(self, task, session,channel,parameters_object,scope='GraphAPIPlugin'):  
         """  
@@ -62,13 +60,11 @@ class GraphAPIPlugin(TeisecAgentPlugin):
         :return: Result of the task execution 
         """ 
         if task["capability_name"]=="getemaildetails": 
-            #print(session)
-            #parameters_object = self.extract_capability_parameters(paramaters,task["task"] , session,channel)
             if parameters_object['parameters_found']=="yes":    
                 result_object= self.getEmailDetails(parameters_object['parameters'], session,channel)
             else:
-                result_object={"status":"error","result":"Parameters not found","session_tokens":0} 
+                result_object={"status":"error","result":"Parameters not found","session_tokens":[]} 
         else:
-            result_object={"status":"error","result":"Capability not found","session_tokens":0} 
+            result_object={"status":"error","result":"Capability not found","session_tokens":[]} 
         result_object["prompt"]=task["task"]
         return result_object

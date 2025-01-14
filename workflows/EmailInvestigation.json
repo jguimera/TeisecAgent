@@ -15,45 +15,45 @@
         "tasks": [
             {
                 "title": "Obtain Email Details",
-                "plugin_id": "SentinelKQLPlugin",
+                "plugin_name": "SentinelKQLPlugin",
                 "capability_name": "generateandrunkql",
                 "prompt_text": "Retrieve email details from Microsoft Sentinel using the sender email address {{sender_email_address}} and subject keyword {{subject_keyword}}. Make sure you include the Recipient address and the InternetMessageId in the query results. Limit the results to the most recent email (1)."
             },
             {
                 "title": "Extract Email Data",
-                "plugin_id": "GraphAPIPlugin",
+                "plugin_name": "GraphAPIPlugin",
                 "capability_name": "getemaildetails",
                 "prompt_text": "Retrieve the Body and headers of the email listed in the previous step. You must use the recipient email address and the InternetMessageId from the results above."
             },
             {
                 "title": "Render Email",
-                "plugin_id": "GPTPlugin",
+                "plugin_name": "GPTPlugin",
                 "capability_name": "runprompt",
-                "prompt_text": "Render the body of the email in a format that mimics what a user would see inside an email client. Include the email content as it would appear to the recipient, with appropriate formatting and layout."
+                "prompt_text": "Render the body of the email as HTML, mimicking the appearance of the email in Microsoft Outlook. Ensure the email content is formatted and laid out as it would appear to the recipient in Outlook."
             },
             {
                 "parallel_tasks": [
                     {
                         "title": "Analyze Email Content",
-                        "plugin_id": "GPTPlugin",
+                        "plugin_name": "GPTPlugin",
                         "capability_name": "runprompt",
                         "prompt_text": "Run an analysis of the content of the email above for suspicious links, attachments, and keywords."
                     },
                     {
                         "title": "Analyze Email Headers",
-                        "plugin_id": "GPTPlugin",
+                        "plugin_name": "GPTPlugin",
                         "capability_name": "runprompt",
                         "prompt_text": "Run an analysis of the Headers of the email above for suspicious email authentication details. Extract also the list of IP addresses and Domains related to this email from the Header information."
                     },
                     {
                         "title": "Investigate Associated Domains",
-                        "plugin_id": "SentinelKQLPlugin",
+                        "plugin_name": "SentinelKQLPlugin",
                         "capability_name": "InvestigateDomainListThreatIntelligence",
                         "prompt_text": "Investigate the domains extracted from the email headers for any threat intelligence indicators."
                     },
                     {
                         "title": "Investigate Associated IP Addresses",
-                        "plugin_id": "SentinelKQLPlugin",
+                        "plugin_name": "SentinelKQLPlugin",
                         "capability_name": "InvestigateIPListThreatIntelligence",
                         "prompt_text": "Investigate the IP addresses extracted from the email headers for any threat intelligence indicators."
                     }
@@ -61,7 +61,7 @@
             },
             {
                 "title": "Generate Investigation Report",
-                "plugin_id": "GPTPlugin",
+                "plugin_name": "GPTPlugin",
                 "capability_name": "runprompt",
                 "prompt_text": "Generate a detailed report of the findings from the email investigation."
             }

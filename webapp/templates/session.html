@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Display</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Session Details</h1>
+
+    <div id="session-container">
+        {% for message in session.messages %}
+            <div class="message {{ message.role }}">
+                    <p><strong>{{ message.role }}:</strong> {{message.content[0].text }}</p>
+            </div>
+        {% endfor %}
+    </div>
+    <div id="session-container">
+        {% for token in session.session_tokens %}
+            <div class="message">
+                    <p><strong>{{ token.scope }}:</strong> {{token.tokens }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

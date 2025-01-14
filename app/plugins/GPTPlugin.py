@@ -16,13 +16,13 @@ class GPTPlugin(TeisecAgentPlugin):
                 "description":"This capability allows run a prompt without retrieving any additional external data. This plugin should be use if the user prompt doesn't require any additional or external data. THe main usage is to summarize current data or to generate new data based on the current context."}  
         } 
         return  capabilities
-    def runtask(self, task, session,channel,parameters_object=[],scope='GPTPlugin'):  
+    def runtask(self, task, session,channel={},parameters_object=[],scope='GPTPlugin'):  
         """  
         Convenience method to run the tasks inside the plugin.  
         :param task: Input task  
         :param session: Session context  
         :return: Result of the task execution 
         """
-        result_object=self.runpromptonAzureAI(task["task"],session,scope='GPTPlugin')
+        result_object=self.runpromptonAzureAI(task["task"],session,scope)
         result_object["prompt"]=task["task"]
         return result_object

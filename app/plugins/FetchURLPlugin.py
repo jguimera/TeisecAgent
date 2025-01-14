@@ -93,7 +93,7 @@ class FetchURLPlugin(TeisecAgentPlugin):
         )  
   
         # Use the Azure OpenAI Client to extract the URL from the prompt  
-        result_object = self.azureOpenAIClient.runPrompt(extended_prompt, session, scope)  
+        result_object = self.azureOpenAIClient.runPrompt(extended_prompt, session, scope+'-URLExtraction')  
         if result_object['status']=='success':
             # Download and clean the content from the extracted URL
             prompt_result=result_object['result']

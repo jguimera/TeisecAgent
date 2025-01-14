@@ -8,18 +8,18 @@ class AzureOpenAIClient():
         self.client=AzureOpenAI(
         azure_endpoint = azure_endpoint, 
         api_key=api_key,  
-        api_version="2024-02-15-preview"
+        api_version="2024-05-01-preview"
         )
     
     def runPrompt(self,prompt,session=[],scope='core'):
-        if (len(session)>0 and session[0]['role']=='system'):
+        if ("messages" in session and len(session["messages"])>0 and session["messages"][0]['role']=='system'):
             #session already contains System message
-            message_object=session
+            message_object=[]
         else:
             #session without System Message. Using Default
-            message_object = [{"role":"system","content":TeisecPrompts["Core.Main.System"]}]
-            message_object.extend(session)
-        message_object.append({"role":"user","content":prompt})
+            message_object = [{"role":"system","content":[{"type":"text","text":TeisecPrompts["Core.Main.System"]}]}]
+        message_object.extend(session["messages"])
+        message_object.append({"role":"user","content":[{"type":"text","text":prompt}]})
         result=''
         status='success'
         session_tokens=''
@@ -52,9 +52,11 @@ class AzureOpenAIClient():
             status='error'
             result=e.message
             print (e)
-        result_object={"status":status,"result":result,"session_tokens":session_tokens}
+        session_tokens_object=[]
+        session_tokens_object.append({"scope":scope,"tokens":session_tokens})
+        result_object={"status":status,"result":result,"session_tokens":session_tokens_object}
         #print(result)
-        with open('promptaudit.log', 'a', encoding='utf-8') as f:  
+        with open('log/'+scope+'.log', 'a', encoding='utf-8') as f:  
             f.write("\nRESULT\n")
             f.write(result)
             f.close()

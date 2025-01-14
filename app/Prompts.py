@@ -133,7 +133,7 @@ The final output must be a JSON object that defines the complete workflow.
             ''',
     "Core.Decompose.User":'''Please, considering the session context, decompose the following user prompt in one or multiple tasks:
                              ${UserPrompt}''',
-    "Core.Main.System":''' You are an AI system specializing in security analytics and investigations, your task is to retrieve and analyze security data from various platforms based on the user request."}]''',
+    "Core.Main.System":''' You are an AI system specializing in security analytics and investigations, your task is to retrieve and analyze security data from various platforms based on the user request.''',
     "Core.Output.Terminal":'''Below you have a prompt and the response associated with it.   
                 Based on the prompt I need you to format the provided response to be shown in a terminal console. 
                 If the response is a JSON object format it in a table for the terminal output unless specified otherwise below.
