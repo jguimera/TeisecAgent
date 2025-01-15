@@ -78,7 +78,7 @@ class FetchURLPlugin(TeisecAgentPlugin):
             return f"Failed to retrieve content. URL couldn't be extracted from the prompt."  
         except ChunkedEncodingError as e:  
             return f"Failed to retrieve content. URL couldn't be extracted from the prompt."  
-    def fetchAndClean(self, prompt, session,channel,scope='FetchURLPlugin'):  
+    def fetchAndClean(self, prompt, session,scope='FetchURLPlugin'):  
         """  
         Extract the URL from the prompt and process it.  
   
@@ -102,13 +102,13 @@ class FetchURLPlugin(TeisecAgentPlugin):
             return result_object
         else:
             return result_object
-    def runtask(self, task, session,channel,parameters_object,scope='FetchURLPlugin'):  
+    def runtask(self, task, session,parameters_object,scope='FetchURLPlugin'):  
         """  
         Convenience method to run the tasks inside the plugin.  
         :param task: Input task  
         :param session: Session context  
         :return: Result of the task execution 
         """
-        result_object=self.fetchAndClean(task["task"],session,channel)
+        result_object=self.fetchAndClean(task["task"],session)
         result_object["prompt"]=task["task"]
         return result_object

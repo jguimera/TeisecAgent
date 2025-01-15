@@ -38,7 +38,7 @@ class GraphAPIPlugin(TeisecAgentPlugin):
                 }
         }    
         return  capabilities
-    def getEmailDetails(self, parametersObject, session,channel):  
+    def getEmailDetails(self, parametersObject, session):  
         """  
         Convenience method to run the prompt and retrieve the Email details.  
         :param parametersObject: Input Parameters details  
@@ -49,10 +49,9 @@ class GraphAPIPlugin(TeisecAgentPlugin):
         internetmessageid=parametersObject['internetmessageid']
         emailDetails_object=self.graphAPIClient.get_email(mailbox,internetmessageid)
         if emailDetails_object['status']=='error':
-            channel('systemmessage',{"message":f"Error obtaining Email: {emailDetails_object["result"]}"})
             print_plugin_debug(self.name, f"Error obtaining Email: {emailDetails_object["result"]}")   
         return emailDetails_object
-    def runtask(self, task, session,channel,parameters_object,scope='GraphAPIPlugin'):  
+    def runtask(self, task, session,parameters_object,scope='GraphAPIPlugin'):  
         """  
         Convenience method to run the tasks inside the plugin.  
         :param task: Input task  
@@ -61,7 +60,7 @@ class GraphAPIPlugin(TeisecAgentPlugin):
         """ 
         if task["capability_name"]=="getemaildetails": 
             if parameters_object['parameters_found']=="yes":    
-                result_object= self.getEmailDetails(parameters_object['parameters'], session,channel)
+                result_object= self.getEmailDetails(parameters_object['parameters'], session)
             else:
                 result_object={"status":"error","result":"Parameters not found","session_tokens":[]} 
         else:

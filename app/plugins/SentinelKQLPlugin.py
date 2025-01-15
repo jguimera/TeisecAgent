@@ -64,7 +64,7 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         capabilities.update(self.custom_capabilities)
         return capabilities
 
-    def run_custom_capability(self, capability_name, task, session, channel,parameters_object):
+    def run_custom_capability(self, capability_name, task, session,parameters_object):
         """  
         Run a custom capability.  
         """  
@@ -73,9 +73,9 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
             kql_query = capability['kql_query']
             for param_name, param_value in parameters_object['parameters'].items():
                 kql_query = kql_query.replace(f"{{{{{param_name}}}}}", param_value)
-            return self.runKQLQuery(kql_query, session, channel)
+            return self.runKQLQuery(kql_query, session)
         else:
-            result_object = {"status": "error", "result": "Parameters not found", "session_tokens": 0}
+            result_object = {"status": "error", "result": "Parameters not found", "session_tokens": []}
             return result_object
 
     def generateSentinelSchema(self):  
@@ -145,7 +145,7 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         print_plugin_debug(self.name, "Updating and Loading Sentinel Schema for current Workspace")  
         return self.generateSentinelSchema()
 
-    def runKQLQuery(self, query, session,channel):  
+    def runKQLQuery(self, query, session):  
         """  
         Generate a KQL query from a prompt and run it.  
   
@@ -156,14 +156,13 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         query_results_object=self.sentinelClient.run_query(query, printresults=False)
         query_results_object["session_tokens"]=[] 
         if query_results_object['status']=='error':
-            channel('systemmessage',{"message":f"Error Running KQL: Trying to fix it"})
             print_plugin_debug(self.name, f"Error Running KQL: Trying to fix it")  
-            new_query=self.fixKQLQuery(query, query_results_object['result'],[],channel)
+            new_query=self.fixKQLQuery(query, query_results_object['result'],[])
             query_results_object=self.sentinelClient.run_query(new_query['result'], printresults=False)
             query_results_object["session_tokens"]=new_query["session_tokens"]
         return  query_results_object 
     
-    def generateNewKQL(self, prompt, session,channel):  
+    def generateNewKQL(self, prompt, session):  
         """  
         Generate a KQL query from a prompt and run it.  
   
@@ -181,8 +180,8 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
             "- Remember that this prompt is part of a session with previous prompts and responses; therefore, you can use information from previous responses in the session if the prompt makes reference to previous results or data above.\n"  
             "- You can only use the fields detailed in the provided table schema.\n" 
         )
-        return self.generateKQL(extended_prompt, session,channel)
-    def extractKQL(self, prompt, session,channel):  
+        return self.generateKQL(extended_prompt, session)
+    def extractKQL(self, prompt, session):  
         """  
         extract a KQL query from a prompt and session.  
   
@@ -198,8 +197,8 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
             "This is the user prompt:\n"
             f"{prompt}\n"
         )
-        return self.generateKQL(extended_prompt, session,channel)
-    def fixKQLQuery(self, query, error,session,channel):  
+        return self.generateKQL(extended_prompt, session)
+    def fixKQLQuery(self, query, error,session):  
         extended_prompt = (  
         "I have run  the KQL query below in Microsoft Sentinel and I have received the error below as a result. I need you to fix the KQL query considering the provided error.\n" 
         "Make sure the KQL query follows KQL syntax.\n "
@@ -210,8 +209,8 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         "- Received Error:\n"  
         f"{error}\n"
         )
-        return self.generateKQL(extended_prompt, session,channel)
-    def generateKQL(self, extended_prompt, session,channel):  
+        return self.generateKQL(extended_prompt, session)
+    def generateKQL(self, extended_prompt, session):  
         """  
         Generate a KQL query from a prompt and run it.  
   
@@ -221,16 +220,14 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         """  
         prompt_result_object = self.runpromptonAzureAI(extended_prompt, session,'SentinelKQLPlugin-KQLGeneration') 
         if prompt_result_object['status']=='error':
-            channel('systemmessage',{"message":f"Error (Generating KQL): {prompt_result_object['result'] }"})
             return prompt_result_object
         else:
         # Clean KQL tags from the result  
             query = prompt_result_object['result'].replace("```kql", "").replace("```kusto", "").replace("```", "").strip()
-            channel('debugmessage',{"message":f"Generated KQL Query:\n {query}"})
             result_object={"status":prompt_result_object['status'],"result":query,"session_tokens":prompt_result_object['session_tokens']} 
             return  result_object
     
-    def generateKQLWithSchemaAndTable(self, prompt, table, session,channel):  
+    def generateKQLWithSchemaAndTable(self, prompt, table, session):  
         """  
         Generate a KQL query using the schema for a specific table and run it.  
   
@@ -250,10 +247,10 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
             print_plugin_debug(self.name, f"Table '{table}' not found in schema. Generating Query without schema")  
             extended_prompt = prompt  
           
-        query_object= self.generateNewKQL(extended_prompt, session,channel)  
+        query_object= self.generateNewKQL(extended_prompt, session)  
         return query_object
   
-    def findTable(self, prompt, session,channel):  
+    def findTable(self, prompt, session):  
         """  
         Identify the best table to use for a given prompt.  
   
@@ -286,7 +283,7 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         result_object= self.azureOpenAIClient.runPrompt(prompt, session,scope)
         return result_object
   
-    def generateQuery(self, prompt, session,channel):  
+    def generateQuery(self, prompt, session):  
         """  
         Convenience method to run the prompt and generate a KQL query with or without schema based on the plugin configuration.  
         :param prompt: Input prompt  
@@ -295,13 +292,13 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         """ 
         query_object={}
         if self.loadSchema:
-            table_object = self.findTable(prompt, session,channel)              
-            query_object= self.generateKQLWithSchemaAndTable(prompt, table_object['result'], session,channel)
+            table_object = self.findTable(prompt, session)              
+            query_object= self.generateKQLWithSchemaAndTable(prompt, table_object['result'], session)
             query_object["session_tokens"]=query_object["session_tokens"]+table_object["session_tokens"]
         else: 
-            query_object= self.generateNewKQL(prompt, session,channel)
+            query_object= self.generateNewKQL(prompt, session)
         return query_object
-    def runtask(self, task, session,channel,parameters_object,scope='Core'):  
+    def runtask(self, task, session,parameters_object,scope='Core'):  
         """  
         Convenience method to run the tasks inside the plugin.  
         :param task: Input task  
@@ -309,16 +306,16 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         :return: Result of the task execution 
         """ 
         if task["capability_name"] in self.custom_capabilities:
-            result_object =  self.run_custom_capability(task["capability_name"], task, session, channel,parameters_object)
+            result_object =  self.run_custom_capability(task["capability_name"], task, session,parameters_object)
         elif task["capability_name"] == "generateandrunkql":
-            query_object = self.generateQuery(task["task"], session, channel)
-            result_object =  self.runKQLQuery(query_object["result"], session, channel)
+            query_object = self.generateQuery(task["task"], session)
+            result_object =  self.runKQLQuery(query_object["result"], session)
             result_object["session_tokens"]=result_object["session_tokens"]+query_object["session_tokens"]
         elif task["capability_name"] == "onlygeneratekql":
-            result_object =  self.generateQuery(task["task"], session, channel)
+            result_object =  self.generateQuery(task["task"], session)
         elif task["capability_name"] == "extractandrunkql":
-            query_object = self.extractKQL(task["task"], session, channel)
-            result_object =  self.runKQLQuery(query_object["result"], session, channel)
+            query_object = self.extractKQL(task["task"], session)
+            result_object =  self.runKQLQuery(query_object["result"], session)
         else:
             result_object = {"status": "error", "result": "Capability not found", "session_tokens": []}
         result_object["prompt"]=task["task"]
