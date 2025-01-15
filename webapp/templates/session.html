@@ -5,23 +5,121 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Session Display</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        #summary-table, #session-scopes-table {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: black;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .system {
+            background-color: #e7f3fe;
+            border: 1px solid #b3d4fc;
+        }
+        .user {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        .assistant {
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+        }
+    </style>
 </head>
 <body>
     <h1>Session Details</h1>
 
-    <div id="session-container">
+    <div id="summary-table">
+        <h2>Token Summary</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>Category</th>
+                    <th>Total Tokens</th>
+                    <th>Price per Million Tokens</th>
+                    <th>Total Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for model, data in models.items() %}
+                    <tr>
+                        <td rowspan="3">{{ model }}</td>
+                        <td>Input</td>
+                        <td>{{ total_input_tokens }}</td>
+                        <td>${{ data.input_price_per_million }}</td>
+                        <td>${{ (total_input_tokens / 1000000) * data.input_price_per_million }}</td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td>{{ total_output_tokens }}</td>
+                        <td>${{ data.output_price_per_million }}</td>
+                        <td>${{ (total_output_tokens / 1000000) * data.output_price_per_million }}</td>
+                    </tr>
+                    <tr>
+                        <td>Total</td>
+                        <td>{{ total_tokens }}</td>
+                        <td>N/A</td>
+                        <td>${{ (total_input_tokens / 1000000) * data.input_price_per_million + (total_output_tokens / 1000000) * data.output_price_per_million }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="session-messages-container">
         {% for message in session.messages %}
             <div class="message {{ message.role }}">
-                    <p><strong>{{ message.role }}:</strong> {{message.content[0].text }}</p>
+                <p><strong>{{ message.role }}:</strong> {{ message.content[0].text }}</p>
             </div>
         {% endfor %}
     </div>
-    <div id="session-container">
-        {% for token in session.session_tokens %}
-            <div class="message">
-                    <p><strong>{{ token.scope }}:</strong> {{token.tokens }}</p>
-            </div>
-        {% endfor %}
+
+    <div id="session-scopes-table">
+        <h2>Session Scopes</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Scope</th>
+                    <th>Total Tokens</th>
+                    <th>Input Tokens</th>
+                    <th>Output Tokens</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for token in session.session_tokens %}
+                    <tr>
+                        <td>{{ token.scope }}</td>
+                        <td>{{ token.tokens.total_tokens }}</td>
+                        <td>{{ token.tokens.prompt_tokens }}</td>
+                        <td>{{ token.tokens.completion_tokens }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </body>
 </html>

@@ -67,4 +67,5 @@ class GraphAPIPlugin(TeisecAgentPlugin):
         else:
             result_object={"status":"error","result":"Capability not found","session_tokens":[]} 
         result_object["prompt"]=task["task"]
+        result_object["session_tokens"]=[]
         return result_object

@@ -57,6 +57,7 @@
                     <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
                   </label>
                    <button id="toggle-debug" class="bg-zinc-300 text-gray-800 rounded-md transition-all font-medium 2xl:px-6 px-2 overflow-hidden text-xs">Show Debug</button> 
+                   <button id="open-session" class="bg-indigo-600 text-white rounded-md transition-all font-medium 2xl:px-6 px-2 overflow-hidden text-xs">Open Session</button>
                 </div>
             </div>
             <div  id="chat-container" class="relative flex flex-col grow">
@@ -152,7 +153,9 @@
         function hideLoadingMessage() {  
             loadingMessage.setAttribute('data-open', 'false');
         }  
-  
+        document.getElementById('open-session').addEventListener('click', function() {
+            window.open('/session', '_blank', 'width=800,height=600');
+        });
         sendButton.addEventListener('click', handleUserInput);  
   
         inputField.addEventListener('keypress', function(event) {  
@@ -200,4 +203,4 @@
         });  
     </script>  
 </body>  
-</html>  
+</html>

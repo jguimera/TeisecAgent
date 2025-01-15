@@ -26,7 +26,7 @@ class AzureOpenAIClient():
         #print(prompt)
         with open('log/'+scope+'.log', 'a', encoding='utf-8') as f:  
             f.write("\nSESSION:\n")
-            f.write(json.dumps(session, ensure_ascii=False, indent=4))
+            f.write(json.dumps(session["messages"], ensure_ascii=False, indent=4))
             f.write('\nPROMPT:\n')
             f.write(prompt)
             f.close()
@@ -43,7 +43,8 @@ class AzureOpenAIClient():
             stop=None
             )
             result=completion.choices[0].message.content
-            session_tokens=str(completion.usage.total_tokens)
+            #prompt_total_tokens=str(completion.usage.total_tokens)
+            #prompt_input_tokens=str(completion.usage.total_tokens)
 
         except BadRequestError as e:  
             status='error'
@@ -53,7 +54,7 @@ class AzureOpenAIClient():
             result=e.message
             print (e)
         session_tokens_object=[]
-        session_tokens_object.append({"scope":scope,"tokens":session_tokens})
+        session_tokens_object.append({"scope":scope,"tokens":completion.usage})
         result_object={"status":status,"result":result,"session_tokens":session_tokens_object}
         #print(result)
         with open('log/'+scope+'.log', 'a', encoding='utf-8') as f:  
