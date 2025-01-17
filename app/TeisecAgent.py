@@ -224,12 +224,12 @@ class TeisecAgent:
         self.send_system(channel, {"message": 'Prompt decomposed in ' + str(len(decomposed_tasks)) + ' tasks'})
         for task in decomposed_tasks:
             self.send_system(channel, {"message": '(' + task['plugin_name'] + '-' + task['capability_name'] + ') ' + task['task']})
-            executed_task=self.run_task(task,channel)
+            executed_task=self.run_task(task,output_type,channel)
             self.update_session(executed_task)
             self.update_session_usage(executed_task['response_object']['session_tokens'])  
-            executed_task['processed_response'] = self.process_task_response(executed_task,output_type ,channel)
+            self.update_session_usage(executed_task['processed_response']['session_tokens'])  
             task_results.append(executed_task)  
-            self.send_response(channel, {"message": executed_task['processed_response']})      
+            self.send_response(channel, {"message": executed_task['processed_response']['result']})      
         self.stop_timer(start_time, channel)
         return task_results
     def run_workflow(self, workflow, prompt, output_type, channel=None):
@@ -251,18 +251,16 @@ class TeisecAgent:
                 for task_to_run in tasks_to_run:
                     task=self.prepare_workflow_task( task_to_run,parameters_object)
                     prepared_tasks.append(task)
-                task_results=self.run_parallel_workflow(prepared_tasks,channel)
+                task_results=self.run_parallel_workflow(prepared_tasks,output_type,channel)
                 for task_result in task_results:
-                    #task['response_object']=self.run_task(task,channel)
-
                     try:
                         self.send_system(channel, {"message": '(' + task_result['plugin_name'] + '-' + task_result['capability_name'] + ') ' + task_result['task']})
                         self.update_session(task_result)
                         self.update_session_usage(task_result['response_object']['session_tokens'])   
                         if task_result['response_object']['status'] == 'error':
                             channel('systemmessage', {"message": f"Error: {task_result['response_object']['result'] }"})   
-                        task_result['processed_response']= self.process_task_response(task_result,output_type ,channel)
-                        self.send_response(channel, {"message": task_result['processed_response']})   
+                        self.update_session_usage(task_result['processed_response']['session_tokens'])  
+                        self.send_response(channel, {"message": task_result['processed_response']['result']})   
                         task_result_list.append(task_result)
                     except:
                         self.send_system(channel, {"message": "Error: Error processing Task result in the workflow." })
@@ -272,14 +270,14 @@ class TeisecAgent:
             self.send_system(channel, {"message": "Error: Required Workflow parameters not found in the prompt or session."})
         self.stop_timer(start_time, channel)
         return task_result_list
-    def run_parallel_workflow(self, tasklist, channel=None):
+    def run_parallel_workflow(self, tasklist,output_type='html', channel=None):
         results = []  
         # Using ThreadPoolExecutor to process items in parallel  
         with concurrent.futures.ThreadPoolExecutor( max_workers=10) as executor:  
-            # Create a partial function with the channel parameter
-            run_task_with_channel = partial(self.run_task, channel=channel)
+            # Create a partial function with the channel and outputtype parameters
+            run_task_with_params = partial(self.run_task,output_type=output_type, channel=channel)
             # Map the processing function to the items and collect the results  
-            for result in executor.map(run_task_with_channel, tasklist):  
+            for result in executor.map(run_task_with_params, tasklist):  
                 results.append(result)
         return results 
     def prepare_workflow_task(self, workflow_task,parameters_object):
@@ -294,7 +292,7 @@ class TeisecAgent:
         }
         return task
     
-    def run_task(self, task, channel=None):
+    def run_task(self, task, output_type ,channel=None):
         #get plugin and Capability
         plugin_name=task['plugin_name']
         try:
@@ -310,13 +308,14 @@ class TeisecAgent:
         #run task with plugin capability
         task_response_object = plugin.runtask(task, self.session,parameters_object)
         task['response_object']=task_response_object
+        task_response_object = self.process_task_response(task,output_type)
+        task['processed_response']= task_response_object        
         return task
     
-    def process_task_response(self, task, output_type, channel):
-        processed_output = self.process_output(output_type, task['response_object']['prompt'], str(task['response_object']['result']), channel)   
-        self.send_debug(channel, {"message": f"Session Length: {len(self.session)}"})  
-        return processed_output
-    def process_output(self, output_type, user_input, response,channel):  
+    def process_task_response(self, task, output_type):
+        processed_output_object = self.process_output(output_type, task['response_object']['prompt'], str(task['response_object']['result']))   
+        return processed_output_object
+    def process_output(self, output_type, user_input, response):  
         """  
         Process the response to format it for specific output types (Terminal, HTML, etc.).  
         """  
@@ -329,14 +328,12 @@ class TeisecAgent:
         task={}
         task["task"]=extended_prompt
         prompt_result_object = self.plugin_list["GPTPlugin"].runtask(task, {"messages":[]}, [],scope='Core-Output')
-        self.update_session_usage(prompt_result_object['session_tokens'])  
-        if prompt_result_object['status']=='error':
-            channel('systemmessage',{"message":f"Error: {prompt_result_object['result'] }"})
-            return  ''   
-        else:
-            # Clean tags from result  
-            prompt_result_clean = prompt_result_object['result'].replace("```plaintext", "").replace("```kusto", "").replace("```html", "").replace("```", "")  
-            return prompt_result_clean  
+        return self.clean_prompt_result(prompt_result_object)
+    def clean_prompt_result(self, prompt_result_object):  
+        """
+        remove Prompt result tags and return the result"""
+        prompt_result_object['result'] = prompt_result_object['result'].replace("```plaintext", "").replace("```kusto", "").replace("```html", "").replace("```", "")  
+        return prompt_result_object  
       
    
     def extract_parameters(self, parameters, prompt, channel):
@@ -349,7 +346,6 @@ class TeisecAgent:
         parameters_result_object = self.plugin_list["GPTPlugin"].runtask(task, self.session, [],'Core-ParametersExtraction')
         self.update_session_usage(parameters_result_object['session_tokens']) 
         parameters_clean = parameters_result_object['result'].replace("```plaintext", "").replace("```json", "").replace("```html", "").replace("```", "")
-        #print_plugin_debug("TeisecAgent", f"Extracted parameters: {parameters_clean}")
         try:
             # Parse the cleaned result into a JSON object
             obj = json.loads(parameters_clean)
@@ -375,7 +371,6 @@ class TeisecAgent:
         Clear the current session.  
         """  
         print_info("Session Cleared")  
-        #self.session.clear()
         self.session={"messages": [{"role":"system","content": [{"type": "text", "text":TeisecPrompts["Core.Main.System"]}]}] ,"session_tokens":[]}
     def stop_timer(self, start_time, channel):  
         # Stop the timer  

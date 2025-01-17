@@ -23,27 +23,22 @@
                 "title": "Extract Email Data",
                 "plugin_name": "GraphAPIPlugin",
                 "capability_name": "getemaildetails",
-                "prompt_text": "Retrieve the Body and headers of the email listed in the previous step. You must use the recipient email address and the InternetMessageId from the results above."
+                "prompt_text": "Retrieve the Body and headers of the email listed in the previous step. You must use the recipient email address and the InternetMessageId from the results above. Make sure you also extract a list of URLs, IP addresses and Domains from the email body and headers."
             },
-            {
-                "title": "Render Email",
-                "plugin_name": "GPTPlugin",
-                "capability_name": "runprompt",
-                "prompt_text": "Render the body of the email as HTML, mimicking the appearance of the email in Microsoft Outlook. Ensure the email content is formatted and laid out as it would appear to the recipient in Outlook."
-            },
+
             {
                 "parallel_tasks": [
                     {
                         "title": "Analyze Email Content",
                         "plugin_name": "GPTPlugin",
                         "capability_name": "runprompt",
-                        "prompt_text": "Run an analysis of the content of the email above for suspicious links, attachments, and keywords."
+                        "prompt_text": "Run an analysis of the content of the email above for suspicious links, attatchments, and keywords."
                     },
                     {
                         "title": "Analyze Email Headers",
                         "plugin_name": "GPTPlugin",
                         "capability_name": "runprompt",
-                        "prompt_text": "Run an analysis of the Headers of the email above for suspicious email authentication details. Extract also the list of IP addresses and Domains related to this email from the Header information."
+                        "prompt_text": "Run an analysis of the Headers of the email above for suspicious email authentication details."
                     },
                     {
                         "title": "Investigate Associated Domains",
@@ -60,10 +55,16 @@
                 ]
             },
             {
+                "title": "Render Email",
+                "plugin_name": "GPTPlugin",
+                "capability_name": "runprompt",
+                "prompt_text": "Render the body of the email as HTML, mimicking the appearance of the email in Microsoft Outlook. Ensure the email content is formatted and laid out as it would appear to the recipient in Outlook. Include the necessary headers and metadata.Also include the CSS styles and images in the email body."
+            },
+            {
                 "title": "Generate Investigation Report",
                 "plugin_name": "GPTPlugin",
                 "capability_name": "runprompt",
-                "prompt_text": "Generate a detailed report of the findings from the email investigation."
+                "prompt_text": "Generate a detailed report of the findings from the email investigation. INclude the Findings from the email content analysis, email headers analysis, domain and IP address investigation, and any other relevant details. Make sure you create a well-structured and formatted report with clear headings and sections. You must include a Conclusion section that states your classification of the email as benign, Suspicous or malicious and the recommended next steps."
             }
         ]
     }
