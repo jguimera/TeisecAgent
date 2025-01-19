@@ -13,7 +13,7 @@
                     "sample_value": "user@example.com"
                 }
             ],
-            "kql_query": "SigninLogs | where UserPrincipalName == '{{userPrincipalName}}' | order by TimeGenerated desc | take 10"
+            "kql_query": "SigninLogs | where UserPrincipalName == '{{userPrincipalName}}' | order by TimeGenerated desc | take 10 | project TimeGenerated, UserPrincipalName, IPAddress, ResultType, AppDisplayName"
         },
         {
             "plugin_name": "SentinelKQLPlugin",
@@ -28,20 +28,25 @@
                     "sample_value": "user@example.com"
                 }
             ],
-            "kql_query": "SigninLogs | where UserPrincipalName == '{{userPrincipalName}}' and ResultType != 0 and TimeGenerated > ago(24h) | order by TimeGenerated desc"
+            "kql_query": "SigninLogs | where UserPrincipalName == '{{userPrincipalName}}' and ResultType != 0 and TimeGenerated > ago(24h) | order by TimeGenerated desc | project TimeGenerated, UserPrincipalName, IPAddress, ResultType, AppDisplayName"
         },
         {
             "plugin_name": "SentinelKQLPlugin",
-            "title": "GetSecurityAlerts",
-            "description": "Retrieve the security alerts generated in the last 7 days.",
+            "title": "GetUserSecurityAlerts",
+            "description": "Retrieve the security alerts generated in the last 7 days realted to a user.",
             "type": "KQL",
-            "parameters": [],
-            "kql_query": "SecurityAlert | where TimeGenerated > ago(7d) | order by TimeGenerated desc"
+            "parameters": [                {
+                "name": "userPrincipalName",
+                "type": "string",
+                "description": "The user principal name of the user.",
+                "sample_value": "user@example.com"
+            }],
+            "kql_query": "SecurityAlert | where TimeGenerated > ago(7d) | where Entities contains '{{userPrincipalName}}'   | order by TimeGenerated desc | project TimeGenerated, AlertName, AlertSeverity, Description, Entities"
         },
         {
             "plugin_name": "SentinelKQLPlugin",
             "title": "GetUserAuditLogs",
-            "description": "Retrieve audit logs for a specific user.",
+            "description": "Retrieve last 10 audit logs for a specific user.",
             "type": "KQL",
             "parameters": [
                 {
@@ -51,7 +56,7 @@
                     "sample_value": "user@example.com"
                 }
             ],
-            "kql_query": "AuditLogs | where InitiatedBy.user.userPrincipalName == '{{userPrincipalName}}' | order by TimeGenerated desc | take 10"
+            "kql_query": "AuditLogs | where InitiatedBy.user.userPrincipalName == '{{userPrincipalName}}' | order by TimeGenerated desc | take 10 | project TimeGenerated, OperationName, Category, Result, InitiatedBy"
         },
         {
             "plugin_name": "SentinelKQLPlugin",
@@ -66,7 +71,7 @@
                     "sample_value": "user@example.com"
                 }
             ],
-            "kql_query": "DeviceEvents | where AccountName == '{{userPrincipalName}}' | order by Timestamp desc | take 10"
+            "kql_query": "DeviceEvents | where AccountName == '{{userPrincipalName}}' | order by Timestamp desc | take 10 | project Timestamp, DeviceName, ActionType, FileName, FolderPath"
         },
         {
             "plugin_name": "SentinelKQLPlugin",
@@ -81,7 +86,22 @@
                     "sample_value": "user@example.com"
                 }
             ],
-            "kql_query": "BehaviorAnalytics | where UserPrincipalName == '{{userPrincipalName}}' | order by TimeGenerated desc | take 10"
+            "kql_query": "BehaviorAnalytics | where UserPrincipalName == '{{userPrincipalName}}' | order by TimeGenerated desc | take 10 | project TimeGenerated, ActivityType, ActionType, UserName, SourceIPAddress,SourceIPLocation, ActivityInsights,DevicesInsights"
+        },
+        {
+            "plugin_name": "SentinelKQLPlugin",
+            "title": "GetUserDeviceLogonEvents",
+            "description": "Retrieve device logon events for a specific user.",
+            "type": "KQL",
+            "parameters": [
+                {
+                    "name": "userPrincipalName",
+                    "type": "string",
+                    "description": "The user principal name of the user.",
+                    "sample_value": "user@example.com"
+                }
+            ],
+            "kql_query": "DeviceLogonEvents | where AccountName == '{{userPrincipalName}}' | order by Timestamp desc | take 10 | project Timestamp, DeviceName, ActionType, RemoteIP, LogonType"
         }
     ]
 }

@@ -11,14 +11,15 @@ class AzureOpenAIClient():
         api_version="2024-05-01-preview"
         )
     
-    def runPrompt(self,prompt,session=[],scope='core'):
+    def runPrompt(self,prompt,session={},scope='core'):
         if ("messages" in session and len(session["messages"])>0 and session["messages"][0]['role']=='system'):
             #session already contains System message
             message_object=[]
         else:
             #session without System Message. Using Default
             message_object = [{"role":"system","content":[{"type":"text","text":TeisecPrompts["Core.Main.System"]}]}]
-        message_object.extend(session["messages"])
+        if session is not None and "messages" in session:
+            message_object.extend(session["messages"])
         message_object.append({"role":"user","content":[{"type":"text","text":prompt}]})
         result=''
         status='success'
@@ -26,7 +27,7 @@ class AzureOpenAIClient():
         #print(prompt)
         with open('log/'+scope+'.log', 'a', encoding='utf-8') as f:  
             f.write("\nSESSION:\n")
-            f.write(json.dumps(session["messages"], ensure_ascii=False, indent=4))
+            f.write(json.dumps(message_object, ensure_ascii=False, indent=4))
             f.write('\nPROMPT:\n')
             f.write(prompt)
             f.close()

@@ -1,0 +1,72 @@
+{
+    "workflow": {
+        "title": "User Investigation Workflow",
+        "shortcut": "user",
+        "input_parameters": [
+            {
+                "name": "userPrincipalName",
+                "description": "The user principal name of the user to be investigated."
+            }
+        ],
+        "tasks": [
+            {
+                "title": "Get Recent Sign-In Logs",
+                "plugin_name": "SentinelKQLPlugin",
+                "capability_name": "GetRecentSignInLogs",
+                "prompt_text": "Retrieve the most recent sign-in logs for the user {{userPrincipalName}}."
+            },
+            {
+                "title": "Get Failed Sign-In Attempts (Last 24h)",
+                "plugin_name": "SentinelKQLPlugin",
+                "capability_name": "GetFailedSignInAttempts24h",
+                "prompt_text": "Retrieve the failed sign-in attempts for the user {{userPrincipalName}} within the last 24 hours."
+            },
+            {
+                "parallel_tasks": [
+                    {
+                        "title": "Get User Security Alerts",
+                        "plugin_name": "SentinelKQLPlugin",
+                        "capability_name": "GetUserSecurityAlerts",
+                        "prompt_text": "Retrieve the security alerts generated in the last 7 days involving the user."
+                    },
+                    {
+                        "title": "Get User Audit Logs",
+                        "plugin_name": "SentinelKQLPlugin",
+                        "capability_name": "GetUserAuditLogs",
+                        "prompt_text": "Retrieve audit logs for the user {{userPrincipalName}}."
+                    },
+                    {
+                        "title": "Get User Device Events",
+                        "plugin_name": "SentinelKQLPlugin",
+                        "capability_name": "GetUserDeviceEvents",
+                        "prompt_text": "Retrieve device events for the user {{userPrincipalName}}."
+                    },
+                    {
+                        "title": "Get User Behavior Analytics",
+                        "plugin_name": "SentinelKQLPlugin",
+                        "capability_name": "GetUserBehaviorAnalytics",
+                        "prompt_text": "Retrieve behavior analytics data for the user {{userPrincipalName}}."
+                    },
+                    {
+                        "title": "Get User Device Logon Events",
+                        "plugin_name": "SentinelKQLPlugin",
+                        "capability_name": "GetUserDeviceLogonEvents",
+                        "prompt_text": "Retrieve device logon events for the user {{userPrincipalName}}."
+                    }
+                ]
+            },
+            {
+                "title": "Investigate Associated IP Addresses",
+                "plugin_name": "SentinelKQLPlugin",
+                "capability_name": "InvestigateIPListThreatIntelligence",
+                "prompt_text": "Investigate the IP addresses associated with the activity of the user {{userPrincipalName}} for any threat intelligence indicators. Extract the IP addresses from the sign-in logs, device events, and any other relevant data sources."
+            },
+            {
+                "title": "Generate Investigation Report",
+                "plugin_name": "GPTPlugin",
+                "capability_name": "runprompt",
+                "prompt_text": "Generate a detailed report of the findings from the user investigation. Include the findings from the sign-in logs, failed sign-in attempts, security alerts, audit logs, device events, behavior analytics, security incidents, and any other relevant details. Make sure you create a well-structured and formatted report with clear headings and sections. Include a Conclusion section that states your classification of the user's activity as benign, suspicious, or malicious and the recommended next steps."
+            }
+        ]
+    }
+}

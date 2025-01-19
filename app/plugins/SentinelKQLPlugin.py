@@ -39,11 +39,7 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         """  
         custom_capabilities = {}
         for capability in self.additional_capabilities:
-            custom_capabilities[capability['title']] = {
-                "description": capability['description'],
-                "parameters": capability['parameters'],
-                "kql_query": capability['kql_query']
-            }
+            custom_capabilities[capability['title']] = capability
             print_plugin_debug(self.name, f"Loaded custom capability: {capability['title']}")
         return custom_capabilities
 
@@ -69,13 +65,13 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         Run a custom capability.  
         """  
         capability = self.custom_capabilities[capability_name]
+        kql_query = capability['kql_query']
         if parameters_object['parameters_found'] == "yes":
-            kql_query = capability['kql_query']
             for param_name, param_value in parameters_object['parameters'].items():
                 kql_query = kql_query.replace(f"{{{{{param_name}}}}}", param_value)
             return self.runKQLQuery(kql_query, session)
         else:
-            result_object = {"status": "error", "result": "Parameters not found", "session_tokens": []}
+            result_object = {"status": "error", "result": f"Parameters for {capability['title']} not found", "session_tokens": []}
             return result_object
 
     def generateSentinelSchema(self):  
@@ -157,7 +153,7 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         query_results_object["session_tokens"]=[] 
         if query_results_object['status']=='error':
             print_plugin_debug(self.name, f"Error Running KQL: Trying to fix it")  
-            new_query=self.fixKQLQuery(query, query_results_object['result'],[])
+            new_query=self.fixKQLQuery(query, query_results_object['result'],{})
             query_results_object=self.sentinelClient.run_query(new_query['result'], printresults=False)
             query_results_object["session_tokens"]=new_query["session_tokens"]
         return  query_results_object 

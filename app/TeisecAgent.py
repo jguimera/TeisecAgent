@@ -16,6 +16,7 @@ import concurrent
 from concurrent.futures import ThreadPoolExecutor
 import concurrent.futures
 from functools import partial
+import traceback
 
 class TeisecAgent:  
     def __init__(self, auth_type):  
@@ -238,7 +239,9 @@ class TeisecAgent:
         """  
         start_time = time.time()  
         task_result_list = []
-        parameters_object = self.extract_parameters(workflow['workflow']['input_parameters'], prompt, channel)
+        parameters_object={'parameters_found':'yes','parameters':{}}
+        if 'input_parameters' in workflow['workflow'] and workflow['workflow']['input_parameters']!=[]:
+            parameters_object = self.extract_parameters(workflow['workflow']['input_parameters'], prompt, channel)
         if parameters_object['parameters_found'] == "yes":
             for workflow_task in workflow['workflow']['tasks']:
                 tasks_to_run=[]
@@ -263,6 +266,7 @@ class TeisecAgent:
                         self.send_response(channel, {"message": task_result['processed_response']['result']})   
                         task_result_list.append(task_result)
                     except:
+                        print_error(f"Stacktrace: {traceback.format_exc()}")
                         self.send_system(channel, {"message": "Error: Error processing Task result in the workflow." })
                         self.send_system(channel, {"message": task_result})
 
@@ -298,16 +302,23 @@ class TeisecAgent:
         try:
             plugin=self.get_plugin(plugin_name)
             capability=plugin.plugincapabilities()[task['capability_name']]
-        except:    
-            return {"status": "error", "result": f"Error: Plugin or Capability {task['capability_name']} not found."}
+        except:
+            task['response_object']= {"status": "error", "result": f"Error: Plugin or Capability {task['capability_name']} not found.","prompt":task['task'],"session_tokens":[]}    
+            task_response_object = self.process_task_response(task,output_type)
+            task['processed_response']= task_response_object 
+            return task
         #check if capabilitiy has input parameters
-        parameters_object=None
-        if 'parameters' in capability:
+        parameters_object={'parameters_found':'yes','parameters':{}}
+        if 'parameters' in capability and capability['parameters']!=[]:
             #extract parameters
             parameters_object=self.extract_parameters(capability['parameters'],task['task'],channel)
         #run task with plugin capability
-        task_response_object = plugin.runtask(task, self.session,parameters_object)
-        task['response_object']=task_response_object
+        try:
+            task_response_object = plugin.runtask(task, self.session,parameters_object)
+            task['response_object']=task_response_object
+        except Exception as e:
+            print_error(f"Error in task execution: {e}\n{traceback.format_exc()}")
+            task['response_object']= {"status": "error", "result": f"Error in task execution: {e}","prompt":task['task'],"session_tokens":[]}            
         task_response_object = self.process_task_response(task,output_type)
         task['processed_response']= task_response_object        
         return task
