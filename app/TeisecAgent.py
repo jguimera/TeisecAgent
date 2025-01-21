@@ -177,8 +177,9 @@ class TeisecAgent:
         # Run the prompt through the GPTPlugin to get the task list
         task={}
         task["task"]=extended_user_prompt
-        task_list_object = self.plugin_list["GPTPlugin"].runtask(task, new_session_object, [],scope='Core-Decompose')
-        self.update_session_usage(task_list_object['session_tokens'])
+        task_list_object = self.plugin_list["GPTPlugin"].runtask(task, new_session_object)
+        # Update the session with the latest usage and with a particular scope
+        self.update_session_usage(task_list_object['session_tokens'], scope='Core-Decompose')
         # Handle errors in the task list generation
         if task_list_object['status'] == 'error':
             channel('systemmessage', {"message": f"Error: {task_list_object['result'] }"})
@@ -195,9 +196,15 @@ class TeisecAgent:
                 channel('systemmessage', {"message": f"Error: {'Error Decomposing. Running User Prompt with GPT Plugin' }"})
                 obj = [{"plugin_name": "GPTPlugin", "capability_name": "runprompt", "task": prompt}]
                 return obj
-    def update_session_usage(self, session_tokens):
+    def update_session_usage(self, session_tokens, scope=''):
         # Update the session tokens with the latest usage
-        self.session["session_tokens"]=self.session["session_tokens"]+session_tokens
+        uptaded_session_tokens = session_tokens
+        if scope != '':
+            uptaded_session_tokens = []
+            for token in session_tokens:
+                token['scope'] = scope
+                uptaded_session_tokens.append(token)
+        self.session["session_tokens"]=self.session["session_tokens"]+uptaded_session_tokens
         #channel('debugmessage', {"message": f"Session Tokens ({scope}): {session_tokens}"})
     def run_prompt(self, output_type, prompt, channel=None):  
         """  
@@ -227,8 +234,6 @@ class TeisecAgent:
             self.send_system(channel, {"message": '(' + task['plugin_name'] + '-' + task['capability_name'] + ') ' + task['task']})
             executed_task=self.run_task(task,output_type,channel)
             self.update_session(executed_task)
-            self.update_session_usage(executed_task['response_object']['session_tokens'])  
-            self.update_session_usage(executed_task['processed_response']['session_tokens'])  
             task_results.append(executed_task)  
             self.send_response(channel, {"message": executed_task['processed_response']['result']})      
         self.stop_timer(start_time, channel)
@@ -241,7 +246,9 @@ class TeisecAgent:
         task_result_list = []
         parameters_object={'parameters_found':'yes','parameters':{}}
         if 'input_parameters' in workflow['workflow'] and workflow['workflow']['input_parameters']!=[]:
-            parameters_object = self.extract_parameters(workflow['workflow']['input_parameters'], prompt, channel)
+            parameters_result_object = self.extract_parameters(workflow['workflow']['input_parameters'], prompt, channel)
+            parameters_object=parameters_result_object['result']
+            self.update_session_usage(parameters_result_object['session_tokens'], scope='Workflow-InputParameters') 
         if parameters_object['parameters_found'] == "yes":
             for workflow_task in workflow['workflow']['tasks']:
                 tasks_to_run=[]
@@ -259,10 +266,8 @@ class TeisecAgent:
                     try:
                         self.send_system(channel, {"message": '(' + task_result['plugin_name'] + '-' + task_result['capability_name'] + ') ' + task_result['task']})
                         self.update_session(task_result)
-                        self.update_session_usage(task_result['response_object']['session_tokens'])   
                         if task_result['response_object']['status'] == 'error':
-                            channel('systemmessage', {"message": f"Error: {task_result['response_object']['result'] }"})   
-                        self.update_session_usage(task_result['processed_response']['session_tokens'])  
+                            channel('systemmessage', {"message": f"Error: {task_result['response_object']['result'] }"})     
                         self.send_response(channel, {"message": task_result['processed_response']['result']})   
                         task_result_list.append(task_result)
                     except:
@@ -308,13 +313,13 @@ class TeisecAgent:
             task['processed_response']= task_response_object 
             return task
         #check if capabilitiy has input parameters
-        parameters_object={'parameters_found':'yes','parameters':{}}
+        task['extracted_parameters']={'parameters_found':'yes','parameters':{}}
         if 'parameters' in capability and capability['parameters']!=[]:
             #extract parameters
-            parameters_object=self.extract_parameters(capability['parameters'],task['task'],channel)
+            task['extracted_parameters']=self.extract_parameters(capability['parameters'],task['task'],channel)
         #run task with plugin capability
         try:
-            task_response_object = plugin.runtask(task, self.session,parameters_object)
+            task_response_object = plugin.runtask(task, self.session)
             task['response_object']=task_response_object
         except Exception as e:
             print_error(f"Error in task execution: {e}\n{traceback.format_exc()}")
@@ -338,12 +343,12 @@ class TeisecAgent:
             extended_prompt = replace_template_placeholders("Core.Output.Other", UserInput=user_input, Response=response)  
         task={}
         task["task"]=extended_prompt
-        prompt_result_object = self.plugin_list["GPTPlugin"].runtask(task, {"messages":[]}, [],scope='Core-Output')
+        prompt_result_object = self.plugin_list["GPTPlugin"].runtask(task, {"messages":[]})
         return self.clean_prompt_result(prompt_result_object)
     def clean_prompt_result(self, prompt_result_object):  
         """
         remove Prompt result tags and return the result"""
-        prompt_result_object['result'] = prompt_result_object['result'].replace("```plaintext", "").replace("```kusto", "").replace("```html", "").replace("```", "")  
+        prompt_result_object['result'] = prompt_result_object['result'].replace("```plaintext", "").replace("```kusto", "").replace("```json", "").replace("```html", "").replace("```", "")  
         return prompt_result_object  
       
    
@@ -354,18 +359,19 @@ class TeisecAgent:
         extended_prompt = replace_template_placeholders("Core.ExtractParameters.System", UserInput=prompt, Parameters=parameters)  
         task={}
         task["task"]=extended_prompt
-        parameters_result_object = self.plugin_list["GPTPlugin"].runtask(task, self.session, [],'Core-ParametersExtraction')
-        self.update_session_usage(parameters_result_object['session_tokens']) 
-        parameters_clean = parameters_result_object['result'].replace("```plaintext", "").replace("```json", "").replace("```html", "").replace("```", "")
+        parameters_result_object = self.plugin_list["GPTPlugin"].runtask(task, self.session)
+        #self.update_session_usage(parameters_result_object['session_tokens']) 
+        parameters_result_object = self.clean_prompt_result(parameters_result_object)
         try:
             # Parse the cleaned result into a JSON object
-            obj = json.loads(parameters_clean)
-            return obj
+            parsed_obj = json.loads(parameters_result_object['result'])
+            parameters_result_object['result']=parsed_obj
         except:
             # Handle JSON parsing errors
             channel('systemmessage', {"message": f"Error: {'Error generating parameters.'}"})
             obj = {}
-            return obj
+            parameters_result_object['result']=obj
+        return parameters_result_object
     def update_session(self, task):  
         """  
         Update the session with the latest prompt and response.  
@@ -376,7 +382,9 @@ class TeisecAgent:
             self.session["messages"].pop(1)  # Remove the oldest element twice (Assistant and User) . First Item is the System Message 
             self.session["messages"].pop(1)  
         self.session["messages"].append(user_object)  
-        self.session["messages"].append(assistant_object)  
+        self.session["messages"].append(assistant_object)
+        self.update_session_usage(task['response_object']['session_tokens'])  
+        self.update_session_usage(task['processed_response']['session_tokens'], scope='Core-OutPutProcessing')  
     def clear_session(self):  
         """  
         Clear the current session.  

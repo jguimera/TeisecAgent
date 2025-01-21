@@ -9,7 +9,7 @@ class TeisecAgentPlugin:
         print(self.name)
     def getname(self):
         return self.name
-    def runtask(self,task,session,parameters_object,scope='Core'):
+    def runtask(self,task,session):
         result_object={"status":"success","result":"","session_tokens":[{"scope":"plugin","session_tokens":22}],"prompt":task["task"]}
         print(self.task)
         return result_object

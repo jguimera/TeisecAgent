@@ -294,7 +294,7 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         else: 
             query_object= self.generateNewKQL(prompt, session)
         return query_object
-    def runtask(self, task, session,parameters_object,scope='Core'):  
+    def runtask(self, task, session):  
         """  
         Convenience method to run the tasks inside the plugin.  
         :param task: Input task  
@@ -302,7 +302,7 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         :return: Result of the task execution 
         """ 
         if task["capability_name"] in self.custom_capabilities:
-            result_object =  self.run_custom_capability(task["capability_name"], task, session,parameters_object)
+            result_object =  self.run_custom_capability(task["capability_name"], task, session,task['extracted_parameters']['result'])
         elif task["capability_name"] == "generateandrunkql":
             query_object = self.generateQuery(task["task"], session)
             result_object =  self.runKQLQuery(query_object["result"], session)

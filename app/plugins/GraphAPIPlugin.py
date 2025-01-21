@@ -51,14 +51,15 @@ class GraphAPIPlugin(TeisecAgentPlugin):
         if emailDetails_object['status']=='error':
             print_plugin_debug(self.name, f"Error obtaining Email: {emailDetails_object["result"]}")   
         return emailDetails_object
-    def runtask(self, task, session,parameters_object,scope='GraphAPIPlugin'):  
+    def runtask(self, task, session):  
         """  
         Convenience method to run the tasks inside the plugin.  
         :param task: Input task  
         :param session: Session context  
         :return: Result of the task execution 
         """ 
-        if task["capability_name"]=="getemaildetails": 
+        if task["capability_name"]=="getemaildetails":
+            parameters_object=task['extracted_parameters']['result'] 
             if parameters_object['parameters_found']=="yes":    
                 result_object= self.getEmailDetails(parameters_object['parameters'], session)
             else:

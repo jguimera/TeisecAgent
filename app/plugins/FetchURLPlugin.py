@@ -102,7 +102,7 @@ class FetchURLPlugin(TeisecAgentPlugin):
             return result_object
         else:
             return result_object
-    def runtask(self, task, session,parameters_object,scope='FetchURLPlugin'):  
+    def runtask(self, task, session):  
         """  
         Convenience method to run the tasks inside the plugin.  
         :param task: Input task  
