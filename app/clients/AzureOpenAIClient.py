@@ -55,7 +55,9 @@ class AzureOpenAIClient():
             result=e.message
             print (e)
         session_tokens_object=[]
-        session_tokens_object.append({"scope":scope,"tokens":completion.usage})
+        usage=completion.usage
+        tokes_object={"prompt_tokens":usage.prompt_tokens,"completion_tokens":usage.completion_tokens,"total_tokens":usage.total_tokens}        
+        session_tokens_object.append({"scope":scope,"tokens":tokes_object})
         result_object={"status":status,"result":result,"session_tokens":session_tokens_object}
         #print(result)
         with open('log/'+scope+'.log', 'a', encoding='utf-8') as f:  
