@@ -60,13 +60,14 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         capabilities.update(self.custom_capabilities)
         return capabilities
 
-    def run_custom_capability(self, capability_name, task, session,parameters_object):
+    def run_custom_capability(self, capability_name, task, session):
         """  
         Run a custom capability.  
         """  
         capability = self.custom_capabilities[capability_name]
         kql_query = capability['kql_query']
-        if parameters_object['parameters_found'] == "yes":
+        parameters_object=task['extracted_parameters']['result']
+        if parameters_object is not None and parameters_object['parameters_found'] == "yes":
             for param_name, param_value in parameters_object['parameters'].items():
                 kql_query = kql_query.replace(f"{{{{{param_name}}}}}", param_value)
             return self.runKQLQuery(kql_query, session)
@@ -302,7 +303,7 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         :return: Result of the task execution 
         """ 
         if task["capability_name"] in self.custom_capabilities:
-            result_object =  self.run_custom_capability(task["capability_name"], task, session,task['extracted_parameters']['result'])
+            result_object =  self.run_custom_capability(task["capability_name"], task, session)
         elif task["capability_name"] == "generateandrunkql":
             query_object = self.generateQuery(task["task"], session)
             result_object =  self.runKQLQuery(query_object["result"], session)

@@ -18,7 +18,6 @@ import concurrent.futures
 from functools import partial
 import traceback
 import uuid
-
 class TeisecAgent:  
     def __init__(self, auth_type):  
         self.client_list = {}  
@@ -175,11 +174,11 @@ class TeisecAgent:
 
         new_session_object = {"messages":new_session + self.sessions[sessionId]["messages"][1:]}
         
+        
         # Run the prompt through the GPTPlugin to get the task list
         task={}
         task["task"]=extended_user_prompt
         task_list_object = self.plugin_list["GPTPlugin"].runtask(task, new_session_object)
-        # Update the session with the latest usage and with a particular scope
         self.update_session_usage(sessionId,task_list_object['session_tokens'], scope='Core-Decompose')
         # Handle errors in the task list generation
         if task_list_object['status'] == 'error':
@@ -208,14 +207,14 @@ class TeisecAgent:
             workflow = self.get_workflow(shortcut)
             if workflow:
                 self.send_system(channel, {"message": f"Running workflow: {workflow['workflow']['title']}"} )
-                return self.run_workflow( sessionId,workflow, prompt,output_type, channel)
+                return self.run_workflow(sessionId, workflow, prompt,output_type, channel)
             else:
                 self.send_system(channel, {"message": f"Workflow shortcut '{shortcut}' not found."})
                 return []
         else:
             return self.decompose_and_run_prompt(sessionId,output_type, prompt, channel)
 
-    def decompose_and_run_prompt(self, sessionId, output_type, prompt, channel=None):
+    def decompose_and_run_prompt(self, sessionId,  output_type, prompt, channel=None):
         """  
         Run the provided prompt using task decomposition.  
         """  
@@ -231,7 +230,7 @@ class TeisecAgent:
             self.send_response(channel, {"message": executed_task['processed_response']['result']})      
         self.stop_timer(start_time, channel)
         return task_results
-    def run_workflow(self,sessionId, workflow, prompt, output_type, channel=None):
+    def run_workflow(self, sessionId,workflow, prompt, output_type, channel=None):
         """  
         Run the provided workflow.  
         """  
@@ -241,7 +240,7 @@ class TeisecAgent:
         if 'input_parameters' in workflow['workflow'] and workflow['workflow']['input_parameters']!=[]:
             parameters_result_object = self.extract_parameters(sessionId,workflow['workflow']['input_parameters'], prompt, channel)
             parameters_object=parameters_result_object['result']
-            self.update_session_usage(sessionId,parameters_result_object['session_tokens'], scope='Workflow-InputParameters') 
+            self.update_session_usage(sessionId,parameters_result_object['session_tokens'], scope='Workflow-InputParameters')     
         if parameters_object['parameters_found'] == "yes":
             for workflow_task in workflow['workflow']['tasks']:
                 tasks_to_run=[]
@@ -306,7 +305,7 @@ class TeisecAgent:
             task['processed_response']= task_response_object 
             return task
         #check if capabilitiy has input parameters
-        task['extracted_parameters']={'parameters_found':'yes','parameters':{}}
+        task['extracted_parameters']={'result':{'parameters_found':'yes','parameters':{}},'session_tokens':[]}  
         if 'parameters' in capability and capability['parameters']!=[]:
             #extract parameters
             task['extracted_parameters']=self.extract_parameters(sessionId,capability['parameters'],task['task'],channel)
@@ -345,7 +344,7 @@ class TeisecAgent:
         return prompt_result_object  
       
    
-    def extract_parameters(self, sessionId,parameters, prompt, channel):
+    def extract_parameters(self, sessionId, parameters, prompt, channel):
         """  
         Extract and replace the input parameters from the user prompt and the current session.  
         """  
