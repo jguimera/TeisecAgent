@@ -67,9 +67,10 @@ class SentinelKQLPlugin(TeisecAgentPlugin):
         capability = self.custom_capabilities[capability_name]
         kql_query = capability['kql_query']
         parameters_object=task['extracted_parameters']['result']
-        if parameters_object is not None and parameters_object['parameters_found'] == "yes":
+        if parameters_object['parameters_found']=="yes": 
             for param_name, param_value in parameters_object['parameters'].items():
                 kql_query = kql_query.replace(f"{{{{{param_name}}}}}", param_value)
+            print_plugin_debug(self.name, f"Running custom capability: {capability['title']} with query: {kql_query}")
             return self.runKQLQuery(kql_query, session)
         else:
             result_object = {"status": "error", "result": f"Parameters for {capability['title']} not found", "session_tokens": []}
