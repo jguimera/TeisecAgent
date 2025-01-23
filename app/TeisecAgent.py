@@ -148,12 +148,12 @@ class TeisecAgent:
                 filepath = os.path.join(workflows_folder, filename)
                 with open(filepath, 'r', encoding='utf-8') as f:
                     workflow = json.load(f)
-                    self.workflow_list[workflow['workflow']['shortcut']] = workflow
+                    self.workflow_list[workflow['workflow']['shortcut'].lower()] = workflow
     def get_workflow(self, shortcut):
         """  
         Get the workflow by its shortcut.  
         """  
-        return self.workflow_list.get(shortcut, None)
+        return self.workflow_list.get( shortcut.lower(), None)
     
 
 

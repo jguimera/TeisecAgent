@@ -44,13 +44,13 @@
                         "title": "Investigate Associated Domains",
                         "plugin_name": "SentinelKQLPlugin",
                         "capability_name": "InvestigateDomainListThreatIntelligence",
-                        "prompt_text": "Investigate the domains extracted from the email headers for any threat intelligence indicators."
+                        "prompt_text": "Extract the domains present in the analyzaed email body and headers and investigate them for any threat intelligence indicators."
                     },
                     {
                         "title": "Investigate Associated IP Addresses",
                         "plugin_name": "SentinelKQLPlugin",
                         "capability_name": "InvestigateIPListThreatIntelligence",
-                        "prompt_text": "Investigate the IP addresses extracted from the email headers for any threat intelligence indicators."
+                        "prompt_text": "Extract the IP addresses present in the analyzaed email body and headers and investigate them for any threat intelligence indicators."
                     }
                 ]
             },

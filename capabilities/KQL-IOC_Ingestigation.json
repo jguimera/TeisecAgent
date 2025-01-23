@@ -13,7 +13,7 @@
                     "sample_value": "'example.com', 'test.com'"
                 }
             ],
-            "kql_query": "ThreatIntelligenceIndicator | where DomainName in ({{domains}}) | project Description, Action, ConfidenceScore, ThreatType, ThreatSeverity,Tags"
+            "kql_query": "datatable(domain:string) [{{domains}}] | join kind=leftouter (ThreatIntelligenceIndicator) on $left.domain==$right.DomainName  | project domain, Description, Action, ConfidenceScore, ThreatType, ThreatSeverity,Tags"
         },
         {
             "plugin_name": "SentinelKQLPlugin",
@@ -28,7 +28,7 @@
                     "sample_value": "'192.168.1.1', '203.0.113.5'"
                 }
             ],
-            "kql_query": "ThreatIntelligenceIndicator | where NetworkSourceIP in ({{ipAddresses}}) | project Description, Action, ConfidenceScore, ThreatType, ThreatSeverity,Tags"
+            "kql_query": "datatable(NetworkSourceIP:string) [{{ipAddresses}}] | join kind=leftouter (ThreatIntelligenceIndicator) on $left.NetworkSourceIP==$right.NetworkSourceIP   | project NetworkSourceIP, Description, Action, ConfidenceScore, ThreatType, ThreatSeverity,Tags"
         }
     ]
 }
