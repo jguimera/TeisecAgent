@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>  
+        <meta charset="UTF-8">  
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+        <title>Teisec - CyberSec Agent</title> 
+        <meta name="description" content="Teisec - Is a Python-based CyberSec Agent designed to interact with Security Solutions">
+        <meta name="keywords" content="Teisec, CyberSec Agent,AI Assistant, Chatbot, AI, Assistant, Chat, GPT, OpenAI, SEC, Python Security Assistant, Python Security Assistant, Python Security Assistant">
+        <meta name="author" content="Jaime Guimera Coll">
+        <meta name="robots" content="index, follow">
+    
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://Teisec.com">
+        <meta property="og:title" content="Teisec - CyberSec Agent">
+        <meta property="og:description" content="Teisec - CyberSec Agent">
+        <meta property="og:image" content="https://Teisec.com/static/teisec-logo.svg">
+    
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="https://Teisec.com">
+        <meta property="twitter:title" content="Teisec - CyberSec Agent">
+        <meta property="twitter:description" content="Teisec - CyberSec Agent">
+        <meta property="twitter:image" content="https://Teisec.com/static/Teisec-logo.svg">
+        
+        <link rel="canonical" href="https://Teisec.com">   
+        
+        <link rel="apple-touch-icon" sizes="180x180" href="../static/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../static/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../static/favicon-16x16.png">
+        <link rel="manifest" href="../static/site.webmanifest">
+        <link rel="stylesheet" href="../static/styles.css">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <style>
+        pre {
+        white-space: pre-wrap;
+        }
+        code {
+            box-sizing: border-box;
+            overflow-x: auto;
+            width: auto;
+            display: block;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+  <div class="container mx-auto">
+    <h1 class="text-2xl font-bold mb-4">Session tasks</h1>
+    {% for task in tasks %}
+      <div class="mb-4">
+        <div onclick="document.getElementById('section-{{ loop.index }}').classList.toggle('hidden');"
+                class="bg-indigo-300 text-black px-4 py-2 rounded mb-2" style="text-align: left">
+          {{ task.capability_name }} - {{ task.plugin_name }} 
+          <br>
+          <span class="bg-slate-200">   {{ task.task }} </span>
+      </div>
+        <div id="section-{{ loop.index }}" class="hidden bg-white p-4 shadow rounded">
+          <h2 class="text-xl font-bold mb-2">General Details</h2>
+          <p><strong>Capability Name:</strong> {{ task.capability_name }}</p>
+          <p><strong>Plugin Name:</strong> {{ task.plugin_name }}</p>
+          <p><strong>Task:</strong> {{ task.task }}</p>
+
+          <h3 class="text-lg font-bold mt-4">Response Object</h3>
+          <p><strong>Prompt:</strong> {{ task.response_object.prompt }}</p>
+          <pre class="bg-gray-200 p-2"><code>{{ task.response_object.result}}</code></pre>
+          <p><strong>Used Tokens:</strong><code></code> {{ task.response_object.session_tokens | tojson (indent=2) }}</code></p>
+          <h3 class="text-lg font-bold mt-4">Processed Response</h3>
+          <p><strong>Result:</strong> {{ task.processed_response.result }}</p>
+          <p><strong>Used Tokens:</strong><code></code> {{ task.processed_response.session_tokens | tojson (indent=2)}}</code></p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</body>
+</html>

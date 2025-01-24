@@ -14,6 +14,28 @@ def index(sessionId):
 def display_sessio_raw(sessionId):
     session_data = teisecAgent.retrievedsession(sessionId)
     return session_data
+@main.route('/sessiontasks/<sessionId>', methods=['GET'])
+def display_session_details(sessionId):
+    session_data = teisecAgent.retrievedsession(sessionId)
+    models = {
+        "4o-Mini": {
+            "input_price_per_million": 0.14392,
+            "output_price_per_million": 0.5757
+        },
+        "4o": {
+            "input_price_per_million": 2.39866,
+            "output_price_per_million": 9.5747
+        }
+    }
+    total_input_tokens=0
+    total_output_tokens=0
+    for token in session_data["session_tokens"]:
+        total_input_tokens += token["tokens"]["prompt_tokens"]
+        total_output_tokens += token["tokens"]["completion_tokens"]
+    total_tokens = total_input_tokens + total_output_tokens
+
+    return render_template('sessiondetails.html', tasks=session_data['tasks'], models=models, total_tokens=total_tokens, total_input_tokens=total_input_tokens, total_output_tokens=total_output_tokens)
+
 @main.route('/session/<sessionId>', methods=['GET'])
 def display_session(sessionId):
     session_data = teisecAgent.retrievedsession(sessionId)

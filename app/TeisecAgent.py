@@ -176,10 +176,10 @@ class TeisecAgent:
         
         
         # Run the prompt through the GPTPlugin to get the task list
-        task={}
+        task={'plugin_name':'Core','capability_name':'Decompose'}
         task["task"]=extended_user_prompt
         task_list_object = self.plugin_list["GPTPlugin"].runtask(task, new_session_object)
-        self.update_session_usage(sessionId,task_list_object['session_tokens'], scope='Core-Decompose')
+        task_list_object['session_tokens']=self.update_tokens_scope(task_list_object['session_tokens'], 'Core-Decompose')
         # Handle errors in the task list generation
         if task_list_object['status'] == 'error':
             channel('systemmessage', {"message": f"Error: {task_list_object['result'] }"})
@@ -190,12 +190,15 @@ class TeisecAgent:
             try:
                 # Parse the cleaned result into a JSON object
                 obj = json.loads(selected_plugin_string_clean) 
-                return obj
             except:
                 # Handle JSON parsing errors by defaulting to using the GPTPlugin
                 channel('systemmessage', {"message": f"Error: {'Error Decomposing. Running User Prompt with GPT Plugin' }"})
                 obj = [{"plugin_name": "GPTPlugin", "capability_name": "runprompt", "task": prompt}]
-                return obj
+            task["task"]=prompt
+            task['response_object']=task_list_object
+            task['processed_response']={"status": "N/A", "result": "N/A","prompt":"N/A","session_tokens":[]} 
+            self.update_session(sessionId,task,addToMessages=False) 
+            return obj
     def run_prompt(self, sessionId,output_type, prompt, channel=None):  
         """  
         Run the provided prompt using task decomposition or workflow.  
@@ -240,7 +243,11 @@ class TeisecAgent:
         if 'input_parameters' in workflow['workflow'] and workflow['workflow']['input_parameters']!=[]:
             parameters_result_object = self.extract_parameters(sessionId,workflow['workflow']['input_parameters'], prompt, channel)
             parameters_object=parameters_result_object['result']
-            self.update_session_usage(sessionId,parameters_result_object['session_tokens'], scope='Workflow-InputParameters')     
+            task={'plugin_name':'Core','capability_name':'Core-Workflow-InputParameters','task':prompt}
+            parameters_result_object['session_tokens']=self.update_tokens_scope(parameters_result_object['session_tokens'], 'Core-Workflow-InputParameters')
+            task['response_object']=parameters_result_object
+            task['processed_response']={"status": "N/A", "result": "N/A","prompt":"N/A","session_tokens":[]}
+            self.update_session(sessionId,task,addToMessages=False) 
         if parameters_object['parameters_found'] == "yes":
             for workflow_task in workflow['workflow']['tasks']:
                 tasks_to_run=[]
@@ -364,28 +371,32 @@ class TeisecAgent:
             obj = {}
             parameters_result_object['result']=obj
         return parameters_result_object
-    def update_session(self,sessionId, task):  
+    def update_session(self,sessionId, task,addToMessages=True):  
         """  
         Update the session with the latest prompt and response.  
         """
         self.sessions[sessionId]["tasks"].append(task)    
-        user_object = {"role": "user", "content": [{"type": "text", "text": task['response_object']['prompt']}]}  
-        assistant_object = {"role": "assistant", "content": [{"type": "text", "text": str(task['response_object']['result'])}]}  
-        if len(self.sessions[sessionId]["messages"]) >= self.context_window_size * 2:  
-            self.sessions[sessionId]["messages"].pop(1)  # Remove the oldest element twice (Assistant and User) . First Item is the System Message 
-            self.sessions[sessionId]["messages"].pop(1)  
-        self.sessions[sessionId]["messages"].append(user_object)  
-        self.sessions[sessionId]["messages"].append(assistant_object)  
-        self.update_session_usage(sessionId,task['response_object']['session_tokens'])  
-        self.update_session_usage(sessionId,task['processed_response']['session_tokens'], scope='Core-OutPutProcessing')
-    def update_session_usage(self,sessionId, session_tokens,scope='Core'):
-        # Update the session tokens with the latest usage
+        if addToMessages:
+            user_object = {"role": "user", "content": [{"type": "text", "text": task['response_object']['prompt']}]}  
+            assistant_object = {"role": "assistant", "content": [{"type": "text", "text": str(task['response_object']['result'])}]}  
+            if len(self.sessions[sessionId]["messages"]) >= self.context_window_size * 2:  
+                self.sessions[sessionId]["messages"].pop(1)  # Remove the oldest element twice (Assistant and User) . First Item is the System Message 
+                self.sessions[sessionId]["messages"].pop(1)  
+            self.sessions[sessionId]["messages"].append(user_object)  
+            self.sessions[sessionId]["messages"].append(assistant_object)  
+            self.update_session_usage(sessionId,task['response_object']['session_tokens'], scope='Plugin-Internal')  
+            self.update_session_usage(sessionId,task['processed_response']['session_tokens'], scope='Core-OutPutProcessing')
+    def update_tokens_scope(self,session_tokens, scope):
         uptaded_session_tokens = session_tokens
         if scope != '':
             uptaded_session_tokens = []
             for token in session_tokens:
                 token['scope'] = scope
                 uptaded_session_tokens.append(token)
+        return uptaded_session_tokens
+    def update_session_usage(self,sessionId, session_tokens,scope='Core'):
+        # Update the session tokens with the latest usage
+        uptaded_session_tokens = self.update_tokens_scope(session_tokens, scope)
         self.sessions[sessionId]["session_tokens"]=self.sessions[sessionId]["session_tokens"]+uptaded_session_tokens
     def clear_session(self):  
         """  
