@@ -141,7 +141,7 @@ socket.on('actionmessage', function(message_object) {
     action=message_object.action;
     if (action=='NewSession') {
         newSessionId = message_object.sessionId;
-        const newUrl = `/session/${newSessionId}`;
+        const newUrl = `/${newSessionId}`;
         window.location.href = newUrl;
     }
 });
